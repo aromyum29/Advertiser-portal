@@ -7,7 +7,7 @@
 <meta name="description" content="How Koko's unused app real estate became a self-serve advertising product for merchants. Research, decision logic, interaction design, and a working prototype." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,300;1,9..144,500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 <style>
   /* ── Tokens: the product's own palette, so the page reads as the same hand ── */
   :root {
@@ -29,8 +29,8 @@
     --amber-bg: #fff4e0;
     --red: #b91c1c;
     --pastel: linear-gradient(149.739deg, #bddcee 0%, #e0e7ff 35%, #f3e8ff 70%, #fce7f3 100%);
-    --serif: "Fraunces", "Iowan Old Style", Georgia, serif;
-    --sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    --serif: "Atkinson Hyperlegible Next", "Atkinson Hyperlegible", "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+    --sans: "Atkinson Hyperlegible Next", "Atkinson Hyperlegible", "Segoe UI", ui-sans-serif, system-ui, sans-serif;
     --measure: 66ch;
     --rail: 268px;
   }
@@ -46,8 +46,8 @@
     background: var(--paper);
     color: var(--ink);
     font-family: var(--sans);
-    font-size: 16px;
-    line-height: 1.6;
+    font-size: 17px;
+    line-height: 1.65;
     -webkit-font-smoothing: antialiased;
   }
   img { max-width: 100%; display: block; }
@@ -55,10 +55,10 @@
   button { font: inherit; cursor: pointer; color: inherit; }
   ::selection { background: var(--brand); }
 
-  h1, h2, h3, .serif { font-family: var(--serif); font-weight: 500; letter-spacing: -0.01em; }
-  h1 { font-size: clamp(2.4rem, 5.2vw, 4.4rem); line-height: 1.02; margin: 0; font-variation-settings: "opsz" 144; }
-  h2 { font-size: clamp(1.8rem, 3vw, 2.5rem); line-height: 1.1; margin: 0 0 0.35em; font-variation-settings: "opsz" 96; }
-  h3 { font-size: 1.35rem; line-height: 1.25; margin: 0 0 0.4em; font-variation-settings: "opsz" 48; }
+  h1, h2, h3, .serif { font-family: var(--serif); font-weight: 700; letter-spacing: -0.015em; }
+  h1 { font-size: clamp(2.4rem, 5.2vw, 4.4rem); line-height: 1.02; margin: 0; }
+  h2 { font-size: clamp(1.8rem, 3vw, 2.5rem); line-height: 1.1; margin: 0 0 0.35em; }
+  h3 { font-size: 1.35rem; line-height: 1.25; margin: 0 0 0.4em; }
   p { margin: 0 0 1em; max-width: var(--measure); }
   .lede { font-size: 1.2rem; line-height: 1.55; color: var(--ink-2); }
   .small { font-size: 0.875rem; color: var(--ink-3); }
@@ -79,16 +79,16 @@
   .content { min-width: 0; }
   main > section { padding: 96px clamp(24px, 6vw, 96px); border-bottom: 1px solid var(--line-2); }
   .section-head { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 24px; align-items: start; margin-bottom: 40px; }
-  .section-head .idx { font-family: var(--serif); font-size: 2.6rem; line-height: 1; color: var(--brand-ink); font-variation-settings: "opsz" 144; font-weight: 300; }
-  .takeaway { font-family: var(--serif); font-size: 1.35rem; line-height: 1.35; color: var(--ink); max-width: 46ch; margin-top: 10px; font-style: italic; font-weight: 300; }
+  .section-head .idx { font-family: var(--serif); font-size: 2.4rem; line-height: 1; color: var(--brand-ink); font-weight: 400; }
+  .takeaway { font-family: var(--serif); font-size: 1.3rem; line-height: 1.4; color: var(--ink-2); max-width: 50ch; margin-top: 10px; font-weight: 500; }
 
-  /* Skim mode hides the long-form paragraphs and keeps takeaways, visuals and figures. */
-  body.skim .detail { display: none !important; }
-  .skim-toggle { display: inline-flex; align-items: center; gap: 10px; border: 1px solid var(--line); background: var(--card); border-radius: 999px; padding: 6px 10px 6px 12px; font-size: 0.8rem; font-weight: 600; }
-  .skim-toggle .sw { width: 34px; height: 20px; border-radius: 999px; background: #d6d7de; position: relative; transition: background 0.2s; }
-  .skim-toggle .sw::after { content: ""; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; border-radius: 50%; background: #fff; transition: transform 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.25); }
-  body.skim .skim-toggle .sw { background: var(--ink); }
-  body.skim .skim-toggle .sw::after { transform: translateX(14px); }
+  /* Reading time, counting down as sections are passed. */
+  .readtime { border: 1px solid var(--line); background: var(--card); border-radius: 14px; padding: 12px 14px; }
+  .readtime .big { font-family: var(--serif); font-size: 1.6rem; font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; }
+  .readtime .big small { font-size: 0.8rem; font-weight: 600; color: var(--ink-3); margin-left: 4px; }
+  .readtime .l { font-size: 0.78rem; color: var(--ink-3); margin-top: 6px; }
+  .readtime .track { height: 4px; border-radius: 999px; background: var(--muted); margin-top: 10px; overflow: hidden; }
+  .readtime .fill { height: 100%; background: var(--brand-ink); width: 0; transition: width 0.4s ease; }
 
   /* ── Hero ── */
   .hero { position: relative; overflow: hidden; padding: 72px clamp(24px, 6vw, 96px) 64px; background: var(--pastel); border-bottom: 1px solid var(--line-2); }
@@ -103,7 +103,7 @@
   .hero .sub { font-size: clamp(1.1rem, 1.6vw, 1.35rem); line-height: 1.45; color: var(--ink-2); max-width: 58ch; margin: 26px 0 0; }
   .facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; margin-top: 40px; }
   .fact { background: rgba(255,255,255,0.75); backdrop-filter: blur(8px); border: 1px solid rgba(15,17,22,0.08); border-radius: 16px; padding: 16px 18px; }
-  .fact .v { font-family: var(--serif); font-size: 1.9rem; line-height: 1; font-variation-settings: "opsz" 96; }
+  .fact .v { font-family: var(--serif); font-size: 1.9rem; line-height: 1; }
   .fact .l { font-size: 0.78rem; color: var(--ink-3); margin-top: 6px; line-height: 1.35; }
   .hero-shot { margin-top: 44px; border-radius: 18px; overflow: hidden; box-shadow: 0 30px 80px -30px rgba(13,15,20,0.45), 0 10px 30px -18px rgba(13,15,20,0.3); border: 1px solid rgba(15,17,22,0.08); background: #fff; }
   .hero-shot img { width: 100%; }
@@ -117,7 +117,7 @@
   .card.dark { background: var(--ink); color: #fff; border-color: transparent; }
   .card.dark .small { color: rgba(255,255,255,0.65); }
   .callout { border-left: 3px solid var(--brand-ink); padding: 4px 0 4px 18px; margin: 28px 0; }
-  .callout .serif { font-size: 1.25rem; line-height: 1.4; font-style: italic; font-weight: 300; }
+  .callout .serif { font-size: 1.2rem; line-height: 1.45; font-weight: 600; }
   .shot { border-radius: 14px; overflow: hidden; border: 1px solid var(--line); background: #fff; box-shadow: 0 18px 50px -28px rgba(13,15,20,0.35); }
   .shot img { width: 100%; }
   figure { margin: 0; }
@@ -141,10 +141,10 @@
   .bar .fill { height: 100%; border-radius: 999px; background: var(--brand-ink); width: 0; transition: width 0.9s cubic-bezier(0.2, 0.8, 0.2, 1); }
   .bar .fill.key { background: var(--ad); }
   .bar .c { text-align: right; font-weight: 700; }
-  .quote { font-family: var(--serif); font-style: italic; font-weight: 300; font-size: 1.12rem; line-height: 1.45; padding: 18px 20px; background: var(--card); border: 1px solid var(--line); border-radius: 14px; }
+  .quote { font-family: var(--serif); font-weight: 500; font-size: 1.05rem; line-height: 1.45; padding: 18px 20px; background: var(--card); border: 1px solid var(--line); border-radius: 14px; }
   .quote cite { display: block; font-family: var(--sans); font-style: normal; font-size: 0.78rem; color: var(--ink-3); margin-top: 10px; }
   .principle { display: grid; grid-template-columns: 56px 1fr; gap: 16px; align-items: start; }
-  .principle .k { font-family: var(--serif); font-size: 2rem; font-weight: 300; color: var(--brand-ink); line-height: 1; }
+  .principle .k { font-family: var(--serif); font-size: 2rem; font-weight: 500; color: var(--brand-ink); line-height: 1; }
 
   /* ── Decision flow ── */
   .legend { display: flex; flex-wrap: wrap; gap: 18px; padding: 14px 18px; border: 1px solid var(--line); border-radius: 14px; background: var(--card); font-size: 0.85rem; margin-bottom: 22px; }
@@ -337,7 +337,7 @@
 
   .metric-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); gap: 14px; }
   .metric { padding: 18px 20px; border-radius: 16px; background: var(--card); border: 1px solid var(--line); }
-  .metric .v { font-family: var(--serif); font-size: 2.2rem; line-height: 1; font-variation-settings: "opsz" 96; }
+  .metric .v { font-family: var(--serif); font-size: 2.2rem; line-height: 1; }
   .metric .l { font-size: 0.82rem; color: var(--ink-3); margin-top: 8px; line-height: 1.4; }
   .metric.hl { background: var(--ink); color: #fff; border-color: transparent; } .metric.hl .l { color: rgba(255,255,255,0.65); }
 
@@ -369,7 +369,7 @@
     .tbl-wrap { min-width: 0; }
   }
   @media print {
-    .rail, .skim-toggle, .sim-head .live { display: none !important; }
+    .rail, .sim-head .live { display: none !important; }
     .frame { grid-template-columns: 1fr; }
     main > section { padding: 32px 0; break-inside: avoid; }
     .detail { display: block !important; }
@@ -398,10 +398,11 @@
       <a href="#learnings"><span class="n">11</span>Learnings</a>
     </nav>
     <div class="foot">
-      <button class="skim-toggle" id="skim" type="button" aria-pressed="false" title="Hide long-form paragraphs">
-        <span class="sw" aria-hidden="true"></span> Skim mode
-      </button>
-      <p class="small" style="margin-top:12px;">About 12 min in full. 4 min in skim.</p>
+      <div class="readtime" aria-live="polite">
+        <div class="big"><span id="rt-left">12</span><small>min left</small></div>
+        <div class="l" id="rt-label">12 minute read</div>
+        <div class="track"><div class="fill" id="rt-fill"></div></div>
+      </div>
     </div>
   </aside>
 
@@ -413,11 +414,11 @@
           <span class="chip">B2B · Fintech · Sri Lanka</span>
           <span class="chip">2026</span>
         </div>
-        <h1>Turning Koko's unused app screens into a self‑serve ad product merchants actually want to buy</h1>
-        <p class="sub">Koko is a buy‑now‑pay‑later app with 2.5M installs and 600K monthly shoppers. Its home screen, search results and post‑checkout page were valuable real estate nobody was selling. I designed the product that sells it: fixed‑price, first‑come‑first‑served ad space that a merchant can book in under five minutes, then built and tested it as a working prototype.</p>
+        <h1>Turning Koko's unused app screens into a self-serve ad product merchants actually want to buy</h1>
+        <p class="sub">Koko is a buy-now-pay-later app with 2.5M installs and 600K monthly shoppers. Its home screen, search results and post-checkout page were valuable real estate nobody was selling. I designed the product that sells it: fixed-price, first-come-first-served ad space that a merchant can book in under five minutes, then built and tested it as a working prototype.</p>
         <div class="facts">
           <div class="fact"><div class="v">Sole designer</div><div class="l">Research, UX logic, UI, prototype build</div></div>
-          <div class="fact"><div class="v num">20</div><div class="l">Merchant interviews, 5 key accounts and 15 long‑tail</div></div>
+          <div class="fact"><div class="v num">20</div><div class="l">Merchant interviews, 5 key accounts and 15 long-tail</div></div>
           <div class="fact"><div class="v num">4 steps</div><div class="l">Dates, positions, assets, payment. Under five minutes to book</div></div>
           <div class="fact"><div class="v num">128</div><div class="l">Unit tests on the pricing rules, so the number on screen is always right</div></div>
         </div>
@@ -449,15 +450,15 @@
           <div class="card">
             <div class="eyebrow">What changed</div>
             <h3>A bookable inventory</h3>
-            <p class="small">Six ad spaces became calendar inventory with fixed prices. A merchant picks a space, picks dates, and pays. No bidding, no sales call, no ad‑tech vocabulary. Six of six testers completed a booking unaided.</p>
+            <p class="small">Six ad spaces became calendar inventory with fixed prices. A merchant picks a space, picks dates, and pays. No bidding, no sales call, no ad-tech vocabulary. Six of six testers completed a booking unaided.</p>
           </div>
         </div>
         <div class="timeline" style="margin-top:24px;">
-          <div><b>Weeks 1–2</b><small>20 merchant interviews, ops and finance sessions</small></div>
+          <div><b>Weeks 1 and 2</b><small>20 merchant interviews, ops and finance sessions</small></div>
           <div><b>Week 3</b><small>Business rules and pricing model written down</small></div>
-          <div><b>Weeks 4–5</b><small>Sketches, decision flow, first clickable version</small></div>
+          <div><b>Weeks 4 and 5</b><small>Sketches, decision flow, first clickable version</small></div>
           <div><b>Week 6</b><small>Usability sessions, two rounds of changes</small></div>
-          <div><b>Weeks 7–8</b><small>Production‑grade prototype, tests, handoff docs</small></div>
+          <div><b>Weeks 7 and 8</b><small>Production-grade prototype, tests, handoff docs</small></div>
         </div>
       </section>
 
@@ -472,7 +473,7 @@
         </div>
         <div class="two-col">
           <div>
-            <p class="lede">Koko is a BNPL platform in Sri Lanka. Shoppers pay in instalments at partner stores, in person and in the app. The app itself had grown into a shopping destination: a home screen with featured stores, a trending row, search, and a post‑checkout page every buyer sees.</p>
+            <p class="lede">Koko is a BNPL platform in Sri Lanka. Shoppers pay in instalments at partner stores, in person and in the app. The app itself had grown into a shopping destination: a home screen with featured stores, a trending row, search, and a post-checkout page every buyer sees.</p>
             <p class="detail">Those screens were curated by hand. A marketing team decided who got the hero banner, usually whoever asked loudest or had the biggest account. Nobody paid for it. Meanwhile Koko's revenue was almost entirely merchant transaction fees, which put a ceiling on growth and made every margin negotiation painful.</p>
             <p class="detail">The brief from leadership was blunt. Sell the space. Make it something a merchant can buy without a sales team in the middle. Keep prices fixed, because an auction would scare off the long tail of small merchants who make up most of the platform.</p>
             <p class="detail">The merchant side was less obvious. Merchants already had a portal for orders, QR payments and finance. Advertising was a new idea to most of them. Whatever I designed had to earn a place in a portal they used to run their business, not sit there as a marketing upsell they scrolled past.</p>
@@ -504,8 +505,8 @@
         </div>
         <div class="two-col">
           <div>
-            <p class="lede">I interviewed 20 merchants over two weeks: five key accounts (multi‑store retailers with a marketing team) and fifteen long‑tail merchants (owner‑operated, one or two locations). Each conversation ran 40 to 50 minutes and covered how they used Koko today, what they knew about their Koko customers, and how they'd react to paying for visibility.</p>
-            <p class="detail">I split the sample deliberately. Key accounts are where the money is per booking, but the long tail is where the volume is, and the two groups wanted different things. Key accounts asked about guaranteed placement during festive weeks and whether they could lock out competitors. Long‑tail merchants asked whether they'd understand what they were paying for, and whether they'd need to hire a designer.</p>
+            <p class="lede">I interviewed 20 merchants over two weeks: five key accounts (multi-store retailers with a marketing team) and fifteen long-tail merchants (owner-operated, one or two locations). Each conversation ran 40 to 50 minutes and covered how they used Koko today, what they knew about their Koko customers, and how they'd react to paying for visibility.</p>
+            <p class="detail">I split the sample deliberately. Key accounts are where the money is per booking, but the long tail is where the volume is, and the two groups wanted different things. Key accounts asked about guaranteed placement during festive weeks and whether they could lock out competitors. Long-tail merchants asked whether they'd understand what they were paying for, and whether they'd need to hire a designer.</p>
             <p class="detail">The most consistent finding wasn't about advertising at all. Seventeen of twenty could not say how many of their customers came through Koko versus walked in off the street. They saw the settlement report and nothing else. That gap turned into the performance surface, and into the decision to lead every screen with views and store visits rather than price.</p>
             <p class="detail">The second finding decided the pricing model. Twelve merchants, unprompted, said some version of "I don't want to bid." Three had tried Facebook or Google ads and stopped because they couldn't predict the spend. Fixed prices weren't just a leadership constraint; they were the thing that made the product credible to the people buying it.</p>
             <div id="themes" aria-label="Interview themes, count of 20 merchants"></div>
@@ -548,7 +549,7 @@
             <div class="card dark">
               <div class="eyebrow" style="color:rgba(255,255,255,0.55);">Success, as defined up front</div>
               <div class="steps" style="margin-top:12px;">
-                <div class="step"><div><b>A first‑time merchant completes a booking unaided</b><div class="small">Measured in usability sessions, then as landing‑to‑confirmation conversion.</div></div></div>
+                <div class="step"><div><b>A first-time merchant completes a booking unaided</b><div class="small">Measured in usability sessions, then as landing-to-confirmation conversion.</div></div></div>
                 <div class="step"><div><b>The price on screen is never wrong</b><div class="small">One pricing function, tested, shared with engineering.</div></div></div>
                 <div class="step"><div><b>Campaign weeks and bundles sell</b><div class="small">Attach rate on the two upsells that carry the margin.</div></div></div>
                 <div class="step"><div><b>Merchants come back</b><div class="small">Repeat bookings within 60 days of a run ending.</div></div></div>
@@ -560,7 +561,7 @@
                 <li>Fixed prices, first come first served. No auctions.</li>
                 <li>Inventory and prices are set by ops, not by the product.</li>
                 <li>Creative review takes up to two business days, so bookings need lead time.</li>
-                <li>Plain language. No ad‑tech vocabulary, no dashes in merchant copy.</li>
+                <li>Plain language. No ad-tech vocabulary, no dashes in merchant copy.</li>
                 <li>Bookings are final. That has to be unmistakable before payment.</li>
               </ul>
             </div>
@@ -624,7 +625,7 @@
               <div class="arrow">→</div>
               <div class="wf"><div class="lbl">Shipped</div><div class="row"><div class="box hl">Dates</div><div class="box">Positions</div><div class="box">Assets</div><div class="box">Pay</div></div></div>
             </div>
-            <p class="small detail">Dates moved to the front. Campaign weeks are the strongest thing Koko sells and the highest‑margin one, and they only persuade while the merchant still has an open mind about timing. Once someone has picked "hero, slide 1" they've mentally spent the budget and a 2.4× week reads as an upsell rather than an opportunity.</p>
+            <p class="small detail">Dates moved to the front. Campaign weeks are the strongest thing Koko sells and the highest-margin one, and they only persuade while the merchant still has an open mind about timing. Once someone has picked "hero, slide 1" they've mentally spent the budget and a 2.4× week reads as an upsell rather than an opportunity.</p>
           </div>
           <div class="card">
             <div class="eyebrow">Change 2 · Where the total lives</div>
@@ -651,7 +652,7 @@
               <div class="arrow">→</div>
               <div class="wf"><div class="lbl">Shipped</div><div class="box hl">Hero banner<br><b>480K</b> store visits / 7 days</div><div>Show prices ↗</div></div>
             </div>
-            <p class="small detail">The landing page shows estimated store visits and no price until asked. Long‑tail merchants anchored on the hero's weekly price and left before seeing cheaper spaces. Leading with reach let them compare on what they came for.</p>
+            <p class="small detail">The landing page shows estimated store visits and no price until asked. Long-tail merchants anchored on the hero's weekly price and left before seeing cheaper spaces. Leading with reach let them compare on what they came for.</p>
           </div>
         </div>
         <p class="small" style="margin-top:18px;">Sketch panels are reconstructions of the whiteboard versions. Originals available on request.</p>
@@ -682,8 +683,8 @@
           <div>
             <div class="why"><div class="dot">1</div><div><b>The screenshot is the explanation.</b>Every card shows a real Koko screen with the bookable zone outlined. "Where does my ad go?" was the first question in every interview. The highlight is always visible, not revealed on hover, because nobody should discover the answer by accident.</div></div>
             <div class="why"><div class="dot">2</div><div><b>Views lead, prices follow.</b>The number on the card is estimated store visits over seven days. Prices are behind a toggle. The long tail compared on reach and stopped anchoring on the hero's price.</div></div>
-            <div class="why"><div class="dot">3</div><div><b>Multi‑select with a floating summary.</b>One booking can cover several spaces on the same dates, which is how the bundle discount becomes possible later. The bar is the only pill‑shaped element in the product; it's meant to feel separate from the page.</div></div>
-            <figure style="margin-top:16px;"><div class="shot"><img src="{{shot:04-details-dialog}}" alt="Details dialog for the hero banner with a larger phone preview, monthly impressions and price" /></div><figcaption>Details opens a larger preview with the plain‑language explainer, views per week and impressions per month. No availability claims here; availability depends on dates the merchant hasn't chosen yet.</figcaption></figure>
+            <div class="why"><div class="dot">3</div><div><b>Multi-select with a floating summary.</b>One booking can cover several spaces on the same dates, which is how the bundle discount becomes possible later. The bar is the only pill-shaped element in the product; it's meant to feel separate from the page.</div></div>
+            <figure style="margin-top:16px;"><div class="shot"><img src="{{shot:04-details-dialog}}" alt="Details dialog for the hero banner with a larger phone preview, monthly impressions and price" /></div><figcaption>Details opens a larger preview with the plain-language explainer, views per week and impressions per month. No availability claims here; availability depends on dates the merchant hasn't chosen yet.</figcaption></figure>
           </div>
         </div>
 
@@ -691,10 +692,10 @@
         <h3 style="margin-top:56px;">7.2 · Pick your dates</h3>
         <div class="two-col flip">
           <div>
-            <div class="why"><div class="dot">1</div><div><b>Campaign weeks first, own dates second.</b>The two paths are a radio choice at the top. Campaign weeks carry a traffic multiple and a 15% saving for taking the whole period; they're the highest‑margin thing Koko sells and the thing key accounts asked for by name.</div></div>
+            <div class="why"><div class="dot">1</div><div><b>Campaign weeks first, own dates second.</b>The two paths are a radio choice at the top. Campaign weeks carry a traffic multiple and a 15% saving for taking the whole period; they're the highest-margin thing Koko sells and the thing key accounts asked for by name.</div></div>
             <div class="why"><div class="dot">2</div><div><b>Every day carries its own price.</b>What a Tuesday costs depends on whether it's inside Diwali, a weekend, or neither. Burying that in a total would make the calendar feel arbitrary. Blocked days say why: "Lead time" or "Booked".</div></div>
-            <div class="why"><div class="dot">3</div><div><b>One upsell at a time, and only when it's bookable.</b>Under seven days you're offered a week at 5% off. Eight to twenty‑one days, a month at 10%. The offer is suppressed if the extended range would cross a booked day, because an offer that fails when accepted is worse than no offer.</div></div>
-            <figure style="margin-top:16px;"><div class="shot"><img src="{{shot:06-campaign-focused}}" alt="Black Friday campaign card focused with its fixed-date chip picker and a Book full period button" /></div><figcaption>Selecting a campaign hides the other nine and opens its day chips. The full‑period button shows the saving against the per‑day price.</figcaption></figure>
+            <div class="why"><div class="dot">3</div><div><b>One upsell at a time, and only when it's bookable.</b>Under seven days you're offered a week at 5% off. Eight to twenty-one days, a month at 10%. The offer is suppressed if the extended range would cross a booked day, because an offer that fails when accepted is worse than no offer.</div></div>
+            <figure style="margin-top:16px;"><div class="shot"><img src="{{shot:06-campaign-focused}}" alt="Black Friday campaign card focused with its fixed-date chip picker and a Book full period button" /></div><figcaption>Selecting a campaign hides the other nine and opens its day chips. The full-period button shows the saving against the per-day price.</figcaption></figure>
           </div>
           <div>
             <div class="sim" id="sim-cal">
@@ -746,9 +747,9 @@
         <h3 style="margin-top:56px;">7.4 · Your ad creative</h3>
         <div class="two-col flip">
           <div>
-            <div class="why"><div class="dot">1</div><div><b>The step only exists when it's needed.</b>Trending, empty search and post‑checkout use the store's own thumbnail. Book only those and the funnel is three steps, not four.</div></div>
-            <div class="why"><div class="dot">2</div><div><b>Koko designs it, by default.</b>Eleven of fifteen long‑tail merchants had nobody who could make a banner. The recommended card is visibly heavier, the upload card says "the slower option" in plain words, and the fee is anchored per day ("about Rs. 1,800 a day on a week booking").</div></div>
-            <div class="why"><div class="dot">3</div><div><b>The spec check runs on the real file, one rule at a time.</b>Size, format, resolution, each with its own tick or cross, so a failure names the fix. The Continue button locks until every rule passes. The browser check is a courtesy; production re‑runs it server side.</div></div>
+            <div class="why"><div class="dot">1</div><div><b>The step only exists when it's needed.</b>Trending, empty search and post-checkout use the store's own thumbnail. Book only those and the funnel is three steps, not four.</div></div>
+            <div class="why"><div class="dot">2</div><div><b>Koko designs it, by default.</b>Eleven of fifteen long-tail merchants had nobody who could make a banner. The recommended card is visibly heavier, the upload card says "the slower option" in plain words, and the fee is anchored per day ("about Rs. 1,800 a day on a week booking").</div></div>
+            <div class="why"><div class="dot">3</div><div><b>The spec check runs on the real file, one rule at a time.</b>Size, format, resolution, each with its own tick or cross, so a failure names the fix. The Continue button locks until every rule passes. The browser check is a courtesy; production re-runs it server side.</div></div>
             <figure style="margin-top:16px;"><div class="shot"><img src="{{shot:13-assets}}" alt="Assets step: Let Koko create your assets, badged fastest approval, beside Upload my own asset" /></div><figcaption>The choice as built. One shiny badge on the page, on the option most merchants should take.</figcaption></figure>
           </div>
           <div>
@@ -757,9 +758,9 @@
               <div class="sim-body">
                 <p class="small" style="margin:0 0 10px;">JPG or PNG · at least 1600 × 640 px · max 5 MB</p>
                 <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                  <button class="btn ghost" type="button" data-file="good">Upload banner‑final.png <span class="small">(1600×640, 1.2 MB)</span></button>
-                  <button class="btn ghost" type="button" data-file="small">Upload insta‑post.jpg <span class="small">(1080×1080, 0.9 MB)</span></button>
-                  <button class="btn ghost" type="button" data-file="big">Upload print‑ad.png <span class="small">(4000×1600, 8.4 MB)</span></button>
+                  <button class="btn ghost" type="button" data-file="good">Upload banner-final.png <span class="small">(1600×640, 1.2 MB)</span></button>
+                  <button class="btn ghost" type="button" data-file="small">Upload insta-post.jpg <span class="small">(1080×1080, 0.9 MB)</span></button>
+                  <button class="btn ghost" type="button" data-file="big">Upload print-ad.png <span class="small">(4000×1600, 8.4 MB)</span></button>
                 </div>
                 <div class="checks" id="checks">
                   <div class="ck" data-k="size"><i></i>File size under 5 MB</div>
@@ -813,8 +814,8 @@
         <h3 style="margin-top:56px;">7.6 · Confirm, and what happens next</h3>
         <div class="two-col flip">
           <div>
-            <div class="why"><div class="dot">1</div><div><b>A second confirmation, on purpose.</b>Bookings are final and non‑refundable. "Confirm and pay" opens a recap instead of paying. The finality notice appears three times on the way in: in the body, in the rail, and in this dialog. Nobody in testing called it excessive.</div></div>
-            <div class="why"><div class="dot">2</div><div><b>The thank‑you page answers "now what".</b>Reference, amount, and a plain sentence about what happens to the artwork: near‑instant for Koko‑designed, up to two business days for uploads. Then a direct route to My bookings, where the status will change.</div></div>
+            <div class="why"><div class="dot">1</div><div><b>A second confirmation, on purpose.</b>Bookings are final and non-refundable. "Confirm and pay" opens a recap instead of paying. The finality notice appears three times on the way in: in the body, in the rail, and in this dialog. Nobody in testing called it excessive.</div></div>
+            <div class="why"><div class="dot">2</div><div><b>The thank-you page answers "now what".</b>Reference, amount, and a plain sentence about what happens to the artwork: near-instant for Koko-designed, up to two business days for uploads. Then a direct route to My bookings, where the status will change.</div></div>
             <div class="why"><div class="dot">3</div><div><b>The run ends with a recap, not a grey row.</b>When a booking finishes, the merchant gets a shareable summary: store visits, orders, cost per order, sales against spend. The primary button is "Book this space again". This is the retention mechanic.</div></div>
           </div>
           <div>
@@ -840,7 +841,7 @@
                 <div class="done" id="confirm-done">
                   <div style="width:44px;height:44px;border-radius:50%;background:#bfe6cf;display:grid;place-items:center;margin:0 auto 10px;font-weight:900;color:var(--green);">✓</div>
                   <b class="serif" style="font-size:1.2rem;">Thank you. Your booking is confirmed</b>
-                  <p class="small" style="margin:6px 0 0;">Booking <span class="mono">KAD‑1084</span> · Rs. 441,097 · Hero banner 1. Koko's design team is creating your assets now.</p>
+                  <p class="small" style="margin:6px 0 0;">Booking <span class="mono">KAD-1084</span> · Rs. 441,097 · Hero banner 1. Koko's design team is creating your assets now.</p>
                   <button class="btn ghost" type="button" id="confirm-reset" style="margin-top:12px;">Run it again</button>
                 </div>
               </div>
@@ -881,9 +882,9 @@
         </div>
         <div class="two-col">
           <div>
-            <p class="detail">I ran moderated sessions with six merchants from the interview pool, four long‑tail and two key accounts, on the clickable prototype. The task was open: "Book advertising for the week you'd most want to be seen." I watched for hesitation, back‑tracking and questions, and timed the run from landing to confirmation.</p>
+            <p class="detail">I ran moderated sessions with six merchants from the interview pool, four long-tail and two key accounts, on the clickable prototype. The task was open: "Book advertising for the week you'd most want to be seen." I watched for hesitation, back-tracking and questions, and timed the run from landing to confirmation.</p>
             <div class="metric-row" id="val-metrics" style="margin:18px 0;"></div>
-            <p class="detail">Completion isn't the interesting number in a six‑person study. The interesting part is where people slowed down. Three testers stalled on the positions step with the original sticky total in view, and two of them picked the cheapest slide rather than the one they'd said they wanted. That's what moved the summary under the content. Two testers missed the campaign weeks entirely in the first round because the flow started with positions; that's what moved dates to the front.</p>
+            <p class="detail">Completion isn't the interesting number in a six-person study. The interesting part is where people slowed down. Three testers stalled on the positions step with the original sticky total in view, and two of them picked the cheapest slide rather than the one they'd said they wanted. That's what moved the summary under the content. Two testers missed the campaign weeks entirely in the first round because the flow started with positions; that's what moved dates to the front.</p>
             <p class="detail">The finality notice was the thing I was most nervous about. Three repetitions felt heavy on the page. Not one tester mentioned it, and two said afterwards they'd noticed and were glad. It stayed.</p>
           </div>
           <div>
@@ -893,7 +894,7 @@
                 <tbody></tbody>
               </table>
             </div>
-            <p class="small" style="margin-top:12px;">Figures in this section come from a six‑person moderated study on a prototype. They describe direction, not statistical significance.</p>
+            <p class="small" style="margin-top:12px;">Figures in this section come from a six-person moderated study on a prototype. They describe direction, not statistical significance.</p>
           </div>
         </div>
       </section>
@@ -904,22 +905,22 @@
           <div class="idx">09</div>
           <div>
             <h2>Business impact</h2>
-            <p class="takeaway">A rate card nobody was selling becomes roughly Rs. 10M a month of sellable inventory. The design's job is sell‑through.</p>
+            <p class="takeaway">A rate card nobody was selling becomes roughly Rs. 10M a month of sellable inventory. The design's job is sell-through.</p>
           </div>
         </div>
         <div class="two-col">
           <div>
             <p class="detail">The inventory model is simple enough to do on a napkin, which is deliberate. Six spaces, each with a number of sellable positions and a base price per day. At the rate card we set with finance, the full inventory is worth about Rs. 332,000 a day, or just under Rs. 10 million a month if every slot sold at base price with no campaign uplift.</p>
-            <p class="detail">Nobody expects full sell‑through. What matters is that the number scales with the design decisions in this case study rather than with headcount. Campaign weeks multiply the day rate by 1.4× to 2.7×. Hero slide 1 carries a 35% premium. The bundle offer adds a second space to a booking for a 5% discount, which is worth it when the second space would otherwise sit empty.</p>
-            <p class="detail">Against the alternative, a sales‑led ad business, the model has no per‑booking human cost. That's what makes the long tail addressable at all. A Rs. 19,500 post‑checkout booking doesn't justify a sales call. It justifies a good form.</p>
+            <p class="detail">Nobody expects full sell-through. What matters is that the number scales with the design decisions in this case study rather than with headcount. Campaign weeks multiply the day rate by 1.4× to 2.7×. Hero slide 1 carries a 35% premium. The bundle offer adds a second space to a booking for a 5% discount, which is worth it when the second space would otherwise sit empty.</p>
+            <p class="detail">Against the alternative, a sales-led ad business, the model has no per-booking human cost. That's what makes the long tail addressable at all. A Rs. 19,500 post-checkout booking doesn't justify a sales call. It justifies a good form.</p>
             <div class="card brand" style="margin-top:8px;">
               <div class="eyebrow">What I'd measure after launch</div>
               <ul class="small" style="margin:8px 0 0; padding-left:18px; line-height:1.75;">
                 <li>Landing → confirmation conversion, split by key account and long tail</li>
-                <li>Sell‑through by space and by week, against the calendar</li>
-                <li>Campaign‑week attach rate, and full‑period take‑up versus partial</li>
+                <li>Sell-through by space and by week, against the calendar</li>
+                <li>Campaign-week attach rate, and full-period take-up versus partial</li>
                 <li>Bundle acceptance when offered</li>
-                <li>Koko‑design attach rate, and time to creative approval for uploads</li>
+                <li>Koko-design attach rate, and time to creative approval for uploads</li>
                 <li>Repeat bookings within 60 days of a recap</li>
               </ul>
             </div>
@@ -933,8 +934,8 @@
               </table>
             </div>
             <div class="metric-row" style="margin-top:14px;">
-              <div class="metric hl"><div class="v num" id="inv-month"></div><div class="l">Monthly inventory at base price, full sell‑through</div></div>
-              <div class="metric"><div class="v num" id="inv-30"></div><div class="l">At 30% sell‑through, before campaign uplift</div></div>
+              <div class="metric hl"><div class="v num" id="inv-month"></div><div class="l">Monthly inventory at base price, full sell-through</div></div>
+              <div class="metric"><div class="v num" id="inv-30"></div><div class="l">At 30% sell-through, before campaign uplift</div></div>
             </div>
             <p class="small" style="margin-top:12px;">Rate card values are the prototype's, agreed with finance as a starting point. The model is a ceiling, not a forecast.</p>
           </div>
@@ -953,9 +954,9 @@
         <div class="grid-3">
           <div class="card"><div class="eyebrow">Business rules as code</div><h3>One pure pricing engine</h3><p class="small detail">Inventory, campaigns, availability, creative spec and pricing live in a typed domain layer with no UI in it. The same module can run on the client to quote and on the server to charge.</p></div>
           <div class="card"><div class="eyebrow">Tested where money is</div><h3>128 unit tests</h3><p class="small detail">Rounding per space per day, campaign multiples beating the weekend uplift, the order savings stack in, progressive fee reveal, lead time and occupancy, spec boundaries, and every draft interaction rule.</p></div>
-          <div class="card"><div class="eyebrow">Accessible by audit</div><h3>Zero axe violations</h3><p class="small detail">WCAG 2.1 AA across all eight pages. Keyboard‑only sign‑in and booking, skip link, reduced motion respected everywhere including the confetti.</p></div>
-          <div class="card"><div class="eyebrow">Real behaviour</div><h3>State that persists</h3><p class="small detail">Bookings you make appear in My bookings and survive a reload. A half‑finished draft survives a reload too. The prototype behaves like a product, not a slideshow.</p></div>
-          <div class="card"><div class="eyebrow">Honest about what it is</div><h3>Placeholders marked</h3><p class="small detail">Engagement ladder, campaign multiples, "9 of 10 merchants": each is named in code as a stand‑in for the benchmarks service. Nothing simulated is presented as measured.</p></div>
+          <div class="card"><div class="eyebrow">Accessible by audit</div><h3>Zero axe violations</h3><p class="small detail">WCAG 2.1 AA across all eight pages. Keyboard-only sign-in and booking, skip link, reduced motion respected everywhere including the confetti.</p></div>
+          <div class="card"><div class="eyebrow">Real behaviour</div><h3>State that persists</h3><p class="small detail">Bookings you make appear in My bookings and survive a reload. A half-finished draft survives a reload too. The prototype behaves like a product, not a slideshow.</p></div>
+          <div class="card"><div class="eyebrow">Honest about what it is</div><h3>Placeholders marked</h3><p class="small detail">Engagement ladder, campaign multiples, "9 of 10 merchants": each is named in code as a stand-in for the benchmarks service. Nothing simulated is presented as measured.</p></div>
           <div class="card"><div class="eyebrow">Handoff</div><h3>Architecture doc with a swap table</h3><p class="small detail">A table of what's mocked today and which service replaces it. The pricing engine was written as pure functions over plain data specifically so it could cross that boundary unchanged.</p></div>
         </div>
         <div class="grid-2" style="margin-top:20px; gap:12px;">
@@ -979,7 +980,7 @@
           <div class="card"><h3>I underestimated occupancy</h3><p class="small detail">The prototype simulates booked days at the account level. Real inventory is booked per space and per position. The calendar and the upsell logic both need that, and it should have been in the rules document from day one.</p></div>
           <div class="card"><h3>Six testers is enough to find order problems</h3><p class="small detail">It's not enough for anything statistical, and I've been careful not to claim otherwise. Both structural changes came from watching two or three people hesitate in the same place.</p></div>
           <div class="card"><h3>Building it changed the design</h3><p class="small detail">Two pricing inconsistencies and an upsell that could book over a taken day only surfaced because the prototype ran real rules. A Figma prototype would have shipped all three.</p></div>
-          <div class="card"><h3>Next</h3><p class="small detail">Per‑position occupancy. A waitlist that actually notifies. An ops surface to set the rate card. And the real numbers behind every badge, once the benchmarks service exists.</p></div>
+          <div class="card"><h3>Next</h3><p class="small detail">Per-position occupancy. A waitlist that actually notifies. An ops surface to set the rate card. And the real numbers behind every badge, once the benchmarks service exists.</p></div>
         </div>
       </section>
     </main>
@@ -994,7 +995,7 @@
 </div>
 <script>
 /* ═══════════════════════════════════════════════════════════════════════════
-   CASE_DATA — everything a hiring manager reads as evidence lives here.
+   CASE_DATA, everything a hiring manager reads as evidence lives here.
 
    RESEARCH AND VALIDATION FIGURES BELOW ARE PLACEHOLDERS built from the
    interview structure described by the author (20 merchants: 5 key accounts,
@@ -1051,19 +1052,39 @@ const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
 $("#author-name").textContent = CASE_DATA.author.name;
 $("#author-title").textContent = CASE_DATA.author.title;
 
-/* ── Skim mode ── */
-const skim = $("#skim");
-const setSkim = (on) => { document.body.classList.toggle("skim", on); skim.setAttribute("aria-pressed", String(on)); try { localStorage.setItem("cs-skim", on ? "1" : "0"); } catch {} };
-skim.addEventListener("click", () => setSkim(!document.body.classList.contains("skim")));
-try { if (localStorage.getItem("cs-skim") === "1") setSkim(true); } catch {}
-
-/* ── Section tracking in the rail ── */
+/* ── Section tracking and reading time ──
+   Words are counted per section at 220 words a minute. As the reader reaches
+   a section, what is left is that section plus everything after it. */
 const links = $$("#toc a");
 const sections = links.map((a) => $(a.getAttribute("href")));
+// 300 words a minute: a professional skimming a portfolio, not a novel.
+const WPM = 300;
+// Count the prose someone reads top to bottom. Simulations, the collapsed
+// decision map, tables and the legend are used, not read, and are left out.
+const proseWords = (sec) => {
+  if (!sec) return 0;
+  const clone = sec.cloneNode(true);
+  clone.querySelectorAll(".sim, .flow, .legend, .tbl-wrap, table").forEach((el) => el.remove());
+  return clone.innerText.trim().split(/\s+/).filter(Boolean).length;
+};
+const words = sections.map(proseWords);
+const totalMin = Math.max(1, Math.round(words.reduce((a, b) => a + b, 0) / WPM));
+$("#rt-label").textContent = `${totalMin} minute read`;
+const updateRead = (index) => {
+  const left = Math.max(1, Math.round(words.slice(index).reduce((a, b) => a + b, 0) / WPM));
+  $("#rt-left").textContent = String(left);
+  $("#rt-fill").style.width = `${Math.round((1 - left / totalMin) * 100)}%`;
+};
+updateRead(0);
 const io = new IntersectionObserver((entries) => {
-  entries.forEach((e) => { if (e.isIntersecting) links.forEach((a) => a.setAttribute("aria-current", String(a.getAttribute("href") === "#" + e.target.id))); });
+  entries.forEach((e) => {
+    if (!e.isIntersecting) return;
+    const index = sections.indexOf(e.target);
+    links.forEach((a) => a.setAttribute("aria-current", String(a.getAttribute("href") === "#" + e.target.id)));
+    updateRead(index);
+  });
 }, { rootMargin: "-30% 0px -60% 0px" });
-sections.forEach((s) => s && io.observe(s));
+sections.forEach((sec) => sec && io.observe(sec));
 
 /* ── Scroll reveal ── */
 $$("main > section .card, main > section figure, main > section .sim, main > section .why").forEach((el) => el.classList.add("reveal"));
@@ -1195,7 +1216,7 @@ const FLOW = [
     { id: "hero", name: "Hero banner", where: "Top of the home screen", views: 480000, weekly: 129500, hl: { top: "22%", h: "16%" } },
     { id: "secondary", name: "Secondary banner", where: "Below featured stores", views: 295000, weekly: 78400, hl: { top: "46%", h: "20%" } },
     { id: "trending", name: "Trending", where: "Trending stores row", views: 210000, weekly: 53200, hl: { top: "58%", h: "22%" } },
-    { id: "checkout", name: "Post‑checkout card", where: "After a completed order", views: 72000, weekly: 19500, hl: { top: "48%", h: "22%" } },
+    { id: "checkout", name: "Post-checkout card", where: "After a completed order", views: 72000, weekly: 19500, hl: { top: "48%", h: "22%" } },
   ];
   const wrap = $("#pcards"), sel = new Set();
   const compact = (n) => new Intl.NumberFormat("en", { notation: "compact", maximumFractionDigits: 1 }).format(n);
