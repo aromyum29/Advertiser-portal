@@ -9,50 +9,297 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppRouteImport } from './routes/_app'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as MerchantRouteImport } from './routes/merchant'
+import { Route as AppIndexRouteImport } from './routes/_app/index'
+import { Route as AppBookRouteImport } from './routes/_app/book'
+import { Route as AppBookingsRouteImport } from './routes/_app/bookings'
+import { Route as AppPerformanceRouteImport } from './routes/_app/performance'
+import { Route as AppBookAssetsRouteImport } from './routes/_app/book/assets'
+import { Route as AppBookConfirmationRouteImport } from './routes/_app/book/confirmation'
+import { Route as AppBookDatesRouteImport } from './routes/_app/book/dates'
+import { Route as AppBookPaymentRouteImport } from './routes/_app/book/payment'
+import { Route as AppBookPositionsRouteImport } from './routes/_app/book/positions'
 
-const IndexRoute = IndexRouteImport.update({
+const AppRoute = AppRouteImport.update({
+  id: '/_app',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MerchantRoute = MerchantRouteImport.update({
+  id: '/merchant',
+  path: '/merchant',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppIndexRoute = AppIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AppRoute,
+} as any)
+const AppBookRoute = AppBookRouteImport.update({
+  id: '/book',
+  path: '/book',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppBookingsRoute = AppBookingsRouteImport.update({
+  id: '/bookings',
+  path: '/bookings',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPerformanceRoute = AppPerformanceRouteImport.update({
+  id: '/performance',
+  path: '/performance',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppBookAssetsRoute = AppBookAssetsRouteImport.update({
+  id: '/assets',
+  path: '/assets',
+  getParentRoute: () => AppBookRoute,
+} as any)
+const AppBookConfirmationRoute = AppBookConfirmationRouteImport.update({
+  id: '/confirmation',
+  path: '/confirmation',
+  getParentRoute: () => AppBookRoute,
+} as any)
+const AppBookDatesRoute = AppBookDatesRouteImport.update({
+  id: '/dates',
+  path: '/dates',
+  getParentRoute: () => AppBookRoute,
+} as any)
+const AppBookPaymentRoute = AppBookPaymentRouteImport.update({
+  id: '/payment',
+  path: '/payment',
+  getParentRoute: () => AppBookRoute,
+} as any)
+const AppBookPositionsRoute = AppBookPositionsRouteImport.update({
+  id: '/positions',
+  path: '/positions',
+  getParentRoute: () => AppBookRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
+  '/': typeof AppIndexRoute
+  '/login': typeof LoginRoute
+  '/merchant': typeof MerchantRoute
+  '/book': typeof AppBookRouteWithChildren
+  '/bookings': typeof AppBookingsRoute
+  '/performance': typeof AppPerformanceRoute
+  '/book/assets': typeof AppBookAssetsRoute
+  '/book/confirmation': typeof AppBookConfirmationRoute
+  '/book/dates': typeof AppBookDatesRoute
+  '/book/payment': typeof AppBookPaymentRoute
+  '/book/positions': typeof AppBookPositionsRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
+  '/login': typeof LoginRoute
+  '/merchant': typeof MerchantRoute
+  '/book': typeof AppBookRouteWithChildren
+  '/bookings': typeof AppBookingsRoute
+  '/performance': typeof AppPerformanceRoute
+  '/': typeof AppIndexRoute
+  '/book/assets': typeof AppBookAssetsRoute
+  '/book/confirmation': typeof AppBookConfirmationRoute
+  '/book/dates': typeof AppBookDatesRoute
+  '/book/payment': typeof AppBookPaymentRoute
+  '/book/positions': typeof AppBookPositionsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
+  '/_app': typeof AppRouteWithChildren
+  '/login': typeof LoginRoute
+  '/merchant': typeof MerchantRoute
+  '/_app/book': typeof AppBookRouteWithChildren
+  '/_app/bookings': typeof AppBookingsRoute
+  '/_app/performance': typeof AppPerformanceRoute
+  '/_app/': typeof AppIndexRoute
+  '/_app/book/assets': typeof AppBookAssetsRoute
+  '/_app/book/confirmation': typeof AppBookConfirmationRoute
+  '/_app/book/dates': typeof AppBookDatesRoute
+  '/_app/book/payment': typeof AppBookPaymentRoute
+  '/_app/book/positions': typeof AppBookPositionsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/merchant'
+    | '/book'
+    | '/bookings'
+    | '/performance'
+    | '/book/assets'
+    | '/book/confirmation'
+    | '/book/dates'
+    | '/book/payment'
+    | '/book/positions'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/login'
+    | '/merchant'
+    | '/book'
+    | '/bookings'
+    | '/performance'
+    | '/'
+    | '/book/assets'
+    | '/book/confirmation'
+    | '/book/dates'
+    | '/book/payment'
+    | '/book/positions'
+  id:
+    | '__root__'
+    | '/_app'
+    | '/login'
+    | '/merchant'
+    | '/_app/book'
+    | '/_app/bookings'
+    | '/_app/performance'
+    | '/_app/'
+    | '/_app/book/assets'
+    | '/_app/book/confirmation'
+    | '/_app/book/dates'
+    | '/_app/book/payment'
+    | '/_app/book/positions'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
+  AppRoute: typeof AppRouteWithChildren
+  LoginRoute: typeof LoginRoute
+  MerchantRoute: typeof MerchantRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
+    '/_app': {
+      id: '/_app'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/merchant': {
+      id: '/merchant'
+      path: '/merchant'
+      fullPath: '/merchant'
+      preLoaderRoute: typeof MerchantRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_app/': {
+      id: '/_app/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/book': {
+      id: '/_app/book'
+      path: '/book'
+      fullPath: '/book'
+      preLoaderRoute: typeof AppBookRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/bookings': {
+      id: '/_app/bookings'
+      path: '/bookings'
+      fullPath: '/bookings'
+      preLoaderRoute: typeof AppBookingsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/performance': {
+      id: '/_app/performance'
+      path: '/performance'
+      fullPath: '/performance'
+      preLoaderRoute: typeof AppPerformanceRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/book/assets': {
+      id: '/_app/book/assets'
+      path: '/assets'
+      fullPath: '/book/assets'
+      preLoaderRoute: typeof AppBookAssetsRouteImport
+      parentRoute: typeof AppBookRoute
+    }
+    '/_app/book/confirmation': {
+      id: '/_app/book/confirmation'
+      path: '/confirmation'
+      fullPath: '/book/confirmation'
+      preLoaderRoute: typeof AppBookConfirmationRouteImport
+      parentRoute: typeof AppBookRoute
+    }
+    '/_app/book/dates': {
+      id: '/_app/book/dates'
+      path: '/dates'
+      fullPath: '/book/dates'
+      preLoaderRoute: typeof AppBookDatesRouteImport
+      parentRoute: typeof AppBookRoute
+    }
+    '/_app/book/payment': {
+      id: '/_app/book/payment'
+      path: '/payment'
+      fullPath: '/book/payment'
+      preLoaderRoute: typeof AppBookPaymentRouteImport
+      parentRoute: typeof AppBookRoute
+    }
+    '/_app/book/positions': {
+      id: '/_app/book/positions'
+      path: '/positions'
+      fullPath: '/book/positions'
+      preLoaderRoute: typeof AppBookPositionsRouteImport
+      parentRoute: typeof AppBookRoute
     }
   }
 }
 
+interface AppBookRouteChildren {
+  AppBookAssetsRoute: typeof AppBookAssetsRoute
+  AppBookConfirmationRoute: typeof AppBookConfirmationRoute
+  AppBookDatesRoute: typeof AppBookDatesRoute
+  AppBookPaymentRoute: typeof AppBookPaymentRoute
+  AppBookPositionsRoute: typeof AppBookPositionsRoute
+}
+
+const AppBookRouteChildren: AppBookRouteChildren = {
+  AppBookAssetsRoute: AppBookAssetsRoute,
+  AppBookConfirmationRoute: AppBookConfirmationRoute,
+  AppBookDatesRoute: AppBookDatesRoute,
+  AppBookPaymentRoute: AppBookPaymentRoute,
+  AppBookPositionsRoute: AppBookPositionsRoute,
+}
+
+const AppBookRouteWithChildren =
+  AppBookRoute._addFileChildren(AppBookRouteChildren)
+
+interface AppRouteChildren {
+  AppBookRoute: typeof AppBookRouteWithChildren
+  AppBookingsRoute: typeof AppBookingsRoute
+  AppPerformanceRoute: typeof AppPerformanceRoute
+  AppIndexRoute: typeof AppIndexRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppBookRoute: AppBookRouteWithChildren,
+  AppBookingsRoute: AppBookingsRoute,
+  AppPerformanceRoute: AppPerformanceRoute,
+  AppIndexRoute: AppIndexRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
+  AppRoute: AppRouteWithChildren,
+  LoginRoute: LoginRoute,
+  MerchantRoute: MerchantRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

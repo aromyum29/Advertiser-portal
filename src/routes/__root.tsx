@@ -11,6 +11,8 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { BookingsProvider } from "../advertiser/state/bookings";
+import { SessionProvider } from "../advertiser/state/session";
 
 function NotFoundComponent() {
   return (
@@ -77,27 +79,30 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "merchant portal" },
-      { name: "description", content: "Precise Portal Replication creates an exact 1:1 replica of an existing portal." },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "merchant portal" },
-      { property: "og:description", content: "Precise Portal Replication creates an exact 1:1 replica of an existing portal." },
+      { title: "Koko Advertiser Portal" },
+      {
+        name: "description",
+        content:
+          "Book advertising space inside the Koko shopper app. Fixed prices, no bidding, the slot is yours for the full period.",
+      },
+      { property: "og:title", content: "Koko Advertiser Portal" },
+      {
+        property: "og:description",
+        content:
+          "Book advertising space inside the Koko shopper app. Fixed prices, no bidding, the slot is yours for the full period.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
-      { name: "twitter:title", content: "merchant portal" },
-      { name: "twitter:description", content: "Precise Portal Replication creates an exact 1:1 replica of an existing portal." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/3e60d270-7556-4ecb-ad00-8203ceb3c746/id-preview-131fab0a--f98b1842-76d7-4cb4-a11a-11f9e7266804.lovable.app-1782118239349.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/3e60d270-7556-4ecb-ad00-8203ceb3c746/id-preview-131fab0a--f98b1842-76d7-4cb4-a11a-11f9e7266804.lovable.app-1782118239349.png" },
+      { name: "twitter:title", content: "Koko Advertiser Portal" },
     ],
     links: [
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" },
       {
         rel: "stylesheet",
-        href: appCss,
+        href: "https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap",
       },
+      { rel: "stylesheet", href: appCss },
     ],
   }),
   shellComponent: RootShell,
@@ -125,8 +130,12 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
+      <SessionProvider>
+        <BookingsProvider>
+          {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+          <Outlet />
+        </BookingsProvider>
+      </SessionProvider>
     </QueryClientProvider>
   );
 }
