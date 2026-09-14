@@ -7,7 +7,7 @@
 <meta name="description" content="How Koko's unused app real estate became a self-serve advertising product for merchants. Research, decision logic, interaction design, and a working prototype." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Lato:ital,wght@0,400;0,700;0,900;1,400&display=swap" rel="stylesheet" />
 <style>
   /* ── Tokens: the product's own palette, so the page reads as the same hand ── */
   :root {
@@ -29,8 +29,8 @@
     --amber-bg: #fff4e0;
     --red: #b91c1c;
     --pastel: linear-gradient(149.739deg, #bddcee 0%, #e0e7ff 35%, #f3e8ff 70%, #fce7f3 100%);
-    --serif: "Lato", "Helvetica Neue", Arial, sans-serif;
-    --sans: "Merriweather", Georgia, "Times New Roman", serif;
+    --serif: "Abril Fatface", "Playfair Display", Georgia, serif;
+    --sans: "Lato", "Helvetica Neue", Arial, sans-serif;
     --ui: "Lato", "Helvetica Neue", Arial, sans-serif;
     --measure: 66ch;
     --rail: 268px;
@@ -47,8 +47,8 @@
     background: var(--paper);
     color: var(--ink);
     font-family: var(--sans);
-    font-size: 16px;
-    line-height: 1.75;
+    font-size: 17px;
+    line-height: 1.65;
     -webkit-font-smoothing: antialiased;
   }
   img { max-width: 100%; display: block; }
@@ -56,11 +56,13 @@
   button { font: inherit; cursor: pointer; color: inherit; }
   ::selection { background: var(--brand); }
 
-  h1, h2, h3, .serif { font-family: var(--serif); font-weight: 700; letter-spacing: -0.01em; }
+  h1, h2, .serif { font-family: var(--serif); font-weight: 400; letter-spacing: 0; }
+  h3 { font-family: var(--ui); font-weight: 700; letter-spacing: -0.01em; }
+  h3.sub-h { font-family: var(--serif); font-weight: 400; font-size: 1.6rem; letter-spacing: 0; }
   button, .chip, .eyebrow, .rail nav, .sim, .tbl, .tagsm, .fnode .branches, .timeline, .fact .l, .metric .l, figcaption, .readtime, .why, .bar, .steps .small, .tools, .stepchips { font-family: var(--ui); }
   strong { font-weight: 700; color: var(--ink); }
   mark { background: linear-gradient(transparent 55%, var(--brand) 55%); color: inherit; padding: 0 2px; }
-  h1 { font-size: clamp(2.4rem, 5.2vw, 4.4rem); line-height: 1.02; margin: 0; }
+  h1 { font-size: clamp(2.2rem, 4.6vw, 3.9rem); line-height: 1.08; margin: 0; }
   h2 { font-size: clamp(1.8rem, 3vw, 2.5rem); line-height: 1.1; margin: 0 0 0.35em; }
   h3 { font-size: 1.35rem; line-height: 1.25; margin: 0 0 0.4em; }
   p { margin: 0 0 1em; max-width: var(--measure); }
@@ -80,15 +82,16 @@
   .rail nav a[aria-current="true"] { background: var(--brand); color: var(--ink); font-weight: 700; }
   .rail nav a[aria-current="true"] .n { color: var(--brand-ink); }
   .rail .foot { margin-top: auto; }
+  .rail .serif { font-size: 1.15rem; }
   .content { min-width: 0; }
   main > section { padding: 96px clamp(24px, 6vw, 96px); border-bottom: 1px solid var(--line-2); }
   .section-head { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 24px; align-items: start; margin-bottom: 40px; }
-  .section-head .idx { font-family: var(--serif); font-size: 2.4rem; line-height: 1; color: var(--brand-ink); font-weight: 400; }
-  .takeaway { font-family: var(--sans); font-size: 1.15rem; line-height: 1.55; color: var(--ink-2); max-width: 52ch; margin-top: 10px; font-style: italic; }
+  .section-head .idx { font-family: var(--serif); font-size: 2.4rem; line-height: 1; color: var(--brand-ink); font-weight: 400; opacity: 0.85; }
+  .takeaway { font-family: var(--sans); font-size: 1.15rem; line-height: 1.55; color: var(--ink-2); max-width: 52ch; margin-top: 10px; font-weight: 400; }
 
   /* Reading time, counting down as sections are passed. */
   .readtime { border: 1px solid var(--line); background: var(--card); border-radius: 14px; padding: 12px 14px; }
-  .readtime .big { font-family: var(--serif); font-size: 1.6rem; font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; }
+  .readtime .big { font-family: var(--serif); font-size: 1.7rem; font-weight: 400; line-height: 1; font-variant-numeric: tabular-nums; }
   .readtime .big small { font-size: 0.8rem; font-weight: 600; color: var(--ink-3); margin-left: 4px; }
   .readtime .l { font-size: 0.78rem; color: var(--ink-3); margin-top: 6px; }
   .readtime .track { height: 4px; border-radius: 999px; background: var(--muted); margin-top: 10px; overflow: hidden; }
@@ -107,10 +110,19 @@
   .hero .sub { font-size: clamp(1.1rem, 1.6vw, 1.35rem); line-height: 1.45; color: var(--ink-2); max-width: 58ch; margin: 26px 0 0; }
   .facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; margin-top: 40px; }
   .fact { background: rgba(255,255,255,0.75); backdrop-filter: blur(8px); border: 1px solid rgba(15,17,22,0.08); border-radius: 16px; padding: 16px 18px; }
-  .fact .v { font-family: var(--serif); font-size: 1.9rem; line-height: 1; }
+  .fact .v { font-family: var(--serif); font-size: 1.7rem; line-height: 1.1; }
   .fact .l { font-size: 0.78rem; color: var(--ink-3); margin-top: 6px; line-height: 1.35; }
-  .hero-shot { margin-top: 44px; border-radius: 18px; overflow: hidden; box-shadow: 0 30px 80px -30px rgba(13,15,20,0.45), 0 10px 30px -18px rgba(13,15,20,0.3); border: 1px solid rgba(15,17,22,0.08); background: #fff; }
-  .hero-shot img { width: 100%; }
+  .collage { position: relative; margin-top: 52px; display: grid; grid-template-columns: minmax(0, 1fr); }
+  .collage figure { margin: 0; }
+  .c-laptop { width: 72%; position: relative; z-index: 2; }
+  .c-laptop-b { position: absolute; right: 0; top: -22px; width: 46%; z-index: 1; opacity: 0.95; transform: rotate(1.5deg); transform-origin: bottom left; }
+  .phone-frame { width: 150px; border: 6px solid #1c1c1f; border-radius: 26px; background: #1c1c1f; overflow: hidden; box-shadow: 0 30px 60px -24px rgba(13,15,20,0.55); }
+  .phone-frame .pscreen { aspect-ratio: 390 / 780; overflow: hidden; background: #fff; border-radius: 20px; }
+  .phone-frame img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+  .c-phone-a { position: absolute; right: 24%; bottom: -30px; z-index: 3; transform: rotate(-3deg); }
+  .c-phone-b { position: absolute; right: 12%; bottom: -12px; z-index: 4; transform: rotate(2deg); }
+  .laptop .screen { box-shadow: 0 40px 80px -36px rgba(13,15,20,0.5); }
+  .hero { padding-bottom: 96px; }
 
   /* ── Reusable blocks ── */
   .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 24px; }
@@ -145,7 +157,7 @@
   .bar .fill { height: 100%; border-radius: 999px; background: var(--brand-ink); width: 0; transition: width 0.9s cubic-bezier(0.2, 0.8, 0.2, 1); }
   .bar .fill.key { background: var(--ad); }
   .bar .c { text-align: right; font-weight: 700; }
-  .quote { font-family: var(--sans); font-style: italic; font-size: 1rem; line-height: 1.45; padding: 18px 20px; background: var(--card); border: 1px solid var(--line); border-radius: 14px; }
+  .quote { font-family: var(--sans); font-style: italic; font-size: 1.02rem; line-height: 1.45; padding: 18px 20px; background: var(--card); border: 1px solid var(--line); border-radius: 14px; }
   .quote cite { display: block; font-family: var(--sans); font-style: normal; font-size: 0.78rem; color: var(--ink-3); margin-top: 10px; }
   .principle { display: grid; grid-template-columns: 56px 1fr; gap: 16px; align-items: start; }
   .principle .k { font-family: var(--serif); font-size: 2rem; font-weight: 500; color: var(--brand-ink); line-height: 1; }
@@ -153,7 +165,7 @@
   /* ── Design decision card: used wherever a call was made ── */
   .decision { position: relative; border: 2px solid var(--ink); border-radius: 16px; background: #fff; padding: 22px 22px 20px; margin: 22px 0; }
   .decision > .eyebrow { position: absolute; top: -11px; left: 18px; background: var(--ink); color: #fff; padding: 4px 10px; border-radius: 999px; font-size: 0.66rem; }
-  .decision h3 { font-family: var(--serif); font-size: 1.05rem; margin: 0 0 8px; }
+  .decision h3 { font-family: var(--ui); font-size: 1.05rem; margin: 0 0 8px; }
   .decision p { margin: 0; font-size: 0.95rem; }
   .decision p + p { margin-top: 8px; }
   .decision .vs { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
@@ -193,46 +205,51 @@
   .constraints li + li { margin-top: 6px; }
   .problem-stmt { background: var(--ink); color: #fff; border-radius: 20px; padding: 30px 32px; }
   .problem-stmt .eyebrow { color: rgba(255,255,255,0.6); }
-  .problem-stmt p { font-family: var(--sans); font-size: 1.25rem; line-height: 1.55; margin: 12px 0 0; max-width: 40ch; }
+  .problem-stmt p { font-family: var(--serif); font-size: 1.45rem; line-height: 1.45; margin: 12px 0 0; max-width: 34ch; }
   .problem-stmt strong { color: var(--brand); }
 
-  /* ── Decision flow ── */
-  .flow { max-width: 860px; }
-  .flow-track { display: flex; flex-direction: column; }
-  .fnode { position: relative; display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 16px; align-items: start; padding: 8px 0; }
-  .fnode::before { content: ""; position: absolute; left: 16px; top: 0; bottom: 0; width: 2px; background: var(--ink); opacity: 0.35; }
-  .fnode:first-child::before { top: 24px; }
-  .fnode:last-child::before { bottom: auto; height: 24px; }
-  .pin { position: relative; z-index: 1; width: 34px; height: 34px; border-radius: 9px; display: grid; place-items: center; font-size: 0.8rem; font-weight: 800; background: var(--ink); border: 2px solid var(--ink); color: #fff; margin-top: 6px; font-family: var(--ui); }
-  .fnode.decision .pin { transform: rotate(45deg); background: #fff; border-color: var(--ad-ink); color: var(--ad-ink); border-radius: 7px; }
-  .fnode.decision .pin span { display: block; transform: rotate(-45deg); }
-  .fnode .body { border: 1px solid var(--line); border-radius: 14px; background: var(--card); overflow: hidden; transition: border-color 0.15s, box-shadow 0.15s; }
-  .fnode .body:hover { border-color: #9a9ca6; }
-  .fnode.open .body { border-color: var(--ink); box-shadow: 0 0 0 3px var(--brand); }
-  .fnode button.lbl { display: block; width: 100%; text-align: left; background: transparent; border: 0; padding: 14px 16px; color: var(--ink); }
-  .fnode button.lbl .t { display: flex; justify-content: space-between; align-items: start; gap: 12px; }
-  .fnode button.lbl b { display: block; font-size: 1rem; line-height: 1.35; color: var(--ink); font-family: var(--serif); }
-  .fnode .kind { display: inline-block; font-family: var(--ui); font-size: 0.66rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 8px; border-radius: 999px; margin-bottom: 8px; background: var(--ink); color: #fff; }
-  .fnode.decision .kind { background: #efe7ff; color: var(--ad-ink); }
-  .fnode button.lbl .chev { flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid var(--line); display: grid; place-items: center; font-size: 0.7rem; color: var(--ink-3); transition: transform 0.25s; margin-top: 2px; }
-  .fnode.open button.lbl .chev { transform: rotate(180deg); border-color: var(--ink); color: var(--ink); }
-  .fnode button.lbl small { display: block; color: var(--ink-2); font-size: 0.86rem; margin-top: 4px; line-height: 1.45; }
-  .fnode .branches { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
-  .fnode .branches span { font-size: 0.74rem; font-weight: 700; padding: 4px 10px; border-radius: 999px; background: var(--muted); color: var(--ink-2); border: 1px solid var(--line-2); }
-  .fnode .branches span.yes { background: var(--green-bg); color: var(--green); border-color: transparent; }
-  .fnode .branches span.no { background: #fee2e2; color: var(--red); border-color: transparent; }
+  /* ── Decision flow ──
+     A quiet vertical stepper: soft cards on a tinted section, a single rail
+     of markers, and a connector that lives only in the gutter. ── */
+  #logic { background: #f4f4f7; }
+  .flow { max-width: 880px; }
+  .flow-track { display: flex; flex-direction: column; gap: 14px; }
+  .fnode { position: relative; display: grid; grid-template-columns: 48px minmax(0, 1fr); column-gap: 18px; align-items: start; }
+  .fnode::before { content: ""; position: absolute; left: 23px; top: 0; bottom: -14px; width: 2px; background: #cfd1d9; }
+  .fnode:first-child::before { top: 26px; }
+  .fnode:last-child::before { display: none; }
+  .pin { position: relative; z-index: 1; width: 36px; height: 36px; margin: 8px 0 0 5px; border-radius: 50%; display: grid; place-items: center; font-family: var(--ui); font-size: 0.85rem; font-weight: 800; background: var(--ink); color: #fff; box-shadow: 0 0 0 6px #f4f4f7; }
+  .fnode.sysdec .pin { border-radius: 8px; transform: rotate(45deg); background: #fff; border: 2px solid var(--ad-ink); color: var(--ad-ink); }
+  .fnode.sysdec .pin span { display: block; transform: rotate(-45deg); }
+  .fnode .body { background: #fff; border-radius: 16px; border: 1.5px solid transparent; box-shadow: 0 1px 2px rgba(13,15,20,0.05), 0 12px 28px -22px rgba(13,15,20,0.25); transition: border-color 0.15s; }
+  .fnode.open .body { border-color: var(--ink); }
+  .fnode button.lbl { display: block; width: 100%; text-align: left; background: transparent; border: 0; padding: 20px 22px; color: var(--ink); border-radius: 16px; }
+  .fnode button.lbl:focus-visible { outline: 2px solid var(--brand-ink); outline-offset: 2px; }
+  .fnode .kind { display: flex; align-items: center; gap: 7px; font-size: 0.7rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 10px; }
+  .fnode .kind::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--ink); }
+  .fnode.sysdec .kind { color: var(--ad-ink); }
+  .fnode.sysdec .kind::before { background: var(--ad-ink); border-radius: 2px; transform: rotate(45deg); }
+  .fnode button.lbl .t { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 16px; align-items: start; }
+  .fnode button.lbl b { display: block; font-size: 1.08rem; line-height: 1.4; font-weight: 700; }
+  .fnode button.lbl .chev { font-size: 0.75rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--brand-ink); white-space: nowrap; padding: 6px 10px; border-radius: 999px; background: color-mix(in srgb, var(--brand) 40%, #fff); margin-top: 2px; }
+  .fnode button.lbl .chev::before { content: "+ "; }
+  .fnode.open button.lbl .chev::before { content: "− "; }
+  .fnode button.lbl small { display: block; color: var(--ink-2); font-size: 0.95rem; line-height: 1.55; margin-top: 8px; }
+  .fnode .branches { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+  .fnode .branches span { font-size: 0.78rem; font-weight: 700; padding: 6px 12px; border-radius: 8px; background: #f4f4f7; color: var(--ink-2); }
+  .fnode .branches span.yes { background: var(--green-bg); color: var(--green); }
+  .fnode .branches span.no { background: #fdecec; color: var(--red); }
   .fnode .reason { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.3s cubic-bezier(0.2,0.8,0.2,1); }
   .fnode.open .reason { grid-template-rows: 1fr; }
   .fnode .reason > div { min-height: 0; overflow: hidden; }
-  .fnode .reason .in { padding: 0 16px 16px; display: grid; gap: 10px; }
-  .fnode .reason .rule, .fnode .reason .because { padding: 12px 14px; border-radius: 10px; font-size: 0.9rem; line-height: 1.55; }
-  .fnode .reason .rule { background: var(--muted); }
+  .fnode .reason .in { padding: 0 22px 22px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .fnode .reason .rule, .fnode .reason .because { padding: 16px 18px; border-radius: 12px; font-size: 0.93rem; line-height: 1.6; }
+  .fnode .reason .rule { background: #f4f4f7; }
   .fnode .reason .because { background: var(--ink); color: #fff; }
-  .fnode .reason .eyebrow { display: block; margin-bottom: 4px; }
+  .fnode .reason .eyebrow { display: block; margin-bottom: 6px; }
   .fnode .reason .because .eyebrow { color: rgba(255,255,255,0.6); }
-  .fnode .reason .tags { display: flex; gap: 6px; flex-wrap: wrap; }
-  .fnode .reason .tag { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 4px 9px; border-radius: 999px; background: var(--brand); color: var(--ink); }
-  @media (prefers-reduced-motion: reduce) { .fnode .reason, .fnode button.lbl .chev { transition: none; } }
+  @media (max-width: 720px) { .fnode .reason .in { grid-template-columns: 1fr; } .fnode button.lbl .t { grid-template-columns: 1fr; } }
+  @media (prefers-reduced-motion: reduce) { .fnode .reason { transition: none; } }
 
   /* ── Simulations ── */
   .sim { background: var(--card); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; }
@@ -382,12 +399,12 @@
   .timeline div { padding: 14px 16px; border-right: 1px solid var(--line-2); border-bottom: 1px solid var(--line-2); }
   .timeline div:nth-child(3n) { border-right: 0; }
   .timeline div:nth-last-child(-n+3) { border-bottom: 0; }
-  .timeline b { display: block; font-family: var(--serif); font-size: 1.05rem; }
+  .timeline b { display: block; font-family: var(--ui); font-weight: 700; font-size: 1rem; }
   .timeline small { color: var(--ink-3); font-size: 0.78rem; }
 
   .metric-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); gap: 14px; }
   .metric { padding: 18px 20px; border-radius: 16px; background: var(--card); border: 1px solid var(--line); }
-  .metric .v { font-family: var(--serif); font-size: 2.2rem; line-height: 1; }
+  .metric .v { font-family: var(--serif); font-size: 2rem; line-height: 1.1; }
   .metric .l { font-size: 0.82rem; color: var(--ink-3); margin-top: 8px; line-height: 1.4; }
   .metric.hl { background: var(--ink); color: #fff; border-color: transparent; } .metric.hl .l { color: rgba(255,255,255,0.65); }
 
@@ -412,6 +429,12 @@
     .rail .foot { margin: 0; }
     main > section { padding: 64px 20px; }
     .section-head { grid-template-columns: 1fr; gap: 6px; }
+    .collage { gap: 18px; }
+    .c-laptop { width: 100%; }
+    .c-laptop-b { display: none; }
+    .c-phone-a, .c-phone-b { position: static; transform: none; width: 46%; }
+    .collage { grid-template-columns: 1fr 1fr; }
+    .c-laptop { grid-column: 1 / -1; }
     .possim { grid-template-columns: minmax(0, 1fr); }
     .cal { grid-template-columns: repeat(4, minmax(0, 1fr)); }
     .screens, .constraints { grid-template-columns: minmax(0, 1fr); }
@@ -474,7 +497,18 @@
           <div class="fact"><div class="v num">5 steps</div><div class="l">Space, dates, positions, assets, payment. Under two minutes to book</div></div>
           <div class="fact"><div class="v num">3 weeks</div><div class="l">From first interview to a working, tested prototype</div></div>
         </div>
-        <div class="hero-shot"><img src="{{shot:03-landing-selected}}" alt="The Advertise landing page with two spaces selected and the floating selection bar" /></div>
+        <div class="collage" aria-label="The product on desktop and phone">
+          <figure class="laptop c-laptop">
+            <div class="screen"><img src="{{shot:03-landing-selected}}" alt="The Advertise landing page on desktop with two spaces selected" /></div>
+            <div class="base"></div>
+          </figure>
+          <figure class="phone-frame c-phone-a"><div class="pscreen"><img src="{{shot:25-mobile-calendar}}" alt="The priced calendar on a phone" /></div></figure>
+          <figure class="phone-frame c-phone-b"><div class="pscreen"><img src="{{shot:24-mobile-landing}}" alt="The landing page on a phone with the selection bar" /></div></figure>
+          <figure class="laptop c-laptop-b">
+            <div class="screen"><img src="{{shot:22-performance}}" alt="The performance dashboard on desktop" /></div>
+            <div class="base"></div>
+          </figure>
+        </div>
       </div>
     </header>
 
@@ -722,7 +756,7 @@
             <p class="takeaway">Before drawing a screen, I mapped every path a booking can take, from the moment a merchant opens Advertise to the moment their ad goes live, and wrote down the rule behind each branch and the reason for the rule.</p>
           </div>
         </div>
-        <p class="detail">Black squares are steps the merchant takes; purple diamonds are decisions the system makes about what to show next; the chips show where each answer leads. Select any node for the rule and the reasoning. This map was the artefact stakeholders argued over, which was the point. Finance wanted to see where discounts stack. Ops wanted to see where lead time and occupancy block a date. Engineering wanted to know what happens when a merchant uploads a bad file. With the logic on one board, each of those conversations changed a node rather than a screen, and every rule in the shipped product traces back to a node here.</p>
+        <p class="detail">Numbered circles are steps the merchant takes. Purple diamonds are decisions the system makes about what to show next, with the possible outcomes underneath. Open Reasoning on any node for the rule and why it exists. This map was the artefact stakeholders argued over, which was the point. Finance wanted to see where discounts stack. Ops wanted to see where lead time and occupancy block a date. Engineering wanted to know what happens when a merchant uploads a bad file. With the logic on one board, each of those conversations changed a node rather than a screen, and every rule in the shipped product traces back to a node here.</p>
         <div class="flow" id="flow">
           <div class="flow-track" id="flow-track"></div>
         </div>
@@ -739,7 +773,7 @@
         </div>
 
         <!-- 7.1 Landing -->
-        <h3 style="margin-top:8px;">6.1 · Choose where you want to be seen</h3>
+        <h3 class="sub-h" style="margin-top:8px;">6.1 · Choose where you want to be seen</h3>
         <div class="two-col">
           <div>
             <div class="sim" id="sim-placement">
@@ -765,7 +799,7 @@
         </div>
 
         <!-- 7.2 Dates -->
-        <h3 style="margin-top:56px;">6.2 · Pick your dates</h3>
+        <h3 class="sub-h" style="margin-top:56px;">6.2 · Pick your dates</h3>
         <div class="two-col flip">
           <div>
             <div class="decision">
@@ -799,7 +833,7 @@
         </div>
 
         <!-- 7.3 Positions -->
-        <h3 style="margin-top:56px;">6.3 · Pick your position</h3>
+        <h3 class="sub-h" style="margin-top:56px;">6.3 · Pick your position</h3>
         <div class="two-col">
           <div>
             <div class="sim" id="sim-pos">
@@ -830,7 +864,7 @@
         </div>
 
         <!-- 7.4 Assets -->
-        <h3 style="margin-top:56px;">6.4 · Your ad creative</h3>
+        <h3 class="sub-h" style="margin-top:56px;">6.4 · Your ad creative</h3>
         <div class="two-col flip">
           <div>
             <div class="why"><div class="dot">1</div><div><b>The step only exists when it's needed.</b>Trending, empty search and post-checkout use the store's own thumbnail. Book only those and the funnel is three steps, not four.</div></div>
@@ -862,7 +896,7 @@
         </div>
 
         <!-- 7.5 Price build -->
-        <h3 style="margin-top:56px;">6.5 · How the total builds</h3>
+        <h3 class="sub-h" style="margin-top:56px;">6.5 · How the total builds</h3>
         <div class="two-col">
           <div>
             <div class="sim" id="sim-price">
@@ -902,7 +936,7 @@
         </div>
 
         <!-- 7.6 Confirm -->
-        <h3 style="margin-top:56px;">6.6 · Confirm, and what happens next</h3>
+        <h3 class="sub-h" style="margin-top:56px;">6.6 · Confirm, and what happens next</h3>
         <div class="two-col flip">
           <div>
             <div class="decision">
@@ -951,7 +985,7 @@
         </div>
 
         <!-- 7.7 Performance + mobile -->
-        <h3 style="margin-top:56px;">6.7 · Closing the loop</h3>
+        <h3 class="sub-h" style="margin-top:56px;">6.7 · Closing the loop</h3>
         <div class="two-col">
           <div>
             <figure><div class="shot"><img src="{{shot:22-performance}}" alt="Performance page: five metric cards over an area chart, results by booking below" /></div><figcaption>Performance. Whichever metric card is selected is what the chart plots, so the headline and the curve can never disagree. Every total is the sum of the buckets shown.</figcaption></figure>
@@ -1277,19 +1311,18 @@ const FLOW = [
   const tone = (t) => (t === "y" ? "yes" : t === "n" ? "no" : "");
   FLOW.forEach((n) => {
     const el = document.createElement("div");
-    el.className = "fnode " + n.kind;
+    el.className = "fnode " + (n.kind === "decision" ? "sysdec" : "step");
     el.dataset.id = n.id;
     const pin = n.kind === "decision" ? "?" : ++stepNo;
     el.innerHTML = `<div class="pin"><span>${pin}</span></div>
       <div class="body">
         <button class="lbl" type="button" aria-expanded="false" aria-controls="reason-${n.id}">
-          <span class="kind">${n.kind === "decision" ? "System decides" : "Merchant step"}</span>
-          <span class="t"><b>${n.title}</b><span class="chev" aria-hidden="true">⌄</span></span>
+          <span class="kind">${n.kind === "decision" ? "System decision" : "Merchant step"}</span>
+          <span class="t"><b>${n.title}</b><span class="chev" aria-hidden="true">Reasoning</span></span>
           <small>${n.sub}</small>
           ${n.branches ? `<span class="branches">${n.branches.map(([b, t]) => `<span class="${tone(t)}">${b}</span>`).join("")}</span>` : ""}
         </button>
         <div class="reason" id="reason-${n.id}"><div><div class="in">
-          <div class="tags">${n.tags.map((t) => `<span class="tag">${t}</span>`).join("")}</div>
           <div class="rule"><span class="eyebrow">The rule</span>${n.rule}</div>
           <div class="because"><span class="eyebrow">Why</span>${n.why}</div>
         </div></div></div>
