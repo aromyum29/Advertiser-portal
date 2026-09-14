@@ -1,0 +1,1289 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Advertise with Koko · A product design case study</title>
+<meta name="description" content="How Koko's unused app real estate became a self-serve advertising product for merchants. Research, decision logic, interaction design, and a working prototype." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,300;1,9..144,500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  /* ── Tokens: the product's own palette, so the page reads as the same hand ── */
+  :root {
+    --ink: #0f1116;
+    --ink-2: #3a3d47;
+    --ink-3: #6b6e7b;
+    --line: rgba(15, 17, 22, 0.1);
+    --line-2: rgba(15, 17, 22, 0.06);
+    --paper: #fbfbfc;
+    --card: #ffffff;
+    --muted: #f2f2f5;
+    --brand: #bddcee;
+    --brand-ink: #1f5f7a;
+    --ad: #9356ff;
+    --ad-ink: #6d28d9;
+    --green: #0f7b3d;
+    --green-bg: #e8f6ee;
+    --amber: #b45309;
+    --amber-bg: #fff4e0;
+    --red: #b91c1c;
+    --pastel: linear-gradient(149.739deg, #bddcee 0%, #e0e7ff 35%, #f3e8ff 70%, #fce7f3 100%);
+    --serif: "Fraunces", "Iowan Old Style", Georgia, serif;
+    --sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    --measure: 66ch;
+    --rail: 268px;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  img { max-width: 100%; display: block; }
+  a { color: inherit; }
+  button { font: inherit; cursor: pointer; }
+  ::selection { background: var(--brand); }
+
+  h1, h2, h3, .serif { font-family: var(--serif); font-weight: 500; letter-spacing: -0.01em; }
+  h1 { font-size: clamp(2.4rem, 5.2vw, 4.4rem); line-height: 1.02; margin: 0; font-variation-settings: "opsz" 144; }
+  h2 { font-size: clamp(1.8rem, 3vw, 2.5rem); line-height: 1.1; margin: 0 0 0.35em; font-variation-settings: "opsz" 96; }
+  h3 { font-size: 1.35rem; line-height: 1.25; margin: 0 0 0.4em; font-variation-settings: "opsz" 48; }
+  p { margin: 0 0 1em; max-width: var(--measure); }
+  .lede { font-size: 1.2rem; line-height: 1.55; color: var(--ink-2); }
+  .small { font-size: 0.875rem; color: var(--ink-3); }
+  .mono { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 0.85em; }
+  .num { font-variant-numeric: tabular-nums; }
+  .eyebrow { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); }
+
+  /* ── Layout: a fixed rail on the left, content flows beside it ── */
+  .frame { display: grid; grid-template-columns: var(--rail) minmax(0, 1fr); min-height: 100vh; }
+  .rail { position: sticky; top: 0; height: 100vh; padding: 28px 22px; border-right: 1px solid var(--line-2); background: var(--paper); display: flex; flex-direction: column; gap: 22px; }
+  .rail nav { display: flex; flex-direction: column; gap: 2px; overflow: auto; }
+  .rail nav a { display: grid; grid-template-columns: 26px 1fr; gap: 8px; align-items: baseline; padding: 6px 8px; border-radius: 8px; font-size: 0.82rem; text-decoration: none; color: var(--ink-3); }
+  .rail nav a .n { font-family: var(--serif); font-size: 0.8rem; color: var(--ink-3); }
+  .rail nav a:hover { background: var(--muted); color: var(--ink); }
+  .rail nav a[aria-current="true"] { background: var(--brand); color: var(--ink); font-weight: 700; }
+  .rail nav a[aria-current="true"] .n { color: var(--brand-ink); }
+  .rail .foot { margin-top: auto; }
+  .content { min-width: 0; }
+  main > section { padding: 96px clamp(24px, 6vw, 96px); border-bottom: 1px solid var(--line-2); }
+  .section-head { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 24px; align-items: start; margin-bottom: 40px; }
+  .section-head .idx { font-family: var(--serif); font-size: 2.6rem; line-height: 1; color: var(--brand-ink); font-variation-settings: "opsz" 144; font-weight: 300; }
+  .takeaway { font-family: var(--serif); font-size: 1.35rem; line-height: 1.35; color: var(--ink); max-width: 46ch; margin-top: 10px; font-style: italic; font-weight: 300; }
+
+  /* Skim mode hides the long-form paragraphs and keeps takeaways, visuals and figures. */
+  body.skim .detail { display: none !important; }
+  .skim-toggle { display: inline-flex; align-items: center; gap: 10px; border: 1px solid var(--line); background: var(--card); border-radius: 999px; padding: 6px 10px 6px 12px; font-size: 0.8rem; font-weight: 600; }
+  .skim-toggle .sw { width: 34px; height: 20px; border-radius: 999px; background: #d6d7de; position: relative; transition: background 0.2s; }
+  .skim-toggle .sw::after { content: ""; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; border-radius: 50%; background: #fff; transition: transform 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.25); }
+  body.skim .skim-toggle .sw { background: var(--ink); }
+  body.skim .skim-toggle .sw::after { transform: translateX(14px); }
+
+  /* ── Hero ── */
+  .hero { position: relative; overflow: hidden; padding: 72px clamp(24px, 6vw, 96px) 64px; background: var(--pastel); border-bottom: 1px solid var(--line-2); }
+  .hero::before { content: ""; position: absolute; inset: 0; background: radial-gradient(60% 50% at 80% 20%, rgba(255,255,255,0.7), transparent 70%); pointer-events: none; }
+  .hero .inner { position: relative; max-width: 1040px; }
+  .hero .kicker { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 26px; }
+  .chip { display: inline-flex; align-items: center; gap: 6px; border-radius: 999px; padding: 6px 12px; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; background: rgba(255,255,255,0.7); border: 1px solid rgba(15,17,22,0.08); }
+  .chip.dark { background: var(--ink); color: #fff; border-color: transparent; }
+  .chip.green { background: var(--green-bg); color: var(--green); }
+  .chip.amber { background: var(--amber-bg); color: var(--amber); }
+  .chip.brand { background: var(--brand); color: var(--ink); }
+  .hero .sub { font-size: clamp(1.1rem, 1.6vw, 1.35rem); line-height: 1.45; color: var(--ink-2); max-width: 58ch; margin: 26px 0 0; }
+  .facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; margin-top: 40px; }
+  .fact { background: rgba(255,255,255,0.75); backdrop-filter: blur(8px); border: 1px solid rgba(15,17,22,0.08); border-radius: 16px; padding: 16px 18px; }
+  .fact .v { font-family: var(--serif); font-size: 1.9rem; line-height: 1; font-variation-settings: "opsz" 96; }
+  .fact .l { font-size: 0.78rem; color: var(--ink-3); margin-top: 6px; line-height: 1.35; }
+  .hero-shot { margin-top: 44px; border-radius: 18px; overflow: hidden; box-shadow: 0 30px 80px -30px rgba(13,15,20,0.45), 0 10px 30px -18px rgba(13,15,20,0.3); border: 1px solid rgba(15,17,22,0.08); background: #fff; }
+  .hero-shot img { width: 100%; }
+
+  /* ── Reusable blocks ── */
+  .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 24px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 18px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 22px 24px; }
+  .card h3 { font-size: 1.15rem; }
+  .card.brand { background: color-mix(in srgb, var(--brand) 22%, #fff); border-color: color-mix(in srgb, var(--brand) 60%, #fff); }
+  .card.dark { background: var(--ink); color: #fff; border-color: transparent; }
+  .card.dark .small { color: rgba(255,255,255,0.65); }
+  .callout { border-left: 3px solid var(--brand-ink); padding: 4px 0 4px 18px; margin: 28px 0; }
+  .callout .serif { font-size: 1.25rem; line-height: 1.4; font-style: italic; font-weight: 300; }
+  .shot { border-radius: 14px; overflow: hidden; border: 1px solid var(--line); background: #fff; box-shadow: 0 18px 50px -28px rgba(13,15,20,0.35); }
+  .shot img { width: 100%; }
+  figure { margin: 0; }
+  figcaption { font-size: 0.82rem; color: var(--ink-3); margin-top: 10px; line-height: 1.45; }
+  .why { display: grid; grid-template-columns: 22px 1fr; gap: 12px; align-items: start; padding: 14px 16px; border-radius: 12px; background: var(--card); border: 1px solid var(--line); margin-top: 12px; font-size: 0.92rem; }
+  .why .dot { width: 22px; height: 22px; border-radius: 50%; background: var(--brand); color: var(--ink); display: grid; place-items: center; font-size: 0.7rem; font-weight: 800; }
+  .why b { display: block; margin-bottom: 2px; }
+  .tbl { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+  .tbl th { text-align: left; font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); padding: 10px 12px; border-bottom: 1px solid var(--line); }
+  .tbl td { padding: 12px; border-bottom: 1px solid var(--line-2); vertical-align: top; }
+  .tbl tr:last-child td { border-bottom: 0; }
+  .tbl-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 14px; background: var(--card); }
+  .steps { counter-reset: step; display: grid; gap: 14px; }
+  .step { display: grid; grid-template-columns: 34px 1fr; gap: 14px; align-items: start; }
+  .step::before { counter-increment: step; content: counter(step); width: 30px; height: 30px; border-radius: 50%; background: var(--ink); color: #fff; display: grid; place-items: center; font-weight: 700; font-size: 0.85rem; }
+  .two-col { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 40px; align-items: start; }
+  .two-col.flip { grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); }
+  .sticky { position: sticky; top: 24px; }
+  .bar { display: grid; grid-template-columns: minmax(140px, 1fr) minmax(0, 2fr) 44px; gap: 12px; align-items: center; font-size: 0.9rem; padding: 7px 0; }
+  .bar .track { height: 12px; border-radius: 999px; background: var(--muted); overflow: hidden; }
+  .bar .fill { height: 100%; border-radius: 999px; background: var(--brand-ink); width: 0; transition: width 0.9s cubic-bezier(0.2, 0.8, 0.2, 1); }
+  .bar .fill.key { background: var(--ad); }
+  .bar .c { text-align: right; font-weight: 700; }
+  .quote { font-family: var(--serif); font-style: italic; font-weight: 300; font-size: 1.12rem; line-height: 1.45; padding: 18px 20px; background: var(--card); border: 1px solid var(--line); border-radius: 14px; }
+  .quote cite { display: block; font-family: var(--sans); font-style: normal; font-size: 0.78rem; color: var(--ink-3); margin-top: 10px; }
+  .principle { display: grid; grid-template-columns: 56px 1fr; gap: 16px; align-items: start; }
+  .principle .k { font-family: var(--serif); font-size: 2rem; font-weight: 300; color: var(--brand-ink); line-height: 1; }
+
+  /* ── Decision flow ── */
+  .flow { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 28px; align-items: start; }
+  .flow-track { display: flex; flex-direction: column; gap: 0; }
+  .fnode { position: relative; display: grid; grid-template-columns: 30px 1fr; gap: 14px; align-items: start; padding: 10px 0 10px 4px; }
+  .fnode::before { content: ""; position: absolute; left: 18px; top: 0; bottom: 0; width: 2px; background: var(--line); }
+  .fnode:first-child::before { top: 50%; }
+  .fnode:last-child::before { bottom: 50%; }
+  .fnode .pin { position: relative; z-index: 1; width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; font-size: 0.7rem; font-weight: 800; background: #fff; border: 2px solid var(--ink); }
+  .fnode.decision .pin { transform: rotate(45deg); border-color: var(--ad); color: var(--ad); border-radius: 6px; }
+  .fnode.decision .pin span { transform: rotate(-45deg); }
+  .fnode button.lbl { text-align: left; background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 10px 14px; width: 100%; transition: border-color 0.15s, box-shadow 0.15s; }
+  .fnode button.lbl:hover { border-color: var(--ink); }
+  .fnode button.lbl[aria-pressed="true"] { border-color: var(--ink); box-shadow: 0 0 0 3px var(--brand); }
+  .fnode button.lbl b { display: block; font-size: 0.95rem; }
+  .fnode button.lbl small { display: block; color: var(--ink-3); font-size: 0.78rem; margin-top: 2px; }
+  .fnode .branches { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+  .fnode .branches span { font-size: 0.7rem; font-weight: 700; padding: 3px 8px; border-radius: 999px; background: var(--muted); }
+  .fnode .branches span.yes { background: var(--green-bg); color: var(--green); }
+  .fnode .branches span.no { background: #fee2e2; color: var(--red); }
+  .flow-panel { position: sticky; top: 24px; background: var(--ink); color: #fff; border-radius: 18px; padding: 24px; min-height: 240px; }
+  .flow-panel .eyebrow { color: rgba(255,255,255,0.55); }
+  .flow-panel h3 { color: #fff; margin-top: 8px; }
+  .flow-panel p { color: rgba(255,255,255,0.85); font-size: 0.95rem; }
+  .flow-panel .tag { display: inline-block; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 4px 9px; border-radius: 999px; background: rgba(255,255,255,0.14); margin-right: 6px; margin-bottom: 8px; }
+
+  /* ── Simulations ── */
+  .sim { background: var(--card); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; }
+  .sim-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--line-2); background: var(--muted); font-size: 0.78rem; font-weight: 700; }
+  .sim-head .live { display: inline-flex; align-items: center; gap: 6px; color: var(--green); }
+  .sim-head .live::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--green); animation: blink 1.6s ease infinite; }
+  @keyframes blink { 50% { opacity: 0.35; } }
+  .sim-body { padding: 18px; }
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border-radius: 10px; padding: 10px 16px; font-size: 0.85rem; font-weight: 600; border: 1.5px solid transparent; transition: all 0.15s; }
+  .btn.primary { background: var(--ink); color: #fff; }
+  .btn.primary:hover { background: #2a2d36; }
+  .btn.primary:disabled { background: #d6d7de; color: #7c7f8a; cursor: not-allowed; }
+  .btn.ghost { background: #fff; border-color: var(--line); }
+  .btn.ghost:hover { border-color: var(--ink); }
+  .btn.sel { border-color: var(--ink); background-image: var(--pastel); color: var(--ink); }
+
+  /* placement sim */
+  .pcards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 170px), 1fr)); gap: 12px; }
+  .pcard { border: 2px solid var(--line); border-radius: 16px; overflow: hidden; background: #fff; cursor: pointer; transition: border-color 0.15s, box-shadow 0.15s; text-align: left; padding: 0; }
+  .pcard:hover { border-color: var(--ink); }
+  .pcard[aria-pressed="true"] { border-color: var(--ink); box-shadow: 0 0 0 4px rgba(15,17,22,0.08); }
+  .pcard .zone { height: 150px; background: var(--muted); display: flex; align-items: flex-end; justify-content: center; overflow: hidden; transition: background 0.3s; }
+  .pcard:hover .zone { background: color-mix(in srgb, var(--brand) 35%, #fff); }
+  .phone { width: 78px; height: 150px; margin-bottom: -6px; border-radius: 12px 12px 0 0; background: #1c1c1f; position: relative; transition: transform 0.4s cubic-bezier(0.2,0.8,0.2,1); }
+  .pcard:hover .phone { transform: translateY(-6px); }
+  .phone .row { position: absolute; left: 8px; right: 8px; height: 8px; border-radius: 3px; background: rgba(255,255,255,0.08); }
+  .phone .hl { position: absolute; border: 2px solid var(--ad); background: rgba(147,86,255,0.15); border-radius: 5px; transition: box-shadow 0.3s; }
+  .pcard:hover .hl, .hl.on { box-shadow: 0 0 14px rgba(147,86,255,0.7); animation: adpulse 1.6s ease infinite; }
+  @keyframes adpulse { 50% { box-shadow: 0 0 4px rgba(147,86,255,0.3); } }
+  .phone .hl::after { content: "Your ad"; position: absolute; top: -8px; left: 4px; background: var(--ad-ink); color: #fff; font-size: 7px; font-weight: 800; padding: 1px 5px; border-radius: 999px; white-space: nowrap; }
+  .pcard .meta { padding: 12px 14px 14px; }
+  .pcard .meta b { display: block; font-size: 0.92rem; }
+  .pcard .meta .views { font-size: 1.3rem; font-weight: 800; margin-top: 6px; }
+  .pcard .meta .views small { font-size: 0.72rem; font-weight: 500; color: var(--ink-3); }
+  .pcard .meta .price { font-size: 0.78rem; color: var(--ink-3); margin-top: 2px; display: none; }
+  .sim.prices .pcard .meta .price { display: block; }
+  .selbar { margin-top: 14px; background: var(--ink); color: #fff; border-radius: 999px; padding: 10px 12px 10px 18px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; font-size: 0.85rem; transform: translateY(8px); opacity: 0; transition: all 0.25s; pointer-events: none; }
+  .selbar.on { transform: none; opacity: 1; pointer-events: auto; }
+  .selbar .go { background: #fff; color: var(--ink); border-radius: 999px; padding: 8px 14px; font-weight: 700; font-size: 0.82rem; }
+  @media (prefers-reduced-motion: reduce) { .hl, .pcard:hover .hl, .sim-head .live::before { animation: none !important; } .phone { transition: none; } }
+
+  /* calendar sim */
+  .cal { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; }
+  .day { border: 1.5px solid var(--line); border-radius: 10px; padding: 8px 6px; text-align: left; background: #fff; display: flex; flex-direction: column; gap: 2px; min-width: 0; transition: all 0.15s; }
+  .day:hover:not(:disabled) { border-color: var(--ink); }
+  .day .dow { font-size: 0.6rem; font-weight: 800; letter-spacing: 0.06em; color: var(--ink-3); }
+  .day .d { font-size: 1rem; font-weight: 800; line-height: 1; }
+  .day .p { font-size: 0.68rem; font-weight: 600; color: var(--ink-3); }
+  .day .tag { font-size: 0.6rem; font-weight: 800; color: var(--ad-ink); }
+  .day:disabled { border-style: dashed; background: var(--muted); cursor: not-allowed; }
+  .day:disabled .d { color: var(--ink-3); }
+  .day.in { background: var(--ink); border-color: var(--ink); }
+  .day.in .d { color: #fff; } .day.in .dow, .day.in .p { color: rgba(255,255,255,0.65); }
+  .day.today .dow { color: var(--ad); }
+  .hint { margin-top: 12px; font-size: 0.85rem; color: var(--ink-3); min-height: 1.4em; }
+  .hint.warn { color: var(--amber); font-weight: 600; }
+  .okbar { margin-top: 12px; padding: 10px 14px; border-radius: 10px; background: var(--green-bg); border: 1px solid #b7e2c8; font-size: 0.88rem; color: #0b4d29; display: none; }
+  .okbar.on { display: block; }
+  .upsell { margin-top: 12px; padding: 14px 16px; border-radius: 12px; border: 1.5px solid var(--brand); background: color-mix(in srgb, var(--brand) 12%, #fff); display: none; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; animation: slidein 0.25s ease; }
+  .upsell.on { display: flex; }
+  @keyframes slidein { from { transform: translateY(-6px); opacity: 0; } }
+  .upsell b { display: block; }
+  .upsell .s { font-size: 0.82rem; color: var(--ink-3); }
+  .upsell .s del { opacity: 0.6; }
+  .tagsm { display: inline-block; font-size: 0.65rem; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; padding: 4px 9px; border-radius: 999px; background: var(--brand); }
+  .total { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line-2); }
+  .total .v { font-size: 1.6rem; font-weight: 800; }
+  .total .s { font-size: 0.8rem; color: var(--ink-3); }
+
+  /* positions sim */
+  .possim { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 18px; align-items: start; }
+  .mock { background: #17171c; border-radius: 18px; padding: 10px; color: #fff; }
+  .mock .bar1 { height: 10px; border-radius: 999px; background: rgba(255,255,255,0.1); margin: 6px 0 8px; }
+  .mock .track { overflow: hidden; border-radius: 8px; }
+  .mock .slides { display: flex; gap: 6px; transition: transform 0.5s ease-out; }
+  .mock .slide { flex: 0 0 100%; height: 56px; border-radius: 8px; border: 2px dashed rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); display: flex; align-items: flex-end; padding: 6px; font-size: 8px; font-weight: 800; color: rgba(255,255,255,0.5); transition: all 0.3s; }
+  .mock .slide.on { border: 2px solid var(--ad); background: rgba(147,86,255,0.2); }
+  .mock .slide.on span { background: var(--ad-ink); color: #fff; padding: 2px 6px; border-radius: 999px; }
+  .mock .dots { display: flex; justify-content: center; gap: 4px; margin: 8px 0; }
+  .mock .dots i { width: 4px; height: 4px; border-radius: 999px; background: rgba(255,255,255,0.25); transition: all 0.4s; }
+  .mock .dots i.on { width: 12px; background: var(--ad); }
+  .mock .eng { background: rgba(255,255,255,0.05); border-radius: 8px; padding: 6px 8px 8px; }
+  .mock .eng .t { font-size: 7px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.5); }
+  .mock .bars { display: flex; align-items: flex-end; gap: 4px; height: 36px; margin-top: 4px; }
+  .mock .bars i { flex: 1; background: rgba(255,255,255,0.2); border-radius: 2px; transition: background 0.4s; }
+  .mock .bars i.on { background: var(--ad); }
+  .opts { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr)); gap: 8px; }
+  .opt { text-align: left; border: 1.5px solid var(--line); border-radius: 12px; padding: 10px 12px; background: #fff; display: grid; grid-template-columns: 16px 1fr; gap: 10px; align-items: start; transition: border-color 0.15s; }
+  .opt:hover { border-color: #9a9ca6; }
+  .opt[aria-checked="true"] { border-color: var(--ink); }
+  .opt .r { width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--line); margin-top: 2px; }
+  .opt[aria-checked="true"] .r { border-color: var(--ink); background: var(--ink); box-shadow: inset 0 0 0 3px #fff; }
+  .opt b { display: block; font-size: 0.85rem; }
+  .opt small { display: block; font-size: 0.72rem; color: var(--ink-3); line-height: 1.35; }
+  .opt .pr { font-size: 0.75rem; font-weight: 700; margin-top: 2px; }
+  .capt { font-size: 0.8rem; color: var(--ink-3); margin-top: 10px; text-align: center; }
+
+  /* spec check sim */
+  .checks { display: grid; gap: 6px; margin-top: 12px; }
+  .ck { display: flex; align-items: center; gap: 10px; font-size: 0.9rem; padding: 6px 0; }
+  .ck i { width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--line); display: grid; place-items: center; font-style: normal; font-size: 0.7rem; font-weight: 900; color: #fff; transition: all 0.2s; }
+  .ck.run i { border-color: var(--line); border-top-color: var(--ink); animation: spin 0.8s linear infinite; }
+  .ck.ok i { background: var(--green); border-color: var(--green); }
+  .ck.bad i { background: var(--red); border-color: var(--red); }
+  .ck.bad { color: var(--red); font-weight: 600; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .verdict { margin-top: 10px; padding: 10px 14px; border-radius: 10px; font-size: 0.85rem; font-weight: 600; display: none; }
+  .verdict.ok { display: block; background: var(--green-bg); color: #0b4d29; }
+  .verdict.bad { display: block; background: #fee2e2; color: var(--red); }
+
+  /* price build sim */
+  .pstep { display: flex; gap: 6px; flex-wrap: wrap; }
+  .pstep button { border-radius: 999px; border: 1.5px solid var(--line); background: #fff; padding: 7px 14px; font-size: 0.8rem; font-weight: 600; }
+  .pstep button[aria-pressed="true"] { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .lines { margin-top: 14px; display: grid; gap: 6px; }
+  .ln { display: flex; justify-content: space-between; gap: 12px; font-size: 0.9rem; padding: 6px 0; border-bottom: 1px dashed var(--line-2); opacity: 0; transform: translateY(-4px); transition: all 0.3s; height: 0; overflow: hidden; padding: 0; }
+  .ln.on { opacity: 1; transform: none; height: auto; padding: 6px 0; }
+  .ln.save { color: var(--green); }
+  .ln.fee { color: #1a3a6b; }
+  .ln b { font-variant-numeric: tabular-nums; }
+  .bigtotal { margin-top: 12px; display: flex; justify-content: space-between; align-items: baseline; }
+  .bigtotal .v { font-size: 2rem; font-weight: 800; font-variant-numeric: tabular-nums; }
+  .pnote { margin-top: 10px; font-size: 0.85rem; color: var(--ink-2); min-height: 2.6em; }
+
+  /* confirm sim */
+  .modal { border-radius: 16px; border: 1px solid var(--line); background: #fff; padding: 18px; max-width: 380px; box-shadow: 0 30px 60px -30px rgba(13,15,20,0.5); }
+  .modal dl { margin: 12px 0; border: 1px solid var(--line); border-radius: 10px; font-size: 0.85rem; }
+  .modal dl div { display: flex; justify-content: space-between; padding: 7px 12px; border-bottom: 1px solid var(--line-2); }
+  .modal dl div:last-child { border: 0; }
+  .modal dl dt { color: var(--ink-3); } .modal dl dd { margin: 0; font-weight: 700; }
+  .modal .final { font-size: 0.78rem; color: var(--amber); font-weight: 600; }
+  .done { padding: 24px; text-align: center; border-radius: 16px; background: var(--green-bg); display: none; }
+  .done .small { color: #0b4d29; }
+  .done.on { display: block; animation: slidein 0.3s ease; }
+
+  /* wireframe reconstructions */
+  .wf { border: 1.5px dashed #b6b8c2; border-radius: 12px; padding: 12px; background: repeating-linear-gradient(0deg, #fafafb, #fafafb 22px, #f3f3f6 22px, #f3f3f6 23px); font-size: 0.7rem; color: var(--ink-3); }
+  .wf .box { border: 1.5px solid #b6b8c2; border-radius: 6px; padding: 6px; margin: 4px 0; background: rgba(255,255,255,0.8); }
+  .wf .box.hl { border-color: var(--ad); }
+  .wf .row { display: flex; gap: 4px; }
+  .wf .row .box { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+  .wf .lbl { font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; font-size: 0.6rem; margin-bottom: 4px; }
+  .diff { display: grid; grid-template-columns: 1fr 24px 1fr; gap: 10px; align-items: center; }
+  .diff .arrow { text-align: center; color: var(--ink-3); font-size: 1.2rem; }
+
+  .timeline { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; background: var(--card); }
+  .timeline div { padding: 14px 16px; border-right: 1px solid var(--line-2); }
+  .timeline div:last-child { border-right: 0; }
+  .timeline b { display: block; font-family: var(--serif); font-size: 1.05rem; }
+  .timeline small { color: var(--ink-3); font-size: 0.78rem; }
+
+  .metric-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); gap: 14px; }
+  .metric { padding: 18px 20px; border-radius: 16px; background: var(--card); border: 1px solid var(--line); }
+  .metric .v { font-family: var(--serif); font-size: 2.2rem; line-height: 1; font-variation-settings: "opsz" 96; }
+  .metric .l { font-size: 0.82rem; color: var(--ink-3); margin-top: 8px; line-height: 1.4; }
+  .metric.hl { background: var(--ink); color: #fff; border-color: transparent; } .metric.hl .l { color: rgba(255,255,255,0.65); }
+
+  .sim-note { font-size: 0.78rem; color: var(--ink-3); padding: 10px 16px; border-top: 1px solid var(--line-2); background: #fff; }
+
+  footer { padding: 56px clamp(24px, 6vw, 96px); color: var(--ink-3); font-size: 0.85rem; }
+
+  .reveal { opacity: 0; transform: translateY(14px); transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.2,0.8,0.2,1); }
+  .reveal.in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
+
+  @media (max-width: 1080px) {
+    .two-col, .two-col.flip, .flow { grid-template-columns: minmax(0, 1fr); }
+    .sticky, .flow-panel { position: static; }
+  }
+  @media (max-width: 900px) {
+    .frame { grid-template-columns: 1fr; }
+    .rail { position: static; height: auto; border-right: 0; border-bottom: 1px solid var(--line-2); flex-direction: row; flex-wrap: wrap; align-items: center; }
+    .rail nav { flex-direction: row; flex-wrap: wrap; gap: 4px; }
+    .rail nav a { grid-template-columns: auto; }
+    .rail nav a .n { display: none; }
+    .rail .foot { margin: 0; }
+    main > section { padding: 64px 20px; }
+    .section-head { grid-template-columns: 1fr; gap: 6px; }
+    .possim { grid-template-columns: minmax(0, 1fr); }
+    .cal { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .diff { grid-template-columns: minmax(0, 1fr); }
+    .diff .arrow { transform: rotate(90deg); }
+    .tbl-wrap { min-width: 0; }
+  }
+  @media print {
+    .rail, .skim-toggle, .sim-head .live { display: none !important; }
+    .frame { grid-template-columns: 1fr; }
+    main > section { padding: 32px 0; break-inside: avoid; }
+    .detail { display: block !important; }
+  }
+</style>
+</head>
+<body>
+<div class="frame">
+  <aside class="rail" aria-label="Case study sections">
+    <div>
+      <div class="eyebrow">Case study</div>
+      <div class="serif" style="font-size:1.1rem; line-height:1.2; margin-top:4px;">Advertise with Koko</div>
+    </div>
+    <nav id="toc">
+      <a href="#tldr"><span class="n">00</span>In brief</a>
+      <a href="#context"><span class="n">01</span>Context</a>
+      <a href="#research"><span class="n">02</span>Research</a>
+      <a href="#problem"><span class="n">03</span>Framing</a>
+      <a href="#principles"><span class="n">04</span>Principles</a>
+      <a href="#logic"><span class="n">05</span>Decision logic</a>
+      <a href="#evolution"><span class="n">06</span>Sketch to product</a>
+      <a href="#product"><span class="n">07</span>The product</a>
+      <a href="#validation"><span class="n">08</span>Validation</a>
+      <a href="#impact"><span class="n">09</span>Impact</a>
+      <a href="#build"><span class="n">10</span>The build</a>
+      <a href="#learnings"><span class="n">11</span>Learnings</a>
+    </nav>
+    <div class="foot">
+      <button class="skim-toggle" id="skim" type="button" aria-pressed="false" title="Hide long-form paragraphs">
+        <span class="sw" aria-hidden="true"></span> Skim mode
+      </button>
+      <p class="small" style="margin-top:12px;">About 12 min in full. 4 min in skim.</p>
+    </div>
+  </aside>
+
+  <div class="content">
+    <header class="hero">
+      <div class="inner">
+        <div class="kicker">
+          <span class="chip dark">Product design</span>
+          <span class="chip">B2B · Fintech · Sri Lanka</span>
+          <span class="chip">2026</span>
+        </div>
+        <h1>Turning Koko's unused app screens into a self‑serve ad product merchants actually want to buy</h1>
+        <p class="sub">Koko is a buy‑now‑pay‑later app with 2.5M installs and 600K monthly shoppers. Its home screen, search results and post‑checkout page were valuable real estate nobody was selling. I designed the product that sells it: fixed‑price, first‑come‑first‑served ad space that a merchant can book in under five minutes, then built and tested it as a working prototype.</p>
+        <div class="facts">
+          <div class="fact"><div class="v">Sole designer</div><div class="l">Research, UX logic, UI, prototype build</div></div>
+          <div class="fact"><div class="v num">20</div><div class="l">Merchant interviews, 5 key accounts and 15 long‑tail</div></div>
+          <div class="fact"><div class="v num">4 steps</div><div class="l">Dates, positions, assets, payment. Under five minutes to book</div></div>
+          <div class="fact"><div class="v num">128</div><div class="l">Unit tests on the pricing rules, so the number on screen is always right</div></div>
+        </div>
+        <div class="hero-shot"><img src="{{shot:03-landing-selected}}" alt="The Advertise landing page with two spaces selected and the floating selection bar" /></div>
+      </div>
+    </header>
+
+    <main>
+      <!-- ══════════ 00 IN BRIEF ══════════ -->
+      <section id="tldr">
+        <div class="section-head">
+          <div class="idx">00</div>
+          <div>
+            <h2>In brief</h2>
+            <p class="takeaway">If you read one section, read this one.</p>
+          </div>
+        </div>
+        <div class="grid-3">
+          <div class="card">
+            <div class="eyebrow">The problem</div>
+            <h3>Two problems, one product</h3>
+            <p class="small">Koko needed a revenue stream that did not depend on transaction fees. Merchants wanted more sales from the 600K people already shopping in the app, but had no way to be seen beyond their own store page.</p>
+          </div>
+          <div class="card">
+            <div class="eyebrow">My role</div>
+            <h3>End to end, alone</h3>
+            <p class="small">I ran the research, wrote the business logic with Koko's ops and finance leads, designed every screen, and built a typed, tested prototype the engineering team can lift the rules from directly.</p>
+          </div>
+          <div class="card">
+            <div class="eyebrow">What changed</div>
+            <h3>A bookable inventory</h3>
+            <p class="small">Six ad spaces became calendar inventory with fixed prices. A merchant picks a space, picks dates, and pays. No bidding, no sales call, no ad‑tech vocabulary. Six of six testers completed a booking unaided.</p>
+          </div>
+        </div>
+        <div class="timeline" style="margin-top:24px;">
+          <div><b>Weeks 1–2</b><small>20 merchant interviews, ops and finance sessions</small></div>
+          <div><b>Week 3</b><small>Business rules and pricing model written down</small></div>
+          <div><b>Weeks 4–5</b><small>Sketches, decision flow, first clickable version</small></div>
+          <div><b>Week 6</b><small>Usability sessions, two rounds of changes</small></div>
+          <div><b>Weeks 7–8</b><small>Production‑grade prototype, tests, handoff docs</small></div>
+        </div>
+      </section>
+
+      <!-- ══════════ 01 CONTEXT ══════════ -->
+      <section id="context">
+        <div class="section-head">
+          <div class="idx">01</div>
+          <div>
+            <h2>Context</h2>
+            <p class="takeaway">Koko had an audience it wasn't monetising and merchants who couldn't reach it.</p>
+          </div>
+        </div>
+        <div class="two-col">
+          <div>
+            <p class="lede">Koko is a BNPL platform in Sri Lanka. Shoppers pay in instalments at partner stores, in person and in the app. The app itself had grown into a shopping destination: a home screen with featured stores, a trending row, search, and a post‑checkout page every buyer sees.</p>
+            <p class="detail">Those screens were curated by hand. A marketing team decided who got the hero banner, usually whoever asked loudest or had the biggest account. Nobody paid for it. Meanwhile Koko's revenue was almost entirely merchant transaction fees, which put a ceiling on growth and made every margin negotiation painful.</p>
+            <p class="detail">The brief from leadership was blunt. Sell the space. Make it something a merchant can buy without a sales team in the middle. Keep prices fixed, because an auction would scare off the long tail of small merchants who make up most of the platform.</p>
+            <p class="detail">The merchant side was less obvious. Merchants already had a portal for orders, QR payments and finance. Advertising was a new idea to most of them. Whatever I designed had to earn a place in a portal they used to run their business, not sit there as a marketing upsell they scrolled past.</p>
+            <div class="callout">
+              <div class="serif">The constraint that shaped everything: fixed prices, first come first served, and a buyer who has never bought an ad before.</div>
+            </div>
+          </div>
+          <div>
+            <figure>
+              <div class="shot"><img src="{{shot:00-before-merchant}}" alt="The existing merchant portal with the Advertise tab, before the redesign" /></div>
+              <figcaption>Where we started. Advertising lived as a tab inside the merchant portal, alongside orders and finance. The demo switchers in the sidebar were how we compared design variants with stakeholders.</figcaption>
+            </figure>
+            <div class="grid-2" style="margin-top:18px; gap:12px;">
+              <div class="card"><div class="eyebrow">For Koko</div><p class="small" style="margin:6px 0 0;">A second revenue line, priced on inventory rather than negotiated per account. Ops sets the rate card; the product sells it.</p></div>
+              <div class="card"><div class="eyebrow">For merchants</div><p class="small" style="margin:6px 0 0;">A way to reach shoppers who already have credit approved and are looking for somewhere to spend it.</p></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════════ 02 RESEARCH ══════════ -->
+      <section id="research">
+        <div class="section-head">
+          <div class="idx">02</div>
+          <div>
+            <h2>Research</h2>
+            <p class="takeaway">Merchants didn't want ads. They wanted to know if Koko was sending them customers, and they wanted certainty about what they'd pay.</p>
+          </div>
+        </div>
+        <div class="two-col">
+          <div>
+            <p class="lede">I interviewed 20 merchants over two weeks: five key accounts (multi‑store retailers with a marketing team) and fifteen long‑tail merchants (owner‑operated, one or two locations). Each conversation ran 40 to 50 minutes and covered how they used Koko today, what they knew about their Koko customers, and how they'd react to paying for visibility.</p>
+            <p class="detail">I split the sample deliberately. Key accounts are where the money is per booking, but the long tail is where the volume is, and the two groups wanted different things. Key accounts asked about guaranteed placement during festive weeks and whether they could lock out competitors. Long‑tail merchants asked whether they'd understand what they were paying for, and whether they'd need to hire a designer.</p>
+            <p class="detail">The most consistent finding wasn't about advertising at all. Seventeen of twenty could not say how many of their customers came through Koko versus walked in off the street. They saw the settlement report and nothing else. That gap turned into the performance surface, and into the decision to lead every screen with views and store visits rather than price.</p>
+            <p class="detail">The second finding decided the pricing model. Twelve merchants, unprompted, said some version of "I don't want to bid." Three had tried Facebook or Google ads and stopped because they couldn't predict the spend. Fixed prices weren't just a leadership constraint; they were the thing that made the product credible to the people buying it.</p>
+            <div id="themes" aria-label="Interview themes, count of 20 merchants"></div>
+            <p class="small" style="margin-top:10px;">Purple bars: raised by all five key accounts. Counts are out of 20 merchants.</p>
+          </div>
+          <div>
+            <div style="display:grid; gap:12px;" id="quotes"></div>
+            <div class="card brand" style="margin-top:18px;">
+              <div class="eyebrow">How insight became design</div>
+              <table class="tbl" style="margin-top:8px;">
+                <tbody>
+                  <tr><td>"I don't know what Koko sends me"</td><td>Views and store visits lead every card. A performance page attributes orders to bookings.</td></tr>
+                  <tr><td>"I don't want to bid"</td><td>Fixed rate card, the price on screen is the price. No auction, no CPC.</td></tr>
+                  <tr><td>"I can't make a banner"</td><td>Koko designs it for a flat fee, as the default option.</td></tr>
+                  <tr><td>"I want Avurudu week, guaranteed"</td><td>Campaign weeks are bookable inventory with a stated traffic multiple.</td></tr>
+                  <tr><td>"How do I know it worked?"</td><td>A recap at the end of every run, and attributed orders in the bookings table.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════════ 03 FRAMING ══════════ -->
+      <section id="problem">
+        <div class="section-head">
+          <div class="idx">03</div>
+          <div>
+            <h2>Framing the problem</h2>
+            <p class="takeaway">Design a booking flow, not an ad platform. The mental model is a hotel calendar, not an auction.</p>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div>
+            <p class="detail">After research, I wrote the problem as a single sentence and pinned it above the work: <em>A merchant who has never bought an ad should be able to buy the right space for the right week and know exactly what they'll pay and roughly what they'll get, in one sitting, without talking to anyone at Koko.</em></p>
+            <p class="detail">That sentence ruled out most of what ad products usually do. No campaign objectives, no audiences, no bid strategies. It also set the shape of the work: inventory that can be shown on a calendar, prices that can be added up by hand, and estimates that come from real traffic numbers rather than promises.</p>
+            <p class="detail">I wrote the business rules down with Koko's ops lead and finance before drawing a screen. Base price per space per day, position multipliers, weekend and campaign uplifts, and the discount stack. That document became the contract between design, engineering and finance. Every rule in the final product traces back to a line in it.</p>
+          </div>
+          <div>
+            <div class="card dark">
+              <div class="eyebrow" style="color:rgba(255,255,255,0.55);">Success, as defined up front</div>
+              <div class="steps" style="margin-top:12px;">
+                <div class="step"><div><b>A first‑time merchant completes a booking unaided</b><div class="small">Measured in usability sessions, then as landing‑to‑confirmation conversion.</div></div></div>
+                <div class="step"><div><b>The price on screen is never wrong</b><div class="small">One pricing function, tested, shared with engineering.</div></div></div>
+                <div class="step"><div><b>Campaign weeks and bundles sell</b><div class="small">Attach rate on the two upsells that carry the margin.</div></div></div>
+                <div class="step"><div><b>Merchants come back</b><div class="small">Repeat bookings within 60 days of a run ending.</div></div></div>
+              </div>
+            </div>
+            <div class="card" style="margin-top:14px;">
+              <div class="eyebrow">Constraints I designed inside</div>
+              <ul class="small" style="margin:8px 0 0; padding-left:18px; line-height:1.7;">
+                <li>Fixed prices, first come first served. No auctions.</li>
+                <li>Inventory and prices are set by ops, not by the product.</li>
+                <li>Creative review takes up to two business days, so bookings need lead time.</li>
+                <li>Plain language. No ad‑tech vocabulary, no dashes in merchant copy.</li>
+                <li>Bookings are final. That has to be unmistakable before payment.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════════ 04 PRINCIPLES ══════════ -->
+      <section id="principles">
+        <div class="section-head">
+          <div class="idx">04</div>
+          <div>
+            <h2>Four rules I held myself to</h2>
+            <p class="takeaway">Each one came out of the interviews. Each one is visible on every screen.</p>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="card principle"><div class="k">1</div><div><h3>Value before price</h3><p class="small detail">Estimated views render above the price on every card, and the landing page hides prices by default. Seventeen merchants didn't know what Koko sent them. Show that first, then what it costs.</p></div></div>
+          <div class="card principle"><div class="k">2</div><div><h3>One decision at a time</h3><p class="small detail">Spaces, then dates, then positions, then artwork, then payment. One accordion open at a time. The bundle offer only appears after the first space is fully decided.</p></div></div>
+          <div class="card principle"><div class="k">3</div><div><h3>Honest persuasion</h3><p class="small detail">Every "most popular" badge, multiple and estimate is wired to a real number or marked as a placeholder for one. One badge per decision, at most. Scarcity comes from the calendar, not from copy.</p></div></div>
+          <div class="card principle"><div class="k">4</div><div><h3>The total never surprises</h3><p class="small detail">Rs. 0.00 until dates exist. The design fee appears only when the artwork step is reached. Payment fees appear only on the payment step. The number moves for reasons the merchant has just seen.</p></div></div>
+        </div>
+      </section>
+
+      <!-- ══════════ 05 DECISION LOGIC ══════════ -->
+      <section id="logic">
+        <div class="section-head">
+          <div class="idx">05</div>
+          <div>
+            <h2>The decision logic</h2>
+            <p class="takeaway">Before wireframes, I mapped every branch a booking can take and wrote down why each one exists. Click a node to read the reasoning.</p>
+          </div>
+        </div>
+        <p class="detail">This flow was the artefact stakeholders argued over, and that was the point. Finance wanted to see where discounts stack. Ops wanted to see where lead time and occupancy block a date. Engineering wanted to know what happens when a merchant uploads a bad file. Having the logic on one board meant each of those conversations changed a node, not a screen.</p>
+        <div class="flow" id="flow">
+          <div class="flow-track" id="flow-track"></div>
+          <aside class="flow-panel" id="flow-panel" aria-live="polite">
+            <div class="eyebrow">Reasoning</div>
+            <h3>Pick a node</h3>
+            <p>Each step in the flow has a rule behind it and a reason for the rule. Select one on the left.</p>
+          </aside>
+        </div>
+      </section>
+
+      <!-- ══════════ 06 SKETCH TO PRODUCT ══════════ -->
+      <section id="evolution">
+        <div class="section-head">
+          <div class="idx">06</div>
+          <div>
+            <h2>From sketch to product</h2>
+            <p class="takeaway">Four things changed between my first sketches and what shipped. None of them were visual. All of them were about order and timing.</p>
+          </div>
+        </div>
+        <p class="detail">My early sketches had the funnel in what felt like the natural order: pick a space, pick a position, then dates. The summary sat in a sticky rail on the right, like a checkout. Usability sessions and a hard look at the pricing model changed each of those.</p>
+        <div class="grid-2" style="margin-top:8px;">
+          <div class="card">
+            <div class="eyebrow">Change 1 · Step order</div>
+            <div class="diff" style="margin:12px 0;">
+              <div class="wf"><div class="lbl">Sketch</div><div class="row"><div class="box">Spaces</div><div class="box">Positions</div><div class="box">Dates</div><div class="box">Pay</div></div></div>
+              <div class="arrow">→</div>
+              <div class="wf"><div class="lbl">Shipped</div><div class="row"><div class="box hl">Dates</div><div class="box">Positions</div><div class="box">Assets</div><div class="box">Pay</div></div></div>
+            </div>
+            <p class="small detail">Dates moved to the front. Campaign weeks are the strongest thing Koko sells and the highest‑margin one, and they only persuade while the merchant still has an open mind about timing. Once someone has picked "hero, slide 1" they've mentally spent the budget and a 2.4× week reads as an upsell rather than an opportunity.</p>
+          </div>
+          <div class="card">
+            <div class="eyebrow">Change 2 · Where the total lives</div>
+            <div class="diff" style="margin:12px 0;">
+              <div class="wf"><div class="lbl">Sketch</div><div class="row"><div class="box" style="flex:2;">Step content<br><br><br></div><div class="box hl">Sticky total</div></div></div>
+              <div class="arrow">→</div>
+              <div class="wf"><div class="lbl">Shipped</div><div class="box">Step content<br><br></div><div class="box hl">Summary + CTA</div></div>
+            </div>
+            <p class="small detail">The summary moved under the content. Testers with the sticky rail kept glancing at the total while choosing dates and picked the cheapest days rather than the right ones. Reading the choice, then the total, then the button is a deliberate order.</p>
+          </div>
+          <div class="card">
+            <div class="eyebrow">Change 3 · One campaign, focused</div>
+            <div class="diff" style="margin:12px 0;">
+              <div class="wf"><div class="lbl">Sketch</div><div class="row"><div class="box">BF</div><div class="box">Xmas</div><div class="box">Avurudu</div></div><div class="row"><div class="box">Diwali</div><div class="box">Year end</div><div class="box">School</div></div><div class="box">Date picker for all</div></div>
+              <div class="arrow">→</div>
+              <div class="wf"><div class="lbl">Shipped</div><div class="box hl">Black Friday<br>fixed dates · Unselect</div><div class="box">Day chips · Book full period</div></div>
+            </div>
+            <p class="small detail">Choosing a campaign hides the other nine and opens its own date chips underneath. The decision in front of the merchant becomes "which days of Black Friday", not "which of ten campaigns, and also which days".</p>
+          </div>
+          <div class="card">
+            <div class="eyebrow">Change 4 · Prices off by default</div>
+            <div class="diff" style="margin:12px 0;">
+              <div class="wf"><div class="lbl">Sketch</div><div class="box">Hero banner<br>480K views · <b>Rs. 129,500/wk</b></div></div>
+              <div class="arrow">→</div>
+              <div class="wf"><div class="lbl">Shipped</div><div class="box hl">Hero banner<br><b>480K</b> store visits / 7 days</div><div>Show prices ↗</div></div>
+            </div>
+            <p class="small detail">The landing page shows estimated store visits and no price until asked. Long‑tail merchants anchored on the hero's weekly price and left before seeing cheaper spaces. Leading with reach let them compare on what they came for.</p>
+          </div>
+        </div>
+        <p class="small" style="margin-top:18px;">Sketch panels are reconstructions of the whiteboard versions. Originals available on request.</p>
+      </section>
+      <!-- ══════════ 07 THE PRODUCT ══════════ -->
+      <section id="product">
+        <div class="section-head">
+          <div class="idx">07</div>
+          <div>
+            <h2>The product, step by step</h2>
+            <p class="takeaway">Each step below is a working simulation of the real interaction, followed by the reasoning. Try them.</p>
+          </div>
+        </div>
+
+        <!-- 7.1 Landing -->
+        <h3 style="margin-top:8px;">7.1 · Choose where you want to be seen</h3>
+        <div class="two-col">
+          <div>
+            <div class="sim" id="sim-placement">
+              <div class="sim-head"><span class="live">Live simulation</span><label style="display:flex; gap:6px; align-items:center; font-weight:600;"><input type="checkbox" id="sim-prices" /> Show prices</label></div>
+              <div class="sim-body">
+                <div class="pcards" id="pcards"></div>
+                <div class="selbar" id="selbar"><span id="selbar-text"></span><button class="go" type="button">Start a booking →</button></div>
+              </div>
+              <div class="sim-note">Hover a card: the phone lifts and the purple zone pulses. Click to select. The bar sums estimated visits across the selection.</div>
+            </div>
+          </div>
+          <div>
+            <div class="why"><div class="dot">1</div><div><b>The screenshot is the explanation.</b>Every card shows a real Koko screen with the bookable zone outlined. "Where does my ad go?" was the first question in every interview. The highlight is always visible, not revealed on hover, because nobody should discover the answer by accident.</div></div>
+            <div class="why"><div class="dot">2</div><div><b>Views lead, prices follow.</b>The number on the card is estimated store visits over seven days. Prices are behind a toggle. The long tail compared on reach and stopped anchoring on the hero's price.</div></div>
+            <div class="why"><div class="dot">3</div><div><b>Multi‑select with a floating summary.</b>One booking can cover several spaces on the same dates, which is how the bundle discount becomes possible later. The bar is the only pill‑shaped element in the product; it's meant to feel separate from the page.</div></div>
+            <figure style="margin-top:16px;"><div class="shot"><img src="{{shot:04-details-dialog}}" alt="Details dialog for the hero banner with a larger phone preview, monthly impressions and price" /></div><figcaption>Details opens a larger preview with the plain‑language explainer, views per week and impressions per month. No availability claims here; availability depends on dates the merchant hasn't chosen yet.</figcaption></figure>
+          </div>
+        </div>
+
+        <!-- 7.2 Dates -->
+        <h3 style="margin-top:56px;">7.2 · Pick your dates</h3>
+        <div class="two-col flip">
+          <div>
+            <div class="why"><div class="dot">1</div><div><b>Campaign weeks first, own dates second.</b>The two paths are a radio choice at the top. Campaign weeks carry a traffic multiple and a 15% saving for taking the whole period; they're the highest‑margin thing Koko sells and the thing key accounts asked for by name.</div></div>
+            <div class="why"><div class="dot">2</div><div><b>Every day carries its own price.</b>What a Tuesday costs depends on whether it's inside Diwali, a weekend, or neither. Burying that in a total would make the calendar feel arbitrary. Blocked days say why: "Lead time" or "Booked".</div></div>
+            <div class="why"><div class="dot">3</div><div><b>One upsell at a time, and only when it's bookable.</b>Under seven days you're offered a week at 5% off. Eight to twenty‑one days, a month at 10%. The offer is suppressed if the extended range would cross a booked day, because an offer that fails when accepted is worse than no offer.</div></div>
+            <figure style="margin-top:16px;"><div class="shot"><img src="{{shot:06-campaign-focused}}" alt="Black Friday campaign card focused with its fixed-date chip picker and a Book full period button" /></div><figcaption>Selecting a campaign hides the other nine and opens its day chips. The full‑period button shows the saving against the per‑day price.</figcaption></figure>
+          </div>
+          <div>
+            <div class="sim" id="sim-cal">
+              <div class="sim-head"><span class="live">Live simulation</span><span>Hero banner · Rs. 18,500 a day</span></div>
+              <div class="sim-body">
+                <div class="cal" id="cal"></div>
+                <p class="hint" id="cal-hint">Tap a start date. Dashed days are unavailable.</p>
+                <div class="okbar" id="cal-ok"></div>
+                <div class="upsell" id="cal-upsell"><div><span class="tagsm">Save 5%</span><b style="margin-top:6px;">Make it a full week</b><span class="s" id="cal-upsell-s"></span></div><button class="btn primary" type="button" id="cal-week">Book the week</button></div>
+                <div class="total"><div><div class="eyebrow">Total</div><div class="v num" id="cal-total">Rs. 0.00</div></div><div class="s" id="cal-days">Updates when you pick your dates</div></div>
+              </div>
+              <div class="sim-note">Three weeks shown. Same rules as the product: three days' lead time, a day already booked, 9% weekend uplift, and the week offer that appears under seven days and disappears if it would cross the booked day.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 7.3 Positions -->
+        <h3 style="margin-top:56px;">7.3 · Pick your position</h3>
+        <div class="two-col">
+          <div>
+            <div class="sim" id="sim-pos">
+              <div class="sim-head"><span class="live">Live simulation</span><span>Hero banner · 5 slides</span></div>
+              <div class="sim-body">
+                <div class="possim">
+                  <div>
+                    <div class="mock">
+                      <div class="bar1"></div>
+                      <div class="track"><div class="slides" id="slides"></div></div>
+                      <div class="dots" id="dots"></div>
+                      <div class="eng"><div class="t">Typical engagement by position</div><div class="bars" id="bars"></div></div>
+                    </div>
+                    <p class="capt" id="pos-capt">Earlier positions usually get more engagement.</p>
+                  </div>
+                  <div class="opts" id="opts" role="radiogroup" aria-label="Position"></div>
+                </div>
+              </div>
+              <div class="sim-note">The carousel slides to the chosen slot and the meter follows. Only the hero charges more for the front of the rotation; every other space is flat.</div>
+            </div>
+          </div>
+          <div>
+            <div class="why"><div class="dot">1</div><div><b>The preview is a drawn mock, not a screenshot.</b>This step is about the shape of the rotation and where you sit in it. A real screenshot pulls attention to its own content. The mock animates to the chosen slot so the merchant watches the consequence of the click.</div></div>
+            <div class="why"><div class="dot">2</div><div><b>Engagement is shown, price only where it differs.</b>The ladder (3.0× at slot 1 down to 1.0×) is a placeholder for the platform benchmarks service and marked as such in code. Only hero slides 1 and 2 show a price, because only they cost more.</div></div>
+            <div class="why"><div class="dot">3</div><div><b>The bundle offer waits.</b>Koko's pairing suggestion appears only when exactly one space is selected and its position is settled. A second decision on top of an unfinished one is noise. Once taken, the offer is replaced by a confirmation banner and never reappears.</div></div>
+            <figure style="margin-top:16px;"><div class="shot"><img src="{{shot:23-bundle-offer}}" alt="Koko recommends: bundle another space and save 5%, four pairings shown with phone previews" /></div><figcaption>The bundle offer, shown after the hero position is picked. The recommended partner is first and badged; the rest are ordered by audience size.</figcaption></figure>
+          </div>
+        </div>
+
+        <!-- 7.4 Assets -->
+        <h3 style="margin-top:56px;">7.4 · Your ad creative</h3>
+        <div class="two-col flip">
+          <div>
+            <div class="why"><div class="dot">1</div><div><b>The step only exists when it's needed.</b>Trending, empty search and post‑checkout use the store's own thumbnail. Book only those and the funnel is three steps, not four.</div></div>
+            <div class="why"><div class="dot">2</div><div><b>Koko designs it, by default.</b>Eleven of fifteen long‑tail merchants had nobody who could make a banner. The recommended card is visibly heavier, the upload card says "the slower option" in plain words, and the fee is anchored per day ("about Rs. 1,800 a day on a week booking").</div></div>
+            <div class="why"><div class="dot">3</div><div><b>The spec check runs on the real file, one rule at a time.</b>Size, format, resolution, each with its own tick or cross, so a failure names the fix. The Continue button locks until every rule passes. The browser check is a courtesy; production re‑runs it server side.</div></div>
+            <figure style="margin-top:16px;"><div class="shot"><img src="{{shot:13-assets}}" alt="Assets step: Let Koko create your assets, badged fastest approval, beside Upload my own asset" /></div><figcaption>The choice as built. One shiny badge on the page, on the option most merchants should take.</figcaption></figure>
+          </div>
+          <div>
+            <div class="sim" id="sim-spec">
+              <div class="sim-head"><span class="live">Live simulation</span><span>Spec check</span></div>
+              <div class="sim-body">
+                <p class="small" style="margin:0 0 10px;">JPG or PNG · at least 1600 × 640 px · max 5 MB</p>
+                <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                  <button class="btn ghost" type="button" data-file="good">Upload banner‑final.png <span class="small">(1600×640, 1.2 MB)</span></button>
+                  <button class="btn ghost" type="button" data-file="small">Upload insta‑post.jpg <span class="small">(1080×1080, 0.9 MB)</span></button>
+                  <button class="btn ghost" type="button" data-file="big">Upload print‑ad.png <span class="small">(4000×1600, 8.4 MB)</span></button>
+                </div>
+                <div class="checks" id="checks">
+                  <div class="ck" data-k="size"><i></i>File size under 5 MB</div>
+                  <div class="ck" data-k="format"><i></i>JPG or PNG format</div>
+                  <div class="ck" data-k="res"><i></i>Resolution at least 1600 × 640 px</div>
+                </div>
+                <div class="verdict" id="verdict"></div>
+                <div style="margin-top:14px;"><button class="btn primary" type="button" id="spec-continue" disabled>Continue to payment</button></div>
+              </div>
+              <div class="sim-note">Pick a file. The rules run in order; the button unlocks only when all three pass.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 7.5 Price build -->
+        <h3 style="margin-top:56px;">7.5 · How the total builds</h3>
+        <div class="two-col">
+          <div>
+            <div class="sim" id="sim-price">
+              <div class="sim-head"><span class="live">Live simulation</span><span>Hero slide 1 · Black Friday, full period</span></div>
+              <div class="sim-body">
+                <div class="pstep" id="pstep" role="group" aria-label="Funnel step">
+                  <button type="button" data-s="0" aria-pressed="true">Landing</button>
+                  <button type="button" data-s="1">Dates</button>
+                  <button type="button" data-s="2">Positions</button>
+                  <button type="button" data-s="3">Assets</button>
+                  <button type="button" data-s="4">Payment</button>
+                </div>
+                <div class="lines">
+                  <div class="ln" data-at="1"><span>Slot charge · 8 days at 2.4×</span><b>Rs. 355,200</b></div>
+                  <div class="ln save" data-at="1"><span>Full campaign period · saved 15%</span><b>− Rs. 53,280</b></div>
+                  <div class="ln" data-at="2"><span>Slide 1 uplift · 1.35×</span><b>+ Rs. 105,672</b></div>
+                  <div class="ln" data-at="3"><span>Design service · Koko creates it</span><b>+ Rs. 12,500</b></div>
+                  <div class="ln fee" data-at="4"><span>Convenience fee · seller credit, 5%</span><b>+ Rs. 21,005</b></div>
+                </div>
+                <div class="bigtotal"><span class="eyebrow">Total</span><span class="v" id="ptotal">Rs. 0.00</span></div>
+                <p class="pnote" id="pnote">Nothing is priced until dates exist. The rail reads Rs. 0.00 rather than a guess.</p>
+              </div>
+              <div class="sim-note">Step through the funnel. Each line appears at the step that sets it and never earlier.</div>
+            </div>
+          </div>
+          <div>
+            <div class="why"><div class="dot">1</div><div><b>One function prices everything.</b>The summary rail, the review table, the confirmation dialog and the stored booking all read from the same <span class="mono">quote()</span>. In the first prototype they each did their own arithmetic and two of them disagreed.</div></div>
+            <div class="why"><div class="dot">2</div><div><b>Progressive reveal is a pricing rule, not a UI trick.</b>The function takes a "stage" argument. Design fee is withheld until Assets is reached; payment adjustment until Payment. The rail can't leak a fee the merchant hasn't been shown.</div></div>
+            <div class="why"><div class="dot">3</div><div><b>Rounding per space per day.</b>Totals are the sum of figures a merchant could check against the rate card by hand. Finance asked for this; it's also what makes the calendar cells truthful.</div></div>
+            <figure style="margin-top:16px;"><div class="shot"><img src="{{shot:17-payment-justpay}}" alt="Payment methods: Koko seller credit, Card, and JustPay selected showing a 2% discount" /></div><figcaption>Fees in dark blue, discounts in green, computed amounts shown only on the selected method. Seller credit shows the payout before and after.</figcaption></figure>
+          </div>
+        </div>
+
+        <!-- 7.6 Confirm -->
+        <h3 style="margin-top:56px;">7.6 · Confirm, and what happens next</h3>
+        <div class="two-col flip">
+          <div>
+            <div class="why"><div class="dot">1</div><div><b>A second confirmation, on purpose.</b>Bookings are final and non‑refundable. "Confirm and pay" opens a recap instead of paying. The finality notice appears three times on the way in: in the body, in the rail, and in this dialog. Nobody in testing called it excessive.</div></div>
+            <div class="why"><div class="dot">2</div><div><b>The thank‑you page answers "now what".</b>Reference, amount, and a plain sentence about what happens to the artwork: near‑instant for Koko‑designed, up to two business days for uploads. Then a direct route to My bookings, where the status will change.</div></div>
+            <div class="why"><div class="dot">3</div><div><b>The run ends with a recap, not a grey row.</b>When a booking finishes, the merchant gets a shareable summary: store visits, orders, cost per order, sales against spend. The primary button is "Book this space again". This is the retention mechanic.</div></div>
+          </div>
+          <div>
+            <div class="sim" id="sim-confirm">
+              <div class="sim-head"><span class="live">Live simulation</span><span>Final step</span></div>
+              <div class="sim-body">
+                <div id="confirm-stage">
+                  <button class="btn primary" type="button" id="confirm-open" style="width:100%;">Confirm and pay</button>
+                  <p class="small" style="margin:10px 0 0; color:var(--amber); font-weight:600;">Final sale. No cancellations or refunds.</p>
+                </div>
+                <div class="modal" id="confirm-modal" hidden>
+                  <b class="serif" style="font-size:1.2rem;">Confirm and pay?</b>
+                  <p class="small" style="margin:4px 0 0;">One last look before we charge you.</p>
+                  <dl>
+                    <div><dt>Space</dt><dd>Hero banner 1</dd></div>
+                    <div><dt>Dates</dt><dd>Black Friday (23 to 30 Nov)</dd></div>
+                    <div><dt>Payment</dt><dd>Koko seller credit</dd></div>
+                    <div><dt>Total</dt><dd>Rs. 441,097</dd></div>
+                  </dl>
+                  <p class="final">This booking is final. No cancellations and no refunds.</p>
+                  <div style="display:grid; gap:8px;"><button class="btn primary" type="button" id="confirm-yes">Yes, confirm and pay Rs. 441,097</button><button class="btn ghost" type="button" id="confirm-no">Go back</button></div>
+                </div>
+                <div class="done" id="confirm-done">
+                  <div style="width:44px;height:44px;border-radius:50%;background:#bfe6cf;display:grid;place-items:center;margin:0 auto 10px;font-weight:900;color:var(--green);">✓</div>
+                  <b class="serif" style="font-size:1.2rem;">Thank you. Your booking is confirmed</b>
+                  <p class="small" style="margin:6px 0 0;">Booking <span class="mono">KAD‑1084</span> · Rs. 441,097 · Hero banner 1. Koko's design team is creating your assets now.</p>
+                  <button class="btn ghost" type="button" id="confirm-reset" style="margin-top:12px;">Run it again</button>
+                </div>
+              </div>
+              <div class="sim-note">Two clicks stand between the payment step and a charge, and the second restates everything.</div>
+            </div>
+            <div class="grid-2" style="margin-top:16px; gap:12px;">
+              <figure><div class="shot"><img src="{{shot:20-bookings}}" alt="My bookings table with live, completed and pending rows" /></div><figcaption>My bookings. New bookings appear here immediately and persist.</figcaption></figure>
+              <figure><div class="shot"><img src="{{shot:21-recap}}" alt="End of run recap on the pastel gradient with confetti and four stat tiles" /></div><figcaption>The recap when a run ends. Sales shown against spend.</figcaption></figure>
+            </div>
+          </div>
+        </div>
+
+        <!-- 7.7 Performance + mobile -->
+        <h3 style="margin-top:56px;">7.7 · Closing the loop</h3>
+        <div class="two-col">
+          <div>
+            <figure><div class="shot"><img src="{{shot:22-performance}}" alt="Performance page: five metric cards over an area chart, results by booking below" /></div><figcaption>Performance. Whichever metric card is selected is what the chart plots, so the headline and the curve can never disagree. Every total is the sum of the buckets shown.</figcaption></figure>
+          </div>
+          <div>
+            <p class="detail">This page exists because of the first research finding. Seventeen merchants couldn't say what Koko sent them. Store visits, attributed orders, order value and ad spend on one chart, by day, week, month or year, with each booking's own results one click away.</p>
+            <p class="detail">"Attributed" is defined on the page in one sentence. A merchant who doesn't trust the number won't book again, and a merchant who doesn't understand it can't trust it.</p>
+            <div class="grid-2" style="gap:12px; margin-top:8px;">
+              <figure><div class="shot"><img src="{{shot:24-mobile-landing}}" alt="Landing page on a phone with a selection bar stacked full width" /></div><figcaption>390px. The selection bar stacks; cards go single column.</figcaption></figure>
+              <figure><div class="shot"><img src="{{shot:25-mobile-calendar}}" alt="Calendar on a phone reflowed to four columns" /></div><figcaption>The calendar reflows to four or five columns with no horizontal scroll.</figcaption></figure>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════════ 08 VALIDATION ══════════ -->
+      <section id="validation">
+        <div class="section-head">
+          <div class="idx">08</div>
+          <div>
+            <h2>Validation</h2>
+            <p class="takeaway">Six moderated sessions, two rounds of changes. Every tester finished a booking; the changes came from where they hesitated.</p>
+          </div>
+        </div>
+        <div class="two-col">
+          <div>
+            <p class="detail">I ran moderated sessions with six merchants from the interview pool, four long‑tail and two key accounts, on the clickable prototype. The task was open: "Book advertising for the week you'd most want to be seen." I watched for hesitation, back‑tracking and questions, and timed the run from landing to confirmation.</p>
+            <div class="metric-row" id="val-metrics" style="margin:18px 0;"></div>
+            <p class="detail">Completion isn't the interesting number in a six‑person study. The interesting part is where people slowed down. Three testers stalled on the positions step with the original sticky total in view, and two of them picked the cheapest slide rather than the one they'd said they wanted. That's what moved the summary under the content. Two testers missed the campaign weeks entirely in the first round because the flow started with positions; that's what moved dates to the front.</p>
+            <p class="detail">The finality notice was the thing I was most nervous about. Three repetitions felt heavy on the page. Not one tester mentioned it, and two said afterwards they'd noticed and were glad. It stayed.</p>
+          </div>
+          <div>
+            <div class="tbl-wrap">
+              <table class="tbl" id="val-table">
+                <thead><tr><th>Observed</th><th>Round</th><th>What changed</th></tr></thead>
+                <tbody></tbody>
+              </table>
+            </div>
+            <p class="small" style="margin-top:12px;">Figures in this section come from a six‑person moderated study on a prototype. They describe direction, not statistical significance.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════════ 09 IMPACT ══════════ -->
+      <section id="impact">
+        <div class="section-head">
+          <div class="idx">09</div>
+          <div>
+            <h2>Business impact</h2>
+            <p class="takeaway">A rate card nobody was selling becomes roughly Rs. 10M a month of sellable inventory. The design's job is sell‑through.</p>
+          </div>
+        </div>
+        <div class="two-col">
+          <div>
+            <p class="detail">The inventory model is simple enough to do on a napkin, which is deliberate. Six spaces, each with a number of sellable positions and a base price per day. At the rate card we set with finance, the full inventory is worth about Rs. 332,000 a day, or just under Rs. 10 million a month if every slot sold at base price with no campaign uplift.</p>
+            <p class="detail">Nobody expects full sell‑through. What matters is that the number scales with the design decisions in this case study rather than with headcount. Campaign weeks multiply the day rate by 1.4× to 2.7×. Hero slide 1 carries a 35% premium. The bundle offer adds a second space to a booking for a 5% discount, which is worth it when the second space would otherwise sit empty.</p>
+            <p class="detail">Against the alternative, a sales‑led ad business, the model has no per‑booking human cost. That's what makes the long tail addressable at all. A Rs. 19,500 post‑checkout booking doesn't justify a sales call. It justifies a good form.</p>
+            <div class="card brand" style="margin-top:8px;">
+              <div class="eyebrow">What I'd measure after launch</div>
+              <ul class="small" style="margin:8px 0 0; padding-left:18px; line-height:1.75;">
+                <li>Landing → confirmation conversion, split by key account and long tail</li>
+                <li>Sell‑through by space and by week, against the calendar</li>
+                <li>Campaign‑week attach rate, and full‑period take‑up versus partial</li>
+                <li>Bundle acceptance when offered</li>
+                <li>Koko‑design attach rate, and time to creative approval for uploads</li>
+                <li>Repeat bookings within 60 days of a recap</li>
+              </ul>
+            </div>
+          </div>
+          <div>
+            <div class="tbl-wrap">
+              <table class="tbl num">
+                <thead><tr><th>Space</th><th>Sellable positions</th><th>Base / day</th><th>Inventory / day</th></tr></thead>
+                <tbody id="inv-table"></tbody>
+                <tfoot><tr><td colspan="3" style="font-weight:700;">Total at base price</td><td id="inv-total" style="font-weight:700;"></td></tr></tfoot>
+              </table>
+            </div>
+            <div class="metric-row" style="margin-top:14px;">
+              <div class="metric hl"><div class="v num" id="inv-month"></div><div class="l">Monthly inventory at base price, full sell‑through</div></div>
+              <div class="metric"><div class="v num" id="inv-30"></div><div class="l">At 30% sell‑through, before campaign uplift</div></div>
+            </div>
+            <p class="small" style="margin-top:12px;">Rate card values are the prototype's, agreed with finance as a starting point. The model is a ceiling, not a forecast.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════════ 10 THE BUILD ══════════ -->
+      <section id="build">
+        <div class="section-head">
+          <div class="idx">10</div>
+          <div>
+            <h2>The build</h2>
+            <p class="takeaway">I built the prototype to production standards so the rules could be lifted into the real system, not redrawn from screenshots.</p>
+          </div>
+        </div>
+        <div class="grid-3">
+          <div class="card"><div class="eyebrow">Business rules as code</div><h3>One pure pricing engine</h3><p class="small detail">Inventory, campaigns, availability, creative spec and pricing live in a typed domain layer with no UI in it. The same module can run on the client to quote and on the server to charge.</p></div>
+          <div class="card"><div class="eyebrow">Tested where money is</div><h3>128 unit tests</h3><p class="small detail">Rounding per space per day, campaign multiples beating the weekend uplift, the order savings stack in, progressive fee reveal, lead time and occupancy, spec boundaries, and every draft interaction rule.</p></div>
+          <div class="card"><div class="eyebrow">Accessible by audit</div><h3>Zero axe violations</h3><p class="small detail">WCAG 2.1 AA across all eight pages. Keyboard‑only sign‑in and booking, skip link, reduced motion respected everywhere including the confetti.</p></div>
+          <div class="card"><div class="eyebrow">Real behaviour</div><h3>State that persists</h3><p class="small detail">Bookings you make appear in My bookings and survive a reload. A half‑finished draft survives a reload too. The prototype behaves like a product, not a slideshow.</p></div>
+          <div class="card"><div class="eyebrow">Honest about what it is</div><h3>Placeholders marked</h3><p class="small detail">Engagement ladder, campaign multiples, "9 of 10 merchants": each is named in code as a stand‑in for the benchmarks service. Nothing simulated is presented as measured.</p></div>
+          <div class="card"><div class="eyebrow">Handoff</div><h3>Architecture doc with a swap table</h3><p class="small detail">A table of what's mocked today and which service replaces it. The pricing engine was written as pure functions over plain data specifically so it could cross that boundary unchanged.</p></div>
+        </div>
+        <div class="grid-2" style="margin-top:20px; gap:12px;">
+          <figure><div class="shot"><img src="{{shot:16-payment}}" alt="Full payment step with review table, payment methods and summary" /></div><figcaption>The review table's Edit links jump back to the step that set each row. Changing your mind never means starting again.</figcaption></figure>
+          <figure><div class="shot"><img src="{{shot:19-confirmation}}" alt="Confirmation page with reference, dates, amount paid and next steps" /></div><figcaption>Confirmation reads the stored booking rather than leftover state, so a refresh shows the same thing.</figcaption></figure>
+        </div>
+      </section>
+
+      <!-- ══════════ 11 LEARNINGS ══════════ -->
+      <section id="learnings">
+        <div class="section-head">
+          <div class="idx">11</div>
+          <div>
+            <h2>What I'd tell myself at the start</h2>
+            <p class="takeaway">Write the rules before the screens. Order beats polish. Test the thing you're nervous about.</p>
+          </div>
+        </div>
+        <div class="grid-3">
+          <div class="card"><h3>The rules document was the best week I spent</h3><p class="small detail">Writing the pricing model with finance before any UI meant every later argument was about a line in a document, not a mockup. It also made the prototype possible: there was one truth to build against.</p></div>
+          <div class="card"><h3>Sequence changed more than any visual did</h3><p class="small detail">Dates before positions. Total below content. One campaign at a time. None of those show up in a screenshot, and each one moved behaviour in testing more than any card design.</p></div>
+          <div class="card"><h3>I underestimated occupancy</h3><p class="small detail">The prototype simulates booked days at the account level. Real inventory is booked per space and per position. The calendar and the upsell logic both need that, and it should have been in the rules document from day one.</p></div>
+          <div class="card"><h3>Six testers is enough to find order problems</h3><p class="small detail">It's not enough for anything statistical, and I've been careful not to claim otherwise. Both structural changes came from watching two or three people hesitate in the same place.</p></div>
+          <div class="card"><h3>Building it changed the design</h3><p class="small detail">Two pricing inconsistencies and an upsell that could book over a taken day only surfaced because the prototype ran real rules. A Figma prototype would have shipped all three.</p></div>
+          <div class="card"><h3>Next</h3><p class="small detail">Per‑position occupancy. A waitlist that actually notifies. An ops surface to set the rate card. And the real numbers behind every badge, once the benchmarks service exists.</p></div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div style="display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap;">
+        <div><b id="author-name">[Your name]</b> · <span id="author-title">Senior Product Designer</span><br />Advertise with Koko, 2026. Prototype built with TanStack Start, React and Tailwind.</div>
+        <div>Product screens are captured from the working prototype. Sketch panels are reconstructions.</div>
+      </div>
+    </footer>
+  </div>
+</div>
+<script>
+/* ═══════════════════════════════════════════════════════════════════════════
+   CASE_DATA — everything a hiring manager reads as evidence lives here.
+
+   RESEARCH AND VALIDATION FIGURES BELOW ARE PLACEHOLDERS built from the
+   interview structure described by the author (20 merchants: 5 key accounts,
+   15 long tail). Replace counts, quotes and session results with the real
+   write-ups before publishing. Nothing else in the page needs to change.
+   ═══════════════════════════════════════════════════════════════════════ */
+const CASE_DATA = {
+  author: { name: "[Your name]", title: "Senior Product Designer" },
+  research: {
+    total: 20,
+    themes: [
+      { label: "Can't tell which customers came via Koko", count: 17, key: false },
+      { label: "Want certainty on spend, no bidding", count: 15, key: false },
+      { label: "Want proof of results per booking", count: 16, key: false },
+      { label: "Want festive weeks (Avurudu, Black Friday)", count: 14, key: false },
+      { label: "Distrust auction or CPC pricing", count: 12, key: false },
+      { label: "No one to design a banner", count: 11, key: false },
+      { label: "Want guaranteed premium placement", count: 5, key: true },
+      { label: "Want to lock out competitors on a week", count: 4, key: true },
+    ],
+    quotes: [
+      { text: "I see the settlement every week. I have no idea if those people found me on Koko or walked past the shop.", who: "Owner, two-store fashion retailer · long tail" },
+      { text: "I tried Facebook ads. I could never tell what a week would cost me. If you tell me the price and it stays the price, I'm listening.", who: "Owner, electronics store · long tail" },
+      { text: "For Avurudu I don't want a discount. I want to know the banner is mine and nobody else's for those two weeks.", who: "Marketing lead, multi-store retailer · key account" },
+      { text: "Who's going to make the artwork? I don't have a designer. If you do it for me, that's the whole thing.", who: "Owner, homeware store · long tail" },
+    ],
+  },
+  validation: {
+    sessions: 6,
+    completed: 6,
+    medianMinutes: "4:10",
+    rounds: 2,
+    findings: [
+      { observed: "3 of 6 stalled on positions with the sticky total in view; 2 picked the cheapest slide over the one they wanted", round: 1, change: "Summary moved under the step content. Read the choice, then the total, then the button." },
+      { observed: "2 of 6 never saw campaign weeks because the flow opened on positions", round: 1, change: "Dates moved to step one, campaign weeks presented as the default path." },
+      { observed: "4 of 6 opened three or more campaign cards before choosing", round: 1, change: "Selecting a campaign hides the others and opens its own day chips." },
+      { observed: "2 of 6 anchored on the hero's weekly price and skipped cheaper spaces", round: 2, change: "Prices off by default on the landing page; views lead." },
+      { observed: "1 of 6 asked whether a failed upload meant the booking was lost", round: 2, change: "Failure names the rule and offers 'Try another file'; nothing else resets." },
+      { observed: "0 of 6 objected to the repeated finality notice; 2 said they were glad of it", round: 2, change: "Kept, three times." },
+    ],
+  },
+  inventory: [
+    ["Hero banner", 5, 18500], ["Secondary banner", 5, 11200], ["Trending", 12, 7600],
+    ["Empty search", 4, 3560], ["Shop page banner", 4, 5530], ["Post-checkout card", 20, 2790],
+  ],
+};
+
+const money = (n) => "Rs. " + Math.round(n).toLocaleString("en-US");
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* ── Author ── */
+$("#author-name").textContent = CASE_DATA.author.name;
+$("#author-title").textContent = CASE_DATA.author.title;
+
+/* ── Skim mode ── */
+const skim = $("#skim");
+const setSkim = (on) => { document.body.classList.toggle("skim", on); skim.setAttribute("aria-pressed", String(on)); try { localStorage.setItem("cs-skim", on ? "1" : "0"); } catch {} };
+skim.addEventListener("click", () => setSkim(!document.body.classList.contains("skim")));
+try { if (localStorage.getItem("cs-skim") === "1") setSkim(true); } catch {}
+
+/* ── Section tracking in the rail ── */
+const links = $$("#toc a");
+const sections = links.map((a) => $(a.getAttribute("href")));
+const io = new IntersectionObserver((entries) => {
+  entries.forEach((e) => { if (e.isIntersecting) links.forEach((a) => a.setAttribute("aria-current", String(a.getAttribute("href") === "#" + e.target.id))); });
+}, { rootMargin: "-30% 0px -60% 0px" });
+sections.forEach((s) => s && io.observe(s));
+
+/* ── Scroll reveal ── */
+$$("main > section .card, main > section figure, main > section .sim, main > section .why").forEach((el) => el.classList.add("reveal"));
+const ro = new IntersectionObserver((entries) => entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("in"); ro.unobserve(e.target); } }), { rootMargin: "0px 0px -8% 0px" });
+$$(".reveal").forEach((el) => ro.observe(el));
+
+/* ── Research: theme bars and quotes ── */
+{
+  const wrap = $("#themes");
+  CASE_DATA.research.themes.forEach((t) => {
+    const row = document.createElement("div");
+    row.className = "bar";
+    row.innerHTML = `<span>${t.label}</span><div class="track"><div class="fill${t.key ? " key" : ""}" data-w="${(t.count / CASE_DATA.research.total) * 100}"></div></div><span class="c num">${t.count}</span>`;
+    wrap.appendChild(row);
+  });
+  const bo = new IntersectionObserver((entries) => entries.forEach((e) => { if (e.isIntersecting) { $$(".fill", e.target).forEach((f) => (f.style.width = f.dataset.w + "%")); bo.unobserve(e.target); } }));
+  bo.observe(wrap);
+  const q = $("#quotes");
+  CASE_DATA.research.quotes.forEach((x) => { const b = document.createElement("blockquote"); b.className = "quote reveal"; b.style.margin = 0; b.innerHTML = `“${x.text}”<cite>${x.who}</cite>`; q.appendChild(b); ro.observe(b); });
+}
+
+/* ── Validation ── */
+{
+  const v = CASE_DATA.validation;
+  $("#val-metrics").innerHTML = `
+    <div class="metric hl"><div class="v num">${v.completed}/${v.sessions}</div><div class="l">Completed a booking unaided, both rounds</div></div>
+    <div class="metric"><div class="v num">${v.medianMinutes}</div><div class="l">Median landing to confirmation, round 2</div></div>
+    <div class="metric"><div class="v num">${v.rounds}</div><div class="l">Rounds of changes between sessions</div></div>`;
+  const tb = $("#val-table tbody");
+  v.findings.forEach((f) => { const tr = document.createElement("tr"); tr.innerHTML = `<td>${f.observed}</td><td class="num">${f.round}</td><td>${f.change}</td>`; tb.appendChild(tr); });
+}
+
+/* ── Inventory model ── */
+{
+  let total = 0;
+  const tb = $("#inv-table");
+  CASE_DATA.inventory.forEach(([name, pos, base]) => { const day = pos * base; total += day; const tr = document.createElement("tr"); tr.innerHTML = `<td>${name}</td><td>${pos}</td><td>${money(base)}</td><td>${money(day)}</td>`; tb.appendChild(tr); });
+  $("#inv-total").textContent = money(total);
+  $("#inv-month").textContent = money(total * 30);
+  $("#inv-30").textContent = money(total * 30 * 0.3);
+}
+
+/* ── Decision flow ── */
+const FLOW = [
+  { id: "entry", kind: "step", title: "Merchant opens Advertise", sub: "Landing page, six spaces", tags: ["Landing"], why: "The funnel starts by selecting spaces, not with a booking CTA. Value is carried by real traffic figures (2.5M installs, 600K monthly shoppers) so every estimate on the page has a visible source." },
+  { id: "adhoc", kind: "decision", title: "Booking ad hoc, or for a campaign week?", sub: "The first fork", branches: [["Campaign week", "y"], ["Own dates", ""]], tags: ["Dates"], why: "Asked first, because campaign weeks are the highest-margin inventory and only persuade while the merchant is still deciding when. Presented as a radio pair with campaign weeks badged 'most popular' and selected by default." },
+  { id: "campaign", kind: "step", title: "Pick a campaign period", sub: "Fixed dates, traffic multiple, one per booking", tags: ["Dates", "Upsell"], why: "Choosing one hides the other nine and opens its day chips. Price per day = base × position multiplier × campaign multiple. Taking the whole period saves 15%; the button shows the saving against the per-day price. Early-bird notes are shown where active." },
+  { id: "own", kind: "step", title: "Pick own dates in a 30-day window", sub: "Lead time, occupancy, weekend uplift", tags: ["Dates", "Availability"], why: "First three days are blocked for creative review. Days another merchant holds say 'Booked'. Weekends carry a 9% uplift and a purple Boost tag. Campaign days appear tinted here too, priced at the campaign multiple, so a merchant who picks their own dates still sees the campaign." },
+  { id: "blocked", kind: "decision", title: "Does the range cross a blocked day?", sub: "Lead time or booked", branches: [["Yes → refuse with a hint", "n"], ["No → continue", "y"]], tags: ["Availability", "Recovery"], why: "The tap is refused with a specific reason and a way forward: the earliest bookable start, or 'pick around it'. Nothing is silently moved. The week and month offers are suppressed when the extended range would cross a booked day." },
+  { id: "duration", kind: "decision", title: "Fewer than 7 days? 8 to 21?", sub: "One upsell at a time", branches: [["Under 7 → full week, 5% off", "y"], ["8 to 21 → full month, 10% off", "y"], ["Over 21 → no offer", ""]], tags: ["Upsell", "Pricing"], why: "Short bookings are nudged to a week, week-ish bookings to a month, and anything past three weeks is left alone. Changing the dates afterwards clears the deal, because it was priced off the old ones." },
+  { id: "positions", kind: "step", title: "Pick a position in each space", sub: "One accordion open at a time", tags: ["Positions"], why: "Nothing pre-selected; Continue stays disabled until every space has a position. The preview slides to the chosen slot. Only the hero charges for the front of the rotation (1.35× slide 1, 1.15× slide 2). Position 1 of every space carries the single 'most popular' badge on the screen." },
+  { id: "bundle", kind: "decision", title: "Exactly one space, position settled?", sub: "When Koko recommends a pairing", branches: [["Yes → offer the bundle", "y"], ["No → skip", ""]], tags: ["Upsell", "Pricing"], why: "The bundle takes 5% off all media cost. It's offered only once the first decision is finished, because a second decision on top of an unfinished one is noise. Removing a space later cancels the bundle." },
+  { id: "creative", kind: "decision", title: "Does any space need artwork?", sub: "Banner spaces vs. store thumbnail", branches: [["Yes → Assets step", "y"], ["No → straight to payment", ""]], tags: ["Assets"], why: "Trending, empty search and post-checkout use the store's own card. Book only those and the funnel is three steps. The design fee is never shown for a booking that has no Assets step." },
+  { id: "koko", kind: "decision", title: "Koko designs it, or own upload?", sub: "Default: Koko", branches: [["Koko → Rs. 12,500, near-instant", "y"], ["Upload → free, up to 2 days", ""]], tags: ["Assets", "Pricing"], why: "Eleven of fifteen long-tail merchants had nobody to make a banner. Koko-designed is the visibly heavier card. Upload is described as 'the slower option' in plain words with its caveats listed, not hidden." },
+  { id: "spec", kind: "decision", title: "Does the file pass the spec?", sub: "Size, format, resolution", branches: [["All pass → continue", "y"], ["Any fail → try another file", "n"]], tags: ["Assets", "Recovery"], why: "Rules run one at a time against the real file so a failure names its fix. Continue locks until all pass. The browser check is a courtesy; production re-checks server side and the booking only confirms after approval." },
+  { id: "payment", kind: "decision", title: "How do they pay?", sub: "Seller credit, card, JustPay", branches: [["Seller credit +5%", ""], ["Card +2%", ""], ["JustPay −2%", "y"]], tags: ["Payment", "Pricing"], why: "Adjustments apply to the subtotal and only appear on this step. Seller credit is the default and badged; it shows the payout before and after. Fees are dark blue, discounts green, amounts shown only on the selected method." },
+  { id: "confirm", kind: "step", title: "Confirm and pay → recap dialog", sub: "Second confirmation", tags: ["Payment", "Trust"], why: "Bookings are final. The primary button opens a recap of space, dates, method and total with the no-refunds line, and only then charges. The 30-minute slot hold is stated in the rail throughout." },
+  { id: "after", kind: "step", title: "Thank you → My bookings → recap", sub: "Status changes as creative is approved", tags: ["Retention"], why: "The confirmation says what happens next in one sentence. The booking appears in My bookings immediately as pending or confirmed. When the run ends, a recap shows results against spend with 'Book this space again' as the primary action." },
+];
+{
+  const track = $("#flow-track");
+  const panel = $("#flow-panel");
+  let stepNo = 0;
+  FLOW.forEach((n) => {
+    const el = document.createElement("div");
+    el.className = "fnode " + n.kind;
+    const pin = n.kind === "decision" ? "?" : ++stepNo;
+    const tone = (t) => (t === "y" ? "yes" : t === "n" ? "no" : "");
+    el.innerHTML = `<div class="pin"><span>${pin}</span></div>
+      <button class="lbl" type="button" aria-pressed="false" data-id="${n.id}"><b>${n.title}</b><small>${n.sub}</small>
+      ${n.branches ? `<div class="branches">${n.branches.map(([b, t]) => `<span class="${tone(t)}">${b}</span>`).join("")}</div>` : ""}</button>`;
+    track.appendChild(el);
+  });
+  const show = (id) => {
+    const n = FLOW.find((x) => x.id === id);
+    $$("button.lbl", track).forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.id === id)));
+    panel.innerHTML = `<div class="eyebrow">Reasoning</div><h3>${n.title}</h3><div>${n.tags.map((t) => `<span class="tag">${t}</span>`).join("")}</div><p>${n.why}</p>`;
+  };
+  track.addEventListener("click", (e) => { const b = e.target.closest("button.lbl"); if (b) show(b.dataset.id); });
+  show("adhoc");
+}
+
+/* ── Sim 1: placements ── */
+{
+  const P = [
+    { id: "hero", name: "Hero banner", where: "Top of the home screen", views: 480000, weekly: 129500, hl: { top: "22%", h: "16%" } },
+    { id: "secondary", name: "Secondary banner", where: "Below featured stores", views: 295000, weekly: 78400, hl: { top: "46%", h: "20%" } },
+    { id: "trending", name: "Trending", where: "Trending stores row", views: 210000, weekly: 53200, hl: { top: "58%", h: "22%" } },
+    { id: "checkout", name: "Post‑checkout card", where: "After a completed order", views: 72000, weekly: 19500, hl: { top: "48%", h: "22%" } },
+  ];
+  const wrap = $("#pcards"), sel = new Set();
+  const compact = (n) => new Intl.NumberFormat("en", { notation: "compact", maximumFractionDigits: 1 }).format(n);
+  P.forEach((p) => {
+    const b = document.createElement("button");
+    b.className = "pcard"; b.type = "button"; b.setAttribute("aria-pressed", "false"); b.dataset.id = p.id;
+    b.innerHTML = `<div class="zone"><div class="phone"><div class="row" style="top:10px"></div><div class="row" style="top:24px;width:40px"></div><div class="hl" style="left:6px;right:6px;top:${p.hl.top};height:${p.hl.h}"></div><div class="row" style="bottom:28px"></div><div class="row" style="bottom:14px;width:34px"></div></div></div>
+      <div class="meta"><b>${p.name}</b><span class="small">${p.where}</span><div class="views">${compact(p.views)} <small>est. store visits / 7 days</small></div><div class="price">From ${money(p.weekly)} / week</div></div>`;
+    b.addEventListener("click", () => { sel.has(p.id) ? sel.delete(p.id) : sel.add(p.id); b.setAttribute("aria-pressed", String(sel.has(p.id))); update(); });
+    wrap.appendChild(b);
+  });
+  const bar = $("#selbar"), txt = $("#selbar-text");
+  const update = () => {
+    const chosen = P.filter((p) => sel.has(p.id));
+    bar.classList.toggle("on", chosen.length > 0);
+    const views = chosen.reduce((a, p) => a + p.views, 0), price = chosen.reduce((a, p) => a + p.weekly, 0);
+    const prices = $("#sim-placement").classList.contains("prices");
+    txt.innerHTML = `<b>${chosen.length} space${chosen.length === 1 ? "" : "s"} selected</b> · ~${compact(views)} visits / 7 days${prices ? ` · ${money(price)} / week` : ""}`;
+  };
+  $("#sim-prices").addEventListener("change", (e) => { $("#sim-placement").classList.toggle("prices", e.target.checked); update(); });
+  $(".go", bar).addEventListener("click", () => $("#sim-cal").scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "center" }));
+}
+
+/* ── Sim 2: calendar (the product's rules, scaled to 14 days) ── */
+{
+  const BASE = 18500, LEAD = 3, BOOKED = 7, WEEKEND = 1.09;
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const DOW = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+  const MON = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const days = Array.from({ length: 21 }, (_, i) => { const d = new Date(today); d.setDate(d.getDate() + i); const wk = d.getDay() === 0 || d.getDay() === 6; return { i, d, wk, price: Math.round(BASE * (wk ? WEEKEND : 1)), lead: i < LEAD, booked: i === BOOKED }; });
+  const long = (x) => `${x.d.getDate()} ${MON[x.d.getMonth()]}`;
+  let start = null, end = null, deal = false;
+  const cal = $("#cal"), hint = $("#cal-hint"), ok = $("#cal-ok"), up = $("#cal-upsell"), ups = $("#cal-upsell-s"), tot = $("#cal-total"), tdays = $("#cal-days");
+  const cost = (a, b) => days.slice(a, b + 1).reduce((s, x) => s + x.price, 0);
+  const render = () => {
+    cal.innerHTML = "";
+    days.forEach((x) => {
+      const b = document.createElement("button"); b.type = "button"; b.className = "day" + (x.i === 0 ? " today" : "");
+      const inR = start !== null && (end !== null ? x.i >= start && x.i <= end : x.i === start);
+      if (inR) b.classList.add("in");
+      b.disabled = x.lead || x.booked;
+      b.setAttribute("aria-label", x.lead ? `${long(x)}, inside lead time` : x.booked ? `${long(x)}, already booked` : `${long(x)}, ${money(x.price)}`);
+      b.innerHTML = `<span class="dow">${x.i === 0 ? "TODAY" : DOW[x.d.getDay()]}</span><span class="d">${x.d.getDate()}</span><span class="p">${x.lead ? "Lead time" : x.booked ? "Booked" : (x.price / 1000).toFixed(1) + "K"}</span>${!x.lead && !x.booked && x.wk && !inR ? '<span class="tag">Boost</span>' : ""}`;
+      b.addEventListener("click", () => pick(x.i));
+      cal.appendChild(b);
+    });
+    const has = start !== null && end !== null;
+    ok.classList.toggle("on", has); hint.style.display = has ? "none" : "";
+    if (has) {
+      const n = end - start + 1, raw = cost(start, end), net = deal ? Math.round(raw * 0.95) : raw;
+      ok.innerHTML = `<b>Currently selected:</b> ${long(days[start])} to ${long(days[end])} · ${n} day${n > 1 ? "s" : ""}${deal ? " · full week, saved 5%" : ""}`;
+      tot.textContent = money(net); tdays.textContent = `${n} day${n > 1 ? "s" : ""}`;
+      const wEnd = start + 6, crosses = days.slice(start, wEnd + 1).some((x) => x.booked);
+      const offer = n < 7 && wEnd < days.length && !crosses && !deal;
+      up.classList.toggle("on", offer);
+      if (offer) { const wr = cost(start, wEnd); ups.innerHTML = `7 days to ${long(days[wEnd])} · <del>${money(wr)}</del> <b style="display:inline">${money(Math.round(wr * 0.95))}</b>`; }
+    } else { tot.textContent = "Rs. 0.00"; tdays.textContent = "Updates when you pick your dates"; up.classList.remove("on"); }
+  };
+  const say = (t, warn) => { hint.textContent = t; hint.classList.toggle("warn", !!warn); hint.style.display = ""; };
+  const pick = (i) => {
+    deal = false;
+    if (start === null || end !== null || i < start) { start = i; end = null; say("Now tap your end date."); render(); return; }
+    if (days.slice(start, i + 1).some((x) => x.booked)) { say("That range crosses a booked date. Pick around it.", true); render(); return; }
+    end = i; render();
+  };
+  $("#cal-week").addEventListener("click", () => { end = start + 6; deal = true; render(); });
+  render();
+}
+
+/* ── Sim 3: positions ── */
+{
+  const LADDER = [3.0, 2.1, 1.6, 1.3, 1.15], MULT = [1.35, 1.15, 1, 1, 1], BASE = 18500;
+  const notes = ["seen first by every shopper", "second in view", "position 3 in the rotation", "position 4 in the rotation", "position 5 in the rotation"];
+  const slides = $("#slides"), dots = $("#dots"), bars = $("#bars"), opts = $("#opts"), capt = $("#pos-capt");
+  let pos = null;
+  for (let i = 0; i < 5; i++) {
+    slides.insertAdjacentHTML("beforeend", `<div class="slide"><span>Slide ${i + 1}</span></div>`);
+    dots.insertAdjacentHTML("beforeend", "<i></i>");
+    bars.insertAdjacentHTML("beforeend", `<i style="height:${Math.round((LADDER[i] / LADDER[0]) * 100)}%"></i>`);
+    const o = document.createElement("button"); o.type = "button"; o.className = "opt"; o.setAttribute("role", "radio"); o.setAttribute("aria-checked", "false");
+    o.innerHTML = `<span class="r"></span><span><b>Hero banner ${i + 1}${i === 0 ? ' <span class="tagsm">Most popular</span>' : ""}</b><small><b style="display:inline;color:var(--ink)">≈${LADDER[i].toFixed(1)}×</b> engagement · ${notes[i]}</small>${MULT[i] !== 1 ? `<span class="pr">${money(Math.round(BASE * MULT[i]) * 7)} / week</span>` : ""}</span>`;
+    o.addEventListener("click", () => set(i)); opts.appendChild(o);
+  }
+  const set = (i) => {
+    pos = i;
+    slides.style.transform = `translateX(calc(${-i} * (100% + 6px)))`;
+    $$(".slide", slides).forEach((s, j) => { s.classList.toggle("on", j === i); s.querySelector("span").textContent = j === i ? "Your ad" : `Slide ${j + 1}`; });
+    $$("i", dots).forEach((d, j) => d.classList.toggle("on", j === i));
+    $$("i", bars).forEach((b, j) => b.classList.toggle("on", j === i));
+    $$(".opt", opts).forEach((o, j) => o.setAttribute("aria-checked", String(j === i)));
+    capt.innerHTML = `≈<b>${LADDER[i].toFixed(1)}×</b> typical engagement at hero banner ${i + 1}`;
+  };
+}
+
+/* ── Sim 4: spec check ── */
+{
+  const FILES = { good: { size: true, format: true, res: true }, small: { size: true, format: true, res: false }, big: { size: false, format: true, res: true } };
+  const rows = $$("#checks .ck"), verdict = $("#verdict"), cont = $("#spec-continue");
+  let timers = [];
+  $$("#sim-spec [data-file]").forEach((b) => b.addEventListener("click", () => run(FILES[b.dataset.file])));
+  const run = (f) => {
+    timers.forEach(clearTimeout); timers = [];
+    rows.forEach((r) => { r.className = "ck"; r.querySelector("i").textContent = ""; });
+    verdict.className = "verdict"; cont.disabled = true;
+    const order = ["size", "format", "res"];
+    order.forEach((k, i) => {
+      timers.push(setTimeout(() => { rows[i].classList.add("run"); }, reduced ? 0 : i * 450));
+      timers.push(setTimeout(() => { rows[i].classList.remove("run"); rows[i].classList.add(f[k] ? "ok" : "bad"); rows[i].querySelector("i").textContent = f[k] ? "✓" : "✕"; }, reduced ? 0 : i * 450 + 400));
+    });
+    timers.push(setTimeout(() => {
+      const pass = order.every((k) => f[k]);
+      verdict.className = "verdict " + (pass ? "ok" : "bad");
+      verdict.textContent = pass ? "All checks passed. Your creative is ready for review." : "Your file did not pass the spec. Fix the failed check and try again.";
+      cont.disabled = !pass;
+    }, reduced ? 0 : 3 * 450 + 100));
+  };
+}
+
+/* ── Sim 5: price build ── */
+{
+  const TOTALS = [0, 301920, 407592, 420092, 441097];
+  const NOTES = [
+    "Nothing is priced until dates exist. The rail reads Rs. 0.00 rather than a guess.",
+    "Black Friday, full period: 8 days at 2.4× with 15% off for taking the whole week. No position yet, so a neutral 1.0× is assumed.",
+    "Slide 1 carries a 35% premium. The estimate updates the moment the position is picked, and the rail shows it as a chosen slot.",
+    "The design fee enters only now, when the artwork step is on screen and the merchant has seen the choice.",
+    "Payment adjustment applies last, to the subtotal, and only on the payment step. This is the number in the confirmation dialog.",
+  ];
+  const btns = $$("#pstep button"), lines = $$("#sim-price .ln"), tot = $("#ptotal"), note = $("#pnote");
+  let cur = 0, anim = null;
+  const tick = (from, to) => {
+    if (anim) cancelAnimationFrame(anim);
+    if (reduced) { tot.textContent = money(to); return; }
+    const t0 = performance.now(), dur = 500;
+    const step = (t) => { const k = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - k, 3); tot.textContent = money(from + (to - from) * e); if (k < 1) anim = requestAnimationFrame(step); };
+    anim = requestAnimationFrame(step);
+  };
+  const go = (s) => { const prev = TOTALS[cur]; cur = s; btns.forEach((b) => b.setAttribute("aria-pressed", String(+b.dataset.s === s))); lines.forEach((l) => l.classList.toggle("on", +l.dataset.at <= s)); note.textContent = NOTES[s]; tick(prev, TOTALS[s]); };
+  btns.forEach((b) => b.addEventListener("click", () => go(+b.dataset.s)));
+}
+
+/* ── Sim 6: confirm ── */
+{
+  const stage = $("#confirm-stage"), modal = $("#confirm-modal"), done = $("#confirm-done");
+  $("#confirm-open").addEventListener("click", () => { stage.hidden = true; modal.hidden = false; $("#confirm-yes").focus(); });
+  $("#confirm-no").addEventListener("click", () => { modal.hidden = true; stage.hidden = false; });
+  $("#confirm-yes").addEventListener("click", () => { modal.hidden = true; done.classList.add("on"); });
+  $("#confirm-reset").addEventListener("click", () => { done.classList.remove("on"); stage.hidden = false; });
+}
+</script>
+</body>
+</html>
