@@ -7,7 +7,15 @@
  * a sign-in wall, an account identity in the header, a way out — and so the
  * guard is a single place to swap for real auth later.
  */
-import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  type ReactNode,
+} from "react";
 
 import { readJSON, remove, writeJSON } from "./storage";
 

@@ -15,7 +15,11 @@ describe("selecting spaces", () => {
   });
 
   it("does not add the same space twice", () => {
-    const twice = apply(EMPTY_DRAFT, { type: "addSpace", id: "hero" }, { type: "addSpace", id: "hero" });
+    const twice = apply(
+      EMPTY_DRAFT,
+      { type: "addSpace", id: "hero" },
+      { type: "addSpace", id: "hero" },
+    );
     expect(twice.placementIds).toEqual(["hero"]);
   });
 
@@ -127,21 +131,30 @@ describe("campaigns", () => {
 
 describe("duration upsell", () => {
   it("offers a full week on a short booking", () => {
-    expect(durationUpsell({ ...EMPTY_DRAFT, startISO: "2026-10-05", endISO: "2026-10-07" })?.deal)
-      .toEqual(WEEK_DEAL);
+    expect(
+      durationUpsell({ ...EMPTY_DRAFT, startISO: "2026-10-05", endISO: "2026-10-07" })?.deal,
+    ).toEqual(WEEK_DEAL);
   });
 
   it("offers nothing on an exact week, which already earned its deal", () => {
-    expect(durationUpsell({ ...EMPTY_DRAFT, startISO: "2026-10-05", endISO: "2026-10-11" })).toBeNull();
+    expect(
+      durationUpsell({ ...EMPTY_DRAFT, startISO: "2026-10-05", endISO: "2026-10-11" }),
+    ).toBeNull();
   });
 
   it("offers a full month between eight and twenty-one days", () => {
-    expect(durationUpsell({ ...EMPTY_DRAFT, startISO: "2026-10-05", endISO: "2026-10-12" })?.days).toBe(30);
-    expect(durationUpsell({ ...EMPTY_DRAFT, startISO: "2026-10-05", endISO: "2026-10-25" })?.days).toBe(30);
+    expect(
+      durationUpsell({ ...EMPTY_DRAFT, startISO: "2026-10-05", endISO: "2026-10-12" })?.days,
+    ).toBe(30);
+    expect(
+      durationUpsell({ ...EMPTY_DRAFT, startISO: "2026-10-05", endISO: "2026-10-25" })?.days,
+    ).toBe(30);
   });
 
   it("leaves a long booking alone", () => {
-    expect(durationUpsell({ ...EMPTY_DRAFT, startISO: "2026-10-05", endISO: "2026-10-30" })).toBeNull();
+    expect(
+      durationUpsell({ ...EMPTY_DRAFT, startISO: "2026-10-05", endISO: "2026-10-30" }),
+    ).toBeNull();
   });
 
   it("offers nothing without a complete range", () => {

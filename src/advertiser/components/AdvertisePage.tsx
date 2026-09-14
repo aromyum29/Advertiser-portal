@@ -51,7 +51,9 @@ export function AdvertisePage() {
   return (
     <div className="min-w-0 space-y-10 pb-28">
       <header className="pt-1">
-        <h1 className="text-3xl font-extrabold leading-tight tracking-tight">Advertise with Koko</h1>
+        <h1 className="text-3xl font-extrabold leading-tight tracking-tight">
+          Advertise with Koko
+        </h1>
         <p className="mt-1.5 text-base text-muted-foreground">
           Put your brand in front of shoppers who already use Koko.
         </p>
@@ -62,8 +64,8 @@ export function AdvertisePage() {
           You already sell on Koko. Now get seen on it.
         </p>
         <p className="mt-1.5 max-w-2xl text-[15px] leading-relaxed text-muted-foreground">
-          Pick a space, choose your dates, pay the price on screen. No bidding. The slot is yours for
-          the full period.
+          Pick a space, choose your dates, pay the price on screen. No bidding. The slot is yours
+          for the full period.
         </p>
 
         <div className="mt-7 grid grid-cols-[repeat(auto-fit,minmax(min(100%,240px),1fr))] gap-4">
@@ -99,7 +101,9 @@ export function AdvertisePage() {
         showPrices={showPrices}
         heading={
           <div>
-            <h2 className="text-[26px] font-extrabold tracking-tight">Choose where you want to be seen</h2>
+            <h2 className="text-[26px] font-extrabold tracking-tight">
+              Choose where you want to be seen
+            </h2>
             <p className="mt-1.5 max-w-3xl text-[15px] text-muted-foreground">
               Pick one space or a few. One booking covers all of them for the same dates.
             </p>
@@ -126,13 +130,17 @@ export function AdvertisePage() {
               <span className="text-[15px] font-bold">{spacesLabel(selected.length)} selected</span>
               {showPrices && (
                 <>
-                  <span aria-hidden="true" className="text-sm text-gray-500 dark:text-gray-400">·</span>
+                  <span aria-hidden="true" className="text-sm text-gray-500 dark:text-gray-400">
+                    ·
+                  </span>
                   <span className="text-[15px] tabular-nums">
                     {money(totalWeekly)} <span className="font-bold">/ week</span>
                   </span>
                 </>
               )}
-              <span aria-hidden="true" className="text-sm text-gray-500 dark:text-gray-400">·</span>
+              <span aria-hidden="true" className="text-sm text-gray-500 dark:text-gray-400">
+                ·
+              </span>
               <span className="text-sm tabular-nums text-gray-300 dark:text-gray-600">
                 ~{compact(totalViews)} {showPrices ? "views" : "store visits"} / 7 days
               </span>

@@ -32,7 +32,9 @@ export function PlacementDetailsDialog({
             </div>
             <div className="flex flex-col gap-4 p-6 sm:p-7">
               <div>
-                <DialogTitle className="text-xl font-bold tracking-tight">{placement.name}</DialogTitle>
+                <DialogTitle className="text-xl font-bold tracking-tight">
+                  {placement.name}
+                </DialogTitle>
                 <p className="mt-0.5 text-[13px] text-muted-foreground">{placement.location}</p>
               </div>
               <DialogDescription className="text-sm leading-relaxed text-foreground/80">
@@ -56,12 +58,18 @@ export function PlacementDetailsDialog({
                   <p className="mt-1 text-2xl font-bold tracking-tight tabular-nums">
                     {compact(Math.round(placement.weeklyImpressions * MONTHLY_FACTOR))}
                   </p>
-                  <p className="mt-0.5 text-[11px] text-muted-foreground">Rendered in shoppers' view</p>
+                  <p className="mt-0.5 text-[11px] text-muted-foreground">
+                    Rendered in shoppers' view
+                  </p>
                 </div>
               </div>
 
               <p className="text-sm text-muted-foreground">
-                From <span className="font-bold text-foreground tabular-nums">{money(placement.weekly)}</span> / week
+                From{" "}
+                <span className="font-bold text-foreground tabular-nums">
+                  {money(placement.weekly)}
+                </span>{" "}
+                / week
               </p>
 
               <button

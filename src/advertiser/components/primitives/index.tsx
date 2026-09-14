@@ -81,7 +81,7 @@ export function Radio({ on }: { on: boolean }) {
     <span
       aria-hidden="true"
       className={cn(
-        "h-[18px] w-[18px] flex-shrink-0 rounded-full border-2",
+        "block h-[18px] w-[18px] flex-shrink-0 rounded-full border-2",
         on
           ? "border-gray-900 bg-gray-900 shadow-[inset_0_0_0_3px_#fff] dark:border-gray-100 dark:bg-gray-100 dark:shadow-[inset_0_0_0_3px_#1D232A]"
           : "border-border bg-card",
@@ -194,7 +194,8 @@ export function FinalSaleNotice({ compact = false }: { compact?: boolean }) {
   return (
     <div className="rounded-xl border border-amber-200 bg-amber-50 px-5 py-4 dark:border-amber-800 dark:bg-amber-950/30">
       <p className="text-sm font-semibold text-amber-800 dark:text-amber-300">
-        This booking is final. No cancellations and no refunds. Your slots are reserved just for you.
+        This booking is final. No cancellations and no refunds. Your slots are reserved just for
+        you.
       </p>
     </div>
   );

@@ -7,7 +7,10 @@ import kokoLogo from "figma:asset/09ac28c5614ff62377e494f60366a17f58f0e925.png";
 
 export function VisaMark() {
   return (
-    <span aria-hidden="true" className="text-[13px] font-black italic tracking-tight text-[#1A1F71]">
+    <span
+      aria-hidden="true"
+      className="text-[13px] font-black italic tracking-tight text-[#1A1F71]"
+    >
       VISA
     </span>
   );
@@ -24,7 +27,10 @@ export function MastercardMark() {
 
 export function JustPayMark() {
   return (
-    <span aria-hidden="true" className="text-[13px] font-black lowercase tracking-tight text-[#2b3ce0]">
+    <span
+      aria-hidden="true"
+      className="text-[13px] font-black lowercase tracking-tight text-[#2b3ce0]"
+    >
       justpay
     </span>
   );

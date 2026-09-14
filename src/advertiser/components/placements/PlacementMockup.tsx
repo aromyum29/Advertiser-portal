@@ -29,7 +29,10 @@ const SHOTS: Record<PlacementId, { image: string | null; region: Region }> = {
   secondary: { image: appHome, region: { left: "4%", top: "46%", width: "92%", height: "21%" } },
   trending: { image: appSale, region: { left: "4%", top: "56%", width: "92%", height: "23%" } },
   search: { image: appSearch, region: { left: "3%", top: "68%", width: "94%", height: "19%" } },
-  shop: { image: appShopDetails, region: { left: "4%", top: "39.5%", width: "92%", height: "15%" } },
+  shop: {
+    image: appShopDetails,
+    region: { left: "4%", top: "39.5%", width: "92%", height: "15%" },
+  },
   checkout: { image: null, region: { left: "7%", top: "47%", width: "86%", height: "22%" } },
 };
 
@@ -89,7 +92,12 @@ export function PlacementMockup({
       )}
     >
       {shot.image ? (
-        <img src={shot.image} alt="" aria-hidden="true" className="absolute inset-0 h-full w-full object-cover object-top" />
+        <img
+          src={shot.image}
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 h-full w-full object-cover object-top"
+        />
       ) : (
         <OrderConfirmedMock />
       )}
@@ -99,7 +107,8 @@ export function PlacementMockup({
           "pointer-events-none absolute rounded-lg border-2 border-[#9356ff] bg-[#9356ff]/15 transition-shadow duration-300",
           "group-hover:animate-[adpulse_1.6s_ease_infinite] group-hover:shadow-[0_0_20px_rgba(147,86,255,0.7)]",
           "motion-reduce:animate-none motion-reduce:transition-none",
-          emphasised && "animate-[adpulse_1.6s_ease_infinite] shadow-[0_0_20px_rgba(147,86,255,0.7)]",
+          emphasised &&
+            "animate-[adpulse_1.6s_ease_infinite] shadow-[0_0_20px_rgba(147,86,255,0.7)]",
           EASE,
         )}
         style={shot.region}

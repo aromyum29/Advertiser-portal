@@ -18,7 +18,12 @@ import {
   type ReactNode,
 } from "react";
 
-import { blockedReason, earliestStart, validateRange, type RangeProblem } from "../domain/availability";
+import {
+  blockedReason,
+  earliestStart,
+  validateRange,
+  type RangeProblem,
+} from "../domain/availability";
 import { getCampaign } from "../domain/campaigns";
 import type { CreativeUpload } from "../domain/creative";
 import { longDate, rangeLength, toISO, startOfToday } from "../domain/dates";
@@ -27,6 +32,7 @@ import { MONTH_DEAL, WEEK_DEAL } from "../domain/pricing";
 import type {
   BookingDraft,
   CreativeChoice,
+  DurationDeal,
   ISODate,
   PaymentMethodId,
   PlacementId,
@@ -54,7 +60,7 @@ type Action =
   | { type: "clearSpaces" }
   | { type: "setPosition"; id: PlacementId; position: number }
   | { type: "setRange"; startISO: ISODate; endISO: ISODate | null }
-  | { type: "extendTo"; endISO: ISODate; deal: typeof WEEK_DEAL | typeof MONTH_DEAL }
+  | { type: "extendTo"; endISO: ISODate; deal: DurationDeal }
   | { type: "clearDates" }
   | { type: "selectCampaign"; id: string; days: number; full: boolean }
   | { type: "removeCampaign"; id: string }
@@ -74,7 +80,9 @@ export function reducer(draft: BookingDraft, action: Action): BookingDraft {
   switch (action.type) {
     case "toggleSpace": {
       const selected = draft.placementIds.includes(action.id);
-      return selected ? reducer(draft, { type: "removeSpace", id: action.id }) : reducer(draft, { type: "addSpace", id: action.id });
+      return selected
+        ? reducer(draft, { type: "removeSpace", id: action.id })
+        : reducer(draft, { type: "addSpace", id: action.id });
     }
 
     case "addSpace":
@@ -288,7 +296,11 @@ export const durationUpsell = (
 };
 
 /** Days taken of a campaign period, given the chip range the advertiser dragged. */
-export const campaignDaysTaken = (campaignId: string, from: number | null, to: number | null): number => {
+export const campaignDaysTaken = (
+  campaignId: string,
+  from: number | null,
+  to: number | null,
+): number => {
   if (from === null) return 0;
   const campaign = getCampaign(campaignId);
   const end = to === null ? from : to;

@@ -6,7 +6,15 @@
  * bookings tomorrow. The seeded history is merged in underneath so the list is
  * never empty on a first visit.
  */
-import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  type ReactNode,
+} from "react";
 
 import { nextReference, SEED_BOOKINGS } from "../domain/bookings";
 import type { BookingRecord } from "../domain/types";

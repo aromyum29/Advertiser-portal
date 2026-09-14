@@ -1,5 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 
+import { PositionsStep } from "@/advertiser/components/funnel/PositionsStep";
+
 export const Route = createFileRoute("/_app/book/positions")({
-  component: () => <div>positions</div>,
+  head: () => ({ meta: [{ title: "Positions · New booking" }] }),
+  component: PositionsStep,
 });

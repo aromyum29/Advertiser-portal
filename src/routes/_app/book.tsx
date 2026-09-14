@@ -1,5 +1,7 @@
-import { createFileRoute, Outlet } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
+
+import { BookingLayout } from "@/advertiser/components/funnel/BookingLayout";
 
 export const Route = createFileRoute("/_app/book")({
-  component: () => <Outlet />,
+  component: BookingLayout,
 });

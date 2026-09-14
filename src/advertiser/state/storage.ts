@@ -24,7 +24,7 @@ const available = (): Storage | null => {
 
 const key = (name: string) => `${PREFIX}:${name}`;
 
-export const readJSON = <T,>(name: string, fallback: T): T => {
+export const readJSON = <T>(name: string, fallback: T): T => {
   const store = available();
   const raw = store ? store.getItem(key(name)) : memory.get(key(name));
   if (!raw) return fallback;

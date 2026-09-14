@@ -13,8 +13,17 @@ import { isNavItemActive, NAV_ITEMS } from "./nav";
 
 function Brand() {
   return (
-    <Link to="/" className="flex items-center gap-3 rounded-lg px-1 py-1" aria-label="Koko advertiser portal, home">
-      <img src={kokoLogo} alt="" aria-hidden="true" className="h-9 w-9 flex-shrink-0 object-contain" />
+    <Link
+      to="/"
+      className="flex items-center gap-3 rounded-lg px-1 py-1"
+      aria-label="Koko advertiser portal, home"
+    >
+      <img
+        src={kokoLogo}
+        alt=""
+        aria-hidden="true"
+        className="h-9 w-9 flex-shrink-0 object-contain"
+      />
       <span className="min-w-0">
         <span className="block truncate text-[15px] font-bold leading-tight tracking-tight">
           Advertiser Portal
@@ -66,7 +75,9 @@ function AccountCard() {
         {advertiser.displayName.charAt(0).toUpperCase()}
       </span>
       <span className="min-w-0 flex-1">
-        <span className="block truncate text-sm font-semibold leading-tight">{advertiser.displayName}</span>
+        <span className="block truncate text-sm font-semibold leading-tight">
+          {advertiser.displayName}
+        </span>
         <span className="block truncate text-xs text-muted-foreground">
           {advertiser.storeName} · {advertiser.city}
         </span>
@@ -156,7 +167,11 @@ export function AppShell({ children }: { children: ReactNode }) {
             aria-expanded={menuOpen}
             className="flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-card"
           >
-            {menuOpen ? <Menu aria-hidden="true" className="h-4 w-4" /> : <Menu aria-hidden="true" className="h-4 w-4" />}
+            {menuOpen ? (
+              <Menu aria-hidden="true" className="h-4 w-4" />
+            ) : (
+              <Menu aria-hidden="true" className="h-4 w-4" />
+            )}
           </button>
           <Brand />
         </header>

@@ -65,7 +65,9 @@ export function PlacementCard({
           </p>
           <p className="mt-0.5 text-[13px] text-muted-foreground">{placement.location}</p>
         </div>
-        <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{placement.description}</p>
+        <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+          {placement.description}
+        </p>
 
         <div className="mt-5 flex items-baseline gap-2">
           <span className="text-[28px] font-extrabold leading-none tracking-tight tabular-nums">

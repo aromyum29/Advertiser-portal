@@ -30,8 +30,16 @@ describe("which steps exist", () => {
 describe("step completion", () => {
   it("needs a period before leaving dates", () => {
     expect(isStepComplete("dates", banner, null)).toBe(false);
-    expect(isStepComplete("dates", { ...banner, startISO: "2026-10-05", endISO: "2026-10-07" }, null)).toBe(true);
-    expect(isStepComplete("dates", { ...banner, campaigns: [{ id: "black-friday", days: 8, full: true }] }, null)).toBe(true);
+    expect(
+      isStepComplete("dates", { ...banner, startISO: "2026-10-05", endISO: "2026-10-07" }, null),
+    ).toBe(true);
+    expect(
+      isStepComplete(
+        "dates",
+        { ...banner, campaigns: [{ id: "black-friday", days: 8, full: true }] },
+        null,
+      ),
+    ).toBe(true);
   });
 
   it("needs a position on every space before leaving positions", () => {
@@ -60,7 +68,12 @@ describe("where a deep link lands", () => {
   });
 
   it("lets a default Koko-designed booking through assets, since it needs no input", () => {
-    const dated = { ...banner, startISO: "2026-10-05", endISO: "2026-10-07", positions: { hero: 1 } };
+    const dated = {
+      ...banner,
+      startISO: "2026-10-05",
+      endISO: "2026-10-07",
+      positions: { hero: 1 },
+    };
     expect(furthestAllowedStep(dated, null).id).toBe("payment");
   });
 
@@ -77,7 +90,12 @@ describe("where a deep link lands", () => {
   });
 
   it("reaches payment once everything before it is done", () => {
-    const ready = { ...banner, startISO: "2026-10-05", endISO: "2026-10-07", positions: { hero: 1 } };
+    const ready = {
+      ...banner,
+      startISO: "2026-10-05",
+      endISO: "2026-10-07",
+      positions: { hero: 1 },
+    };
     expect(furthestAllowedStep(ready, null).id).toBe("payment");
   });
 });
