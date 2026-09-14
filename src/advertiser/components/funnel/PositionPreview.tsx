@@ -74,7 +74,7 @@ export function PositionPreview({
                   )}
                 >
                   {slot === position ? (
-                    <span className="rounded-full bg-[#9356ff] px-1.5 py-0.5 text-[8px] font-bold leading-none text-white">
+                    <span className="rounded-full bg-[#6D28D9] px-1.5 py-0.5 text-[8px] font-bold leading-none text-white">
                       Your ad
                     </span>
                   ) : (

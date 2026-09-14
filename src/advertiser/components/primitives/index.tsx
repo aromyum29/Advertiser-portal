@@ -20,6 +20,11 @@ export const PASTEL_GRADIENT =
 export const BRAND_BLUE = "#BDDCEE";
 /** The purple that marks "this is where your ad goes" in every app mockup. */
 export const AD_PURPLE = "#9356ff";
+/**
+ * A darker step of the same hue for the small "Your ad" chips. White text on
+ * AD_PURPLE is 3.9:1, under the 4.5:1 floor, and these chips are 8 to 9px.
+ */
+export const AD_PURPLE_INK = "#6D28D9";
 
 type TagTone = "brand" | "emerald" | "amber" | "dark";
 

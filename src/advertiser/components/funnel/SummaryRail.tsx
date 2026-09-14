@@ -166,7 +166,7 @@ export function SummaryRail({
         </Link>
       )}
 
-      <p className="text-center text-xs text-muted-foreground/70">
+      <p className="text-center text-xs text-muted-foreground">
         Held for {SLOT_HOLD_MINUTES} min · {reference}
       </p>
     </aside>

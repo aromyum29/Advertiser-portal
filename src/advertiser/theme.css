@@ -1,0 +1,16 @@
+/**
+ * Advertiser portal theme overrides.
+ *
+ * Scoped to `[data-portal="advertiser"]` so the merchant portal kept at
+ * /merchant as a design reference renders exactly as it was exported.
+ */
+
+[data-portal="advertiser"] {
+  /*
+   * The inherited muted grey (#717182) clears 4.5:1 on white but falls to
+   * roughly 3.7:1 on the muted surfaces this portal uses for table headers,
+   * segmented controls and preview panels. Darkening it a step passes WCAG AA
+   * on every surface here without changing the visual language.
+   */
+  --muted-foreground: #5c5d6b;
+}

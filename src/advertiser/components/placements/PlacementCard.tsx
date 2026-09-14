@@ -27,20 +27,15 @@ export function PlacementCard({
   const headingId = `placement-${placement.id}-name`;
   return (
     <div
-      role="button"
-      tabIndex={0}
-      aria-pressed={selected}
       aria-labelledby={headingId}
+      // Clicking the card selects it, as a pointer convenience. It carries no
+      // role of its own: the Select and Details buttons inside are the
+      // accessible controls, and nesting a button inside a button would leave
+      // keyboard and screen reader users with something they cannot operate.
       onClick={onToggle}
-      onKeyDown={(event) => {
-        if (event.key === "Enter" || event.key === " ") {
-          event.preventDefault();
-          onToggle();
-        }
-      }}
       className={cn(
         "group relative flex cursor-pointer flex-col overflow-hidden rounded-[22px] border-2 bg-card shadow-sm transition-[border-color,box-shadow] duration-150",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-900 focus-visible:ring-offset-2",
+        "focus-within:ring-2 focus-within:ring-gray-900 focus-within:ring-offset-2",
         selected
           ? "border-gray-900 shadow-[0_8px_28px_rgba(13,15,20,0.14)] ring-4 ring-gray-900/10 dark:border-gray-200 dark:ring-gray-100/15"
           : "border-border/60 hover:border-gray-900 hover:shadow-[0_8px_24px_rgba(13,15,20,0.08)] dark:hover:border-gray-200",
@@ -109,6 +104,7 @@ export function PlacementCard({
           <div className={cn("flex gap-2.5", showPrices ? "items-center" : "w-full flex-col")}>
             <button
               type="button"
+              aria-pressed={selected}
               onClick={(event) => {
                 event.stopPropagation();
                 onToggle();
@@ -130,6 +126,7 @@ export function PlacementCard({
                 event.stopPropagation();
                 onDetails();
               }}
+              aria-label={`Details about ${placement.name}`}
               className={cn(
                 "whitespace-nowrap rounded-lg border-[1.5px] border-border bg-card px-4.5 py-2.5 text-[13px] font-semibold transition-colors hover:border-gray-900 dark:hover:border-gray-200",
                 showPrices ? "order-1" : "w-full",

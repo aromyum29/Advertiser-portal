@@ -83,6 +83,10 @@ export function PlacementMockup({
   const shot = SHOTS[id];
   return (
     <div
+      // The whole mockup is an illustration of where the ad renders. The card
+      // around it already names the space and its location in text, so this
+      // adds nothing for a screen reader and is marked decorative.
+      aria-hidden="true"
       style={{ width, height }}
       className={cn(
         "relative overflow-hidden rounded-t-[18px] bg-[#1c1c1f] shadow-[0_10px_36px_rgba(0,0,0,0.18)]",
@@ -113,7 +117,8 @@ export function PlacementMockup({
         )}
         style={shot.region}
       >
-        <span className="absolute -top-[9px] left-1.5 whitespace-nowrap rounded-full bg-[#9356ff] px-[7px] py-px text-[9px] font-bold text-white">
+        {/* Darker step of the highlight purple: white on #9356ff is 3.9:1. */}
+        <span className="absolute -top-[9px] left-1.5 whitespace-nowrap rounded-full bg-[#6D28D9] px-[7px] py-px text-[9px] font-bold text-white">
           Your ad
         </span>
       </div>

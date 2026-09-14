@@ -80,13 +80,13 @@ export function AdvertisePage() {
                 aria-hidden="true"
                 className="pointer-events-none h-10 w-10 flex-shrink-0 select-none object-contain"
               />
-              <span className="text-balance text-[11px] font-semibold uppercase leading-snug tracking-[0.06em] text-muted-foreground/80">
+              <span className="text-balance text-[11px] font-semibold uppercase leading-snug tracking-[0.06em] text-muted-foreground">
                 {metric.label}
               </span>
               <p className="text-3xl font-extrabold leading-none tracking-tight tabular-nums">
                 {metric.value}
               </p>
-              <p className="text-[13px] leading-snug text-muted-foreground/80">{metric.note}</p>
+              <p className="text-[13px] leading-snug text-muted-foreground">{metric.note}</p>
             </div>
           ))}
         </div>

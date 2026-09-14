@@ -44,6 +44,7 @@ export function LoginPage() {
 
   return (
     <div
+      data-portal="advertiser"
       className="flex min-h-screen items-center justify-center px-4 py-10"
       style={{ backgroundImage: PASTEL_GRADIENT }}
     >

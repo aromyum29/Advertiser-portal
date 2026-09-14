@@ -132,7 +132,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   }, [menuOpen]);
 
   return (
-    <div className="flex min-h-screen bg-background">
+    <div data-portal="advertiser" className="flex min-h-screen bg-background">
       <a
         href="#main"
         className="sr-only rounded-lg bg-gray-900 px-4 py-2 text-sm font-semibold text-white focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50"
@@ -168,7 +168,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             className="flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-card"
           >
             {menuOpen ? (
-              <Menu aria-hidden="true" className="h-4 w-4" />
+              <X aria-hidden="true" className="h-4 w-4" />
             ) : (
               <Menu aria-hidden="true" className="h-4 w-4" />
             )}
