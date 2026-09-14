@@ -216,9 +216,9 @@
   .flow { max-width: 880px; }
   .flow-track { display: flex; flex-direction: column; gap: 14px; }
   .fnode { position: relative; display: grid; grid-template-columns: 48px minmax(0, 1fr); column-gap: 18px; align-items: start; }
-  .fnode::before { content: ""; position: absolute; left: 23px; top: 0; bottom: -14px; width: 2px; background: #cfd1d9; }
+  .fnode::before { content: ""; position: absolute; left: 22px; top: 0; bottom: -14px; width: 2px; background: #b9bcc6; }
   .fnode:first-child::before { top: 26px; }
-  .fnode:last-child::before { display: none; }
+  .fnode:last-child::before { bottom: auto; height: 26px; }
   .pin { position: relative; z-index: 1; width: 36px; height: 36px; margin: 8px 0 0 5px; border-radius: 50%; display: grid; place-items: center; font-family: var(--ui); font-size: 0.85rem; font-weight: 800; background: var(--ink); color: #fff; box-shadow: 0 0 0 6px #f4f4f7; }
   .fnode.sysdec .pin { border-radius: 8px; transform: rotate(45deg); background: #fff; border: 2px solid var(--ad-ink); color: var(--ad-ink); }
   .fnode.sysdec .pin span { display: block; transform: rotate(-45deg); }
@@ -230,11 +230,14 @@
   .fnode .kind::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--ink); }
   .fnode.sysdec .kind { color: var(--ad-ink); }
   .fnode.sysdec .kind::before { background: var(--ad-ink); border-radius: 2px; transform: rotate(45deg); }
-  .fnode button.lbl .t { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 16px; align-items: start; }
   .fnode button.lbl b { display: block; font-size: 1.08rem; line-height: 1.4; font-weight: 700; }
-  .fnode button.lbl .chev { font-size: 0.75rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--brand-ink); white-space: nowrap; padding: 6px 10px; border-radius: 999px; background: color-mix(in srgb, var(--brand) 40%, #fff); margin-top: 2px; }
-  .fnode button.lbl .chev::before { content: "+ "; }
-  .fnode.open button.lbl .chev::before { content: "− "; }
+  .fnode button.lbl { padding-bottom: 14px; }
+  .fnode .acc { display: flex; justify-content: flex-end; align-items: center; gap: 8px; margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--line-2); font-size: 0.74rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--brand-ink); }
+  .fnode .acc svg { transition: transform 0.25s; }
+  .fnode .acc-l::after { content: "Show reasoning"; }
+  .fnode.open .acc-l::after { content: "Hide reasoning"; }
+  .fnode.open .acc svg { transform: rotate(180deg); }
+  .fnode button.lbl:hover .acc { color: var(--ink); }
   .fnode button.lbl small { display: block; color: var(--ink-2); font-size: 0.95rem; line-height: 1.55; margin-top: 8px; }
   .fnode .branches { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
   .fnode .branches span { font-size: 0.78rem; font-weight: 700; padding: 6px 12px; border-radius: 8px; background: #f4f4f7; color: var(--ink-2); }
@@ -249,8 +252,8 @@
   .fnode .reason .because { background: var(--ink); color: #fff; }
   .fnode .reason .eyebrow { display: block; margin-bottom: 6px; }
   .fnode .reason .because .eyebrow { color: rgba(255,255,255,0.6); }
-  @media (max-width: 720px) { .fnode .reason .in { grid-template-columns: 1fr; } .fnode button.lbl .t { grid-template-columns: 1fr; } }
-  @media (prefers-reduced-motion: reduce) { .fnode .reason { transition: none; } }
+  @media (max-width: 720px) { .fnode .reason .in { grid-template-columns: 1fr; } }
+  @media (prefers-reduced-motion: reduce) { .fnode .reason, .fnode .acc svg { transition: none; } }
 
   /* ── Simulations ── */
   .sim { background: var(--card); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; }
@@ -757,7 +760,7 @@
             <p class="takeaway">Before drawing a screen, I mapped every path a booking can take, from the moment a merchant opens Advertise to the moment their ad goes live, and wrote down the rule behind each branch and the reason for the rule.</p>
           </div>
         </div>
-        <p class="detail">Numbered circles are steps the merchant takes. Purple diamonds are decisions the system makes about what to show next, with the possible outcomes underneath. Open Reasoning on any node for the rule and why it exists. This map was the artefact stakeholders argued over, which was the point. Finance wanted to see where discounts stack. Ops wanted to see where lead time and occupancy block a date. Engineering wanted to know what happens when a merchant uploads a bad file. With the logic on one board, each of those conversations changed a node rather than a screen, and every rule in the shipped product traces back to a node here.</p>
+        <p class="detail">Numbered circles are steps the merchant takes. Purple diamonds are decisions the system makes about what to show next, with the possible outcomes underneath. Open the reasoning on any node for the rule and why it exists. This map was the artefact stakeholders argued over, which was the point. Finance wanted to see where discounts stack. Ops wanted to see where lead time and occupancy block a date. Engineering wanted to know what happens when a merchant uploads a bad file. With the logic on one board, each of those conversations changed a node rather than a screen, and every rule in the shipped product traces back to a node here.</p>
         <div class="flow" id="flow">
           <div class="flow-track" id="flow-track"></div>
         </div>
@@ -1312,16 +1315,17 @@ const FLOW = [
   const tone = (t) => (t === "y" ? "yes" : t === "n" ? "no" : "");
   FLOW.forEach((n) => {
     const el = document.createElement("div");
-    el.className = "fnode " + (n.kind === "decision" ? "sysdec" : "step");
+    el.className = "fnode " + (n.kind === "decision" ? "sysdec" : "mstep");
     el.dataset.id = n.id;
     const pin = n.kind === "decision" ? "?" : ++stepNo;
     el.innerHTML = `<div class="pin"><span>${pin}</span></div>
       <div class="body">
         <button class="lbl" type="button" aria-expanded="false" aria-controls="reason-${n.id}">
           <span class="kind">${n.kind === "decision" ? "System decision" : "Merchant step"}</span>
-          <span class="t"><b>${n.title}</b><span class="chev" aria-hidden="true">Reasoning</span></span>
+          <b>${n.title}</b>
           <small>${n.sub}</small>
           ${n.branches ? `<span class="branches">${n.branches.map(([b, t]) => `<span class="${tone(t)}">${b}</span>`).join("")}</span>` : ""}
+          <span class="acc" aria-hidden="true"><span class="acc-l"></span><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5l4 4 4-4"/></svg></span>
         </button>
         <div class="reason" id="reason-${n.id}"><div><div class="in">
           <div class="rule"><span class="eyebrow">The rule</span>${n.rule}</div>
