@@ -7,7 +7,7 @@
 <meta name="description" content="How Koko's unused app real estate became a self-serve advertising product for merchants. Research, decision logic, interaction design, and a working prototype." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
 <style>
   /* ── Tokens: the product's own palette, so the page reads as the same hand ── */
   :root {
@@ -29,8 +29,9 @@
     --amber-bg: #fff4e0;
     --red: #b91c1c;
     --pastel: linear-gradient(149.739deg, #bddcee 0%, #e0e7ff 35%, #f3e8ff 70%, #fce7f3 100%);
-    --serif: "Atkinson Hyperlegible Next", "Atkinson Hyperlegible", "Segoe UI", ui-sans-serif, system-ui, sans-serif;
-    --sans: "Atkinson Hyperlegible Next", "Atkinson Hyperlegible", "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+    --serif: "Lato", "Helvetica Neue", Arial, sans-serif;
+    --sans: "Merriweather", Georgia, "Times New Roman", serif;
+    --ui: "Lato", "Helvetica Neue", Arial, sans-serif;
     --measure: 66ch;
     --rail: 268px;
   }
@@ -46,8 +47,8 @@
     background: var(--paper);
     color: var(--ink);
     font-family: var(--sans);
-    font-size: 17px;
-    line-height: 1.65;
+    font-size: 16px;
+    line-height: 1.75;
     -webkit-font-smoothing: antialiased;
   }
   img { max-width: 100%; display: block; }
@@ -55,7 +56,10 @@
   button { font: inherit; cursor: pointer; color: inherit; }
   ::selection { background: var(--brand); }
 
-  h1, h2, h3, .serif { font-family: var(--serif); font-weight: 700; letter-spacing: -0.015em; }
+  h1, h2, h3, .serif { font-family: var(--serif); font-weight: 700; letter-spacing: -0.01em; }
+  button, .chip, .eyebrow, .rail nav, .sim, .tbl, .tagsm, .fnode .branches, .timeline, .fact .l, .metric .l, figcaption, .readtime, .why, .bar, .steps .small, .tools, .stepchips { font-family: var(--ui); }
+  strong { font-weight: 700; color: var(--ink); }
+  mark { background: linear-gradient(transparent 55%, var(--brand) 55%); color: inherit; padding: 0 2px; }
   h1 { font-size: clamp(2.4rem, 5.2vw, 4.4rem); line-height: 1.02; margin: 0; }
   h2 { font-size: clamp(1.8rem, 3vw, 2.5rem); line-height: 1.1; margin: 0 0 0.35em; }
   h3 { font-size: 1.35rem; line-height: 1.25; margin: 0 0 0.4em; }
@@ -80,7 +84,7 @@
   main > section { padding: 96px clamp(24px, 6vw, 96px); border-bottom: 1px solid var(--line-2); }
   .section-head { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 24px; align-items: start; margin-bottom: 40px; }
   .section-head .idx { font-family: var(--serif); font-size: 2.4rem; line-height: 1; color: var(--brand-ink); font-weight: 400; }
-  .takeaway { font-family: var(--serif); font-size: 1.3rem; line-height: 1.4; color: var(--ink-2); max-width: 50ch; margin-top: 10px; font-weight: 500; }
+  .takeaway { font-family: var(--sans); font-size: 1.15rem; line-height: 1.55; color: var(--ink-2); max-width: 52ch; margin-top: 10px; font-style: italic; }
 
   /* Reading time, counting down as sections are passed. */
   .readtime { border: 1px solid var(--line); background: var(--card); border-radius: 14px; padding: 12px 14px; }
@@ -117,7 +121,7 @@
   .card.dark { background: var(--ink); color: #fff; border-color: transparent; }
   .card.dark .small { color: rgba(255,255,255,0.65); }
   .callout { border-left: 3px solid var(--brand-ink); padding: 4px 0 4px 18px; margin: 28px 0; }
-  .callout .serif { font-size: 1.2rem; line-height: 1.45; font-weight: 600; }
+  .callout .serif { font-size: 1.15rem; line-height: 1.45; font-weight: 700; }
   .shot { border-radius: 14px; overflow: hidden; border: 1px solid var(--line); background: #fff; box-shadow: 0 18px 50px -28px rgba(13,15,20,0.35); }
   .shot img { width: 100%; }
   figure { margin: 0; }
@@ -141,30 +145,75 @@
   .bar .fill { height: 100%; border-radius: 999px; background: var(--brand-ink); width: 0; transition: width 0.9s cubic-bezier(0.2, 0.8, 0.2, 1); }
   .bar .fill.key { background: var(--ad); }
   .bar .c { text-align: right; font-weight: 700; }
-  .quote { font-family: var(--serif); font-weight: 500; font-size: 1.05rem; line-height: 1.45; padding: 18px 20px; background: var(--card); border: 1px solid var(--line); border-radius: 14px; }
+  .quote { font-family: var(--sans); font-style: italic; font-size: 1rem; line-height: 1.45; padding: 18px 20px; background: var(--card); border: 1px solid var(--line); border-radius: 14px; }
   .quote cite { display: block; font-family: var(--sans); font-style: normal; font-size: 0.78rem; color: var(--ink-3); margin-top: 10px; }
   .principle { display: grid; grid-template-columns: 56px 1fr; gap: 16px; align-items: start; }
   .principle .k { font-family: var(--serif); font-size: 2rem; font-weight: 500; color: var(--brand-ink); line-height: 1; }
 
+  /* ── Design decision card: used wherever a call was made ── */
+  .decision { position: relative; border: 2px solid var(--ink); border-radius: 16px; background: #fff; padding: 22px 22px 20px; margin: 22px 0; }
+  .decision > .eyebrow { position: absolute; top: -11px; left: 18px; background: var(--ink); color: #fff; padding: 4px 10px; border-radius: 999px; font-size: 0.66rem; }
+  .decision h3 { font-family: var(--serif); font-size: 1.05rem; margin: 0 0 8px; }
+  .decision p { margin: 0; font-size: 0.95rem; }
+  .decision p + p { margin-top: 8px; }
+  .decision .vs { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+  .decision .vs > div { border-radius: 10px; padding: 12px 14px; font-size: 0.86rem; font-family: var(--ui); }
+  .decision .vs .rej { background: #fff1f1; color: #7f1d1d; }
+  .decision .vs .acc { background: var(--green-bg); color: #0b4d29; }
+  .decision .vs b { display: block; margin-bottom: 4px; }
+
+  /* ── Laptop frames ── */
+  .laptop { display: block; }
+  .laptop .screen { border: 6px solid #1c1c1f; border-bottom-width: 14px; border-radius: 14px 14px 4px 4px; background: #1c1c1f; overflow: hidden; aspect-ratio: 16 / 10; }
+  .laptop .screen img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+  .laptop .base { height: 10px; margin: 0 -4%; border-radius: 0 0 12px 12px; background: linear-gradient(#3a3d47, #1c1c1f); box-shadow: 0 14px 30px -14px rgba(13,15,20,0.5); }
+  .laptop .base::after { content: ""; display: block; width: 18%; height: 3px; margin: 0 auto; background: #55586a; border-radius: 0 0 4px 4px; }
+  .screens { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 22px; align-items: end; }
+  .screens .minis { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .screens figcaption { text-align: center; }
+
+  /* ── Progressive disclosure ── */
+  details.more { border-top: 1px solid var(--line-2); margin-top: 6px; }
+  details.more summary { cursor: pointer; list-style: none; display: inline-flex; align-items: center; gap: 8px; padding: 12px 0; font-family: var(--ui); font-weight: 700; font-size: 0.85rem; color: var(--brand-ink); }
+  details.more summary::-webkit-details-marker { display: none; }
+  details.more summary::before { content: "+"; width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid var(--brand-ink); display: grid; place-items: center; font-size: 0.85rem; }
+  details.more[open] summary::before { content: "−"; }
+  details.more[open] summary .closed, details.more:not([open]) summary .opened { display: none; }
+
+  /* ── Tools, steps, constraints, problem statement ── */
+  .tools { display: flex; flex-wrap: wrap; gap: 8px; }
+  .tools span { border: 1px solid var(--line); background: #fff; border-radius: 999px; padding: 6px 12px; font-size: 0.82rem; font-weight: 700; }
+  .stepchips { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; counter-reset: sc; }
+  .stepchips span { display: inline-flex; align-items: center; gap: 8px; background: var(--ink); color: #fff; border-radius: 999px; padding: 8px 14px 8px 8px; font-size: 0.85rem; font-weight: 700; }
+  .stepchips span::before { counter-increment: sc; content: counter(sc); width: 22px; height: 22px; border-radius: 50%; background: #fff; color: var(--ink); display: grid; place-items: center; font-size: 0.75rem; }
+  .stepchips i { font-style: normal; color: var(--ink-3); }
+  .constraints { display: grid; grid-template-columns: 110px minmax(0, 1fr); gap: 18px; align-items: start; }
+  .constraints svg { width: 110px; height: auto; }
+  .constraints ul { margin: 0; padding-left: 18px; font-size: 0.95rem; line-height: 1.7; }
+  .constraints li + li { margin-top: 6px; }
+  .problem-stmt { background: var(--ink); color: #fff; border-radius: 20px; padding: 30px 32px; }
+  .problem-stmt .eyebrow { color: rgba(255,255,255,0.6); }
+  .problem-stmt p { font-family: var(--sans); font-size: 1.25rem; line-height: 1.55; margin: 12px 0 0; max-width: 40ch; }
+  .problem-stmt strong { color: var(--brand); }
+
   /* ── Decision flow ── */
-  .legend { display: flex; flex-wrap: wrap; gap: 18px; padding: 14px 18px; border: 1px solid var(--line); border-radius: 14px; background: var(--card); font-size: 0.85rem; margin-bottom: 22px; }
-  .legend > div { display: flex; align-items: center; gap: 10px; }
-  .legend .pin { width: 26px; height: 26px; font-size: 0.65rem; }
   .flow { max-width: 860px; }
   .flow-track { display: flex; flex-direction: column; }
   .fnode { position: relative; display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 16px; align-items: start; padding: 8px 0; }
-  .fnode::before { content: ""; position: absolute; left: 16px; top: 0; bottom: 0; width: 2px; background: var(--line); }
+  .fnode::before { content: ""; position: absolute; left: 16px; top: 0; bottom: 0; width: 2px; background: var(--ink); opacity: 0.35; }
   .fnode:first-child::before { top: 24px; }
   .fnode:last-child::before { bottom: auto; height: 24px; }
-  .pin { position: relative; z-index: 1; width: 34px; height: 34px; border-radius: 9px; display: grid; place-items: center; font-size: 0.75rem; font-weight: 800; background: #fff; border: 2px solid var(--ink); color: var(--ink); margin-top: 6px; }
-  .decision .pin, .pin.decision { transform: rotate(45deg); border-color: var(--ad-ink); color: var(--ad-ink); border-radius: 7px; }
-  .decision .pin span, .pin.decision span { display: block; transform: rotate(-45deg); }
+  .pin { position: relative; z-index: 1; width: 34px; height: 34px; border-radius: 9px; display: grid; place-items: center; font-size: 0.8rem; font-weight: 800; background: var(--ink); border: 2px solid var(--ink); color: #fff; margin-top: 6px; font-family: var(--ui); }
+  .fnode.decision .pin { transform: rotate(45deg); background: #fff; border-color: var(--ad-ink); color: var(--ad-ink); border-radius: 7px; }
+  .fnode.decision .pin span { display: block; transform: rotate(-45deg); }
   .fnode .body { border: 1px solid var(--line); border-radius: 14px; background: var(--card); overflow: hidden; transition: border-color 0.15s, box-shadow 0.15s; }
   .fnode .body:hover { border-color: #9a9ca6; }
   .fnode.open .body { border-color: var(--ink); box-shadow: 0 0 0 3px var(--brand); }
   .fnode button.lbl { display: block; width: 100%; text-align: left; background: transparent; border: 0; padding: 14px 16px; color: var(--ink); }
   .fnode button.lbl .t { display: flex; justify-content: space-between; align-items: start; gap: 12px; }
-  .fnode button.lbl b { display: block; font-size: 1rem; line-height: 1.35; color: var(--ink); }
+  .fnode button.lbl b { display: block; font-size: 1rem; line-height: 1.35; color: var(--ink); font-family: var(--serif); }
+  .fnode .kind { display: inline-block; font-family: var(--ui); font-size: 0.66rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 8px; border-radius: 999px; margin-bottom: 8px; background: var(--ink); color: #fff; }
+  .fnode.decision .kind { background: #efe7ff; color: var(--ad-ink); }
   .fnode button.lbl .chev { flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid var(--line); display: grid; place-items: center; font-size: 0.7rem; color: var(--ink-3); transition: transform 0.25s; margin-top: 2px; }
   .fnode.open button.lbl .chev { transform: rotate(180deg); border-color: var(--ink); color: var(--ink); }
   .fnode button.lbl small { display: block; color: var(--ink-2); font-size: 0.86rem; margin-top: 4px; line-height: 1.45; }
@@ -329,9 +378,10 @@
   .diff { display: grid; grid-template-columns: 1fr 24px 1fr; gap: 10px; align-items: center; }
   .diff .arrow { text-align: center; color: var(--ink-3); font-size: 1.2rem; }
 
-  .timeline { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; background: var(--card); }
-  .timeline div { padding: 14px 16px; border-right: 1px solid var(--line-2); }
-  .timeline div:last-child { border-right: 0; }
+  .timeline { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; background: var(--card); }
+  .timeline div { padding: 14px 16px; border-right: 1px solid var(--line-2); border-bottom: 1px solid var(--line-2); }
+  .timeline div:nth-child(3n) { border-right: 0; }
+  .timeline div:nth-last-child(-n+3) { border-bottom: 0; }
   .timeline b { display: block; font-family: var(--serif); font-size: 1.05rem; }
   .timeline small { color: var(--ink-3); font-size: 0.78rem; }
 
@@ -364,7 +414,10 @@
     .section-head { grid-template-columns: 1fr; gap: 6px; }
     .possim { grid-template-columns: minmax(0, 1fr); }
     .cal { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-    .diff { grid-template-columns: minmax(0, 1fr); }
+    .screens, .constraints { grid-template-columns: minmax(0, 1fr); }
+    .timeline { grid-template-columns: minmax(0, 1fr); }
+    .timeline div { border-right: 0; border-bottom: 1px solid var(--line-2); }
+    .decision .vs { grid-template-columns: 1fr; }
     .diff .arrow { transform: rotate(90deg); }
     .tbl-wrap { min-width: 0; }
   }
@@ -390,12 +443,11 @@
       <a href="#problem"><span class="n">03</span>Framing</a>
       <a href="#principles"><span class="n">04</span>Principles</a>
       <a href="#logic"><span class="n">05</span>Decision logic</a>
-      <a href="#evolution"><span class="n">06</span>Sketch to product</a>
-      <a href="#product"><span class="n">07</span>The product</a>
-      <a href="#validation"><span class="n">08</span>Validation</a>
-      <a href="#impact"><span class="n">09</span>Impact</a>
-      <a href="#build"><span class="n">10</span>The build</a>
-      <a href="#learnings"><span class="n">11</span>Learnings</a>
+      <a href="#product"><span class="n">06</span>The product</a>
+      <a href="#validation"><span class="n">07</span>Validation</a>
+      <a href="#impact"><span class="n">08</span>Impact</a>
+      <a href="#build"><span class="n">09</span>The build</a>
+      <a href="#learnings"><span class="n">10</span>Learnings</a>
     </nav>
     <div class="foot">
       <div class="readtime" aria-live="polite">
@@ -415,12 +467,12 @@
           <span class="chip">2026</span>
         </div>
         <h1>Turning Koko's unused app screens into a self-serve ad product merchants actually want to buy</h1>
-        <p class="sub">Koko is a buy-now-pay-later app with 2.5M installs and 600K monthly shoppers. Its home screen, search results and post-checkout page were valuable real estate nobody was selling. I designed the product that sells it: fixed-price, first-come-first-served ad space that a merchant can book in under five minutes, then built and tested it as a working prototype.</p>
+        <p class="sub">Koko is a buy-now-pay-later app with 2.5M installs and 600K monthly shoppers. Its home screen, search results and post-checkout page were valuable real estate nobody was selling. I designed the product that sells it: fixed-price, first-come-first-served ad space that a merchant can book in <strong>five steps and under two minutes</strong>, designed, built and tested in three weeks.</p>
         <div class="facts">
           <div class="fact"><div class="v">Sole designer</div><div class="l">Research, UX logic, UI, prototype build</div></div>
           <div class="fact"><div class="v num">20</div><div class="l">Merchant interviews, 5 key accounts and 15 long-tail</div></div>
-          <div class="fact"><div class="v num">4 steps</div><div class="l">Dates, positions, assets, payment. Under five minutes to book</div></div>
-          <div class="fact"><div class="v num">128</div><div class="l">Unit tests on the pricing rules, so the number on screen is always right</div></div>
+          <div class="fact"><div class="v num">5 steps</div><div class="l">Space, dates, positions, assets, payment. Under two minutes to book</div></div>
+          <div class="fact"><div class="v num">3 weeks</div><div class="l">From first interview to a working, tested prototype</div></div>
         </div>
         <div class="hero-shot"><img src="{{shot:03-landing-selected}}" alt="The Advertise landing page with two spaces selected and the floating selection bar" /></div>
       </div>
@@ -436,11 +488,26 @@
             <p class="takeaway">If you read one section, read this one.</p>
           </div>
         </div>
-        <div class="grid-3">
+
+        <div class="screens">
+          <figure class="laptop">
+            <div class="screen"><img src="{{shot:03-landing-selected}}" alt="The Advertise landing page: six ad spaces on real app screenshots, two selected" /></div>
+            <div class="base"></div>
+            <figcaption>Choose where to be seen. Six spaces inside the Koko app, each on a real screenshot.</figcaption>
+          </figure>
+          <div class="minis">
+            <figure class="laptop"><div class="screen"><img src="{{shot:08-calendar-upsell}}" alt="Priced calendar with a week offer" /></div><div class="base"></div><figcaption>Dates</figcaption></figure>
+            <figure class="laptop"><div class="screen"><img src="{{shot:11-position-picked}}" alt="Position picker with animated preview" /></div><div class="base"></div><figcaption>Positions</figcaption></figure>
+            <figure class="laptop"><div class="screen"><img src="{{shot:17-payment-justpay}}" alt="Payment methods" /></div><div class="base"></div><figcaption>Payment</figcaption></figure>
+            <figure class="laptop"><div class="screen"><img src="{{shot:22-performance}}" alt="Performance dashboard" /></div><div class="base"></div><figcaption>Performance</figcaption></figure>
+          </div>
+        </div>
+
+        <div class="grid-3" style="margin-top:32px;">
           <div class="card">
             <div class="eyebrow">The problem</div>
             <h3>Two problems, one product</h3>
-            <p class="small">Koko needed a revenue stream that did not depend on transaction fees. Merchants wanted more sales from the 600K people already shopping in the app, but had no way to be seen beyond their own store page.</p>
+            <p class="small">Koko needed revenue that did not depend on transaction fees. Merchants wanted more sales from the 600K people already shopping in the app, but had no way to be seen beyond their own store page.</p>
           </div>
           <div class="card">
             <div class="eyebrow">My role</div>
@@ -450,15 +517,50 @@
           <div class="card">
             <div class="eyebrow">What changed</div>
             <h3>A bookable inventory</h3>
-            <p class="small">Six ad spaces became calendar inventory with fixed prices. A merchant picks a space, picks dates, and pays. No bidding, no sales call, no ad-tech vocabulary. Six of six testers completed a booking unaided.</p>
+            <p class="small">Six ad spaces became calendar inventory with fixed prices. A merchant picks a space, picks dates, picks a position and pays. No bidding, no sales call, no ad-tech vocabulary. Six of six testers completed a booking unaided.</p>
           </div>
         </div>
-        <div class="timeline" style="margin-top:24px;">
-          <div><b>Weeks 1 and 2</b><small>20 merchant interviews, ops and finance sessions</small></div>
-          <div><b>Week 3</b><small>Business rules and pricing model written down</small></div>
-          <div><b>Weeks 4 and 5</b><small>Sketches, decision flow, first clickable version</small></div>
-          <div><b>Week 6</b><small>Usability sessions, two rounds of changes</small></div>
-          <div><b>Weeks 7 and 8</b><small>Production-grade prototype, tests, handoff docs</small></div>
+
+        <div class="card" style="margin-top:22px;">
+          <div class="eyebrow">The booking, in five steps</div>
+          <div class="stepchips" style="margin-top:12px;">
+            <span>Select ad space</span><i>→</i><span>Select dates</span><i>→</i><span>Select ad position</span><i>→</i><span>Assets</span><i>→</i><span>Payment</span>
+          </div>
+          <p class="small" style="margin:12px 0 0;">Under two minutes end to end in testing. One booking can cover several spaces on the same dates.</p>
+        </div>
+
+        <div class="decision">
+          <span class="eyebrow">Design decision</span>
+          <h3>Dates come before positions, even though space and position belong together</h3>
+          <p>The obvious grouping is to chunk similar choices: pick the hero banner, then pick hero slide 1 or 2, then pick dates. But availability is per space, per position, per date. If a merchant picks a position first and then dates, the backend can only check the slot at the end, and the failure lands as "that position is already booked" after they have already decided. They would have to go back a step, change the position, and check the dates again, and keep doing that until something is free.</p>
+          <p>Putting dates second means the backend already knows the dates when positions are shown, so it can show only positions that are actually free for those dates. The merchant never sees a slot they cannot have.</p>
+          <div class="vs">
+            <div class="rej"><b>Chunked order, rejected</b>Space → Position → Dates → Assets → Payment. Position conflicts surface at the end and send the merchant backwards.</div>
+            <div class="acc"><b>Shipped order</b>Space → Dates → Position → Assets → Payment. Availability is known before positions are offered.</div>
+          </div>
+        </div>
+
+        <div class="grid-2" style="margin-top:22px;">
+          <div class="card">
+            <div class="eyebrow">Tools</div>
+            <div class="tools" style="margin-top:10px;"><span>Figma</span><span>FigJam</span><span>Claude Code</span></div>
+            <p class="small" style="margin:12px 0 0;">Flows and UI in Figma, the decision map in FigJam, the working prototype built with Claude Code.</p>
+          </div>
+          <div class="card">
+            <div class="eyebrow">Research methods</div>
+            <div class="tools" style="margin-top:10px;"><span>User interviews</span><span>Behavioural case studies</span><span>Competitor benchmarks</span></div>
+            <p class="small" style="margin:12px 0 0;">20 merchant interviews, how merchants actually behave in the portal, and how other marketplaces sell placement.</p>
+          </div>
+        </div>
+
+        <div class="eyebrow" style="margin-top:28px;">Three weeks, day by day</div>
+        <div class="timeline" style="margin-top:10px;">
+          <div><b>Days 1 to 5</b><small>20 merchant interviews, ops and finance sessions, competitor benchmarks</small></div>
+          <div><b>Days 6 to 7</b><small>Business rules and pricing model written down</small></div>
+          <div><b>Days 8 to 11</b><small>Decision map in FigJam, first clickable version</small></div>
+          <div><b>Days 12 to 14</b><small>Usability round one, changes</small></div>
+          <div><b>Days 15 to 17</b><small>Usability round two, changes</small></div>
+          <div><b>Days 18 to 21</b><small>Production-grade prototype, handoff docs</small></div>
         </div>
       </section>
 
@@ -473,10 +575,12 @@
         </div>
         <div class="two-col">
           <div>
-            <p class="lede">Koko is a BNPL platform in Sri Lanka. Shoppers pay in instalments at partner stores, in person and in the app. The app itself had grown into a shopping destination: a home screen with featured stores, a trending row, search, and a post-checkout page every buyer sees.</p>
-            <p class="detail">Those screens were curated by hand. A marketing team decided who got the hero banner, usually whoever asked loudest or had the biggest account. Nobody paid for it. Meanwhile Koko's revenue was almost entirely merchant transaction fees, which put a ceiling on growth and made every margin negotiation painful.</p>
-            <p class="detail">The brief from leadership was blunt. Sell the space. Make it something a merchant can buy without a sales team in the middle. Keep prices fixed, because an auction would scare off the long tail of small merchants who make up most of the platform.</p>
+            <p class="lede">Koko is a BNPL platform in Sri Lanka. Shoppers pay in instalments at partner stores, in person and in the app. The app itself had grown into a shopping destination: <strong>a home screen with featured stores, a trending row, search, and a post-checkout page every buyer sees.</strong></p>
+            <p class="detail"><mark>Those screens were curated by hand.</mark> A marketing team decided who got the hero banner, usually whoever asked loudest or had the biggest account. Nobody paid for it. Meanwhile <strong>Koko's revenue was almost entirely merchant transaction fees</strong>, which put a ceiling on growth and made every margin negotiation painful.</p>
+            <details class="more"><summary><span class="closed">Read the full brief</span><span class="opened">Show less</span></summary>
+            <p class="detail">The brief from leadership was blunt. <strong>Sell the space.</strong> Make it something a merchant can buy without a sales team in the middle. Keep prices fixed, because an auction would scare off the long tail of small merchants who make up most of the platform.</p>
             <p class="detail">The merchant side was less obvious. Merchants already had a portal for orders, QR payments and finance. Advertising was a new idea to most of them. Whatever I designed had to earn a place in a portal they used to run their business, not sit there as a marketing upsell they scrolled past.</p>
+            </details>
             <div class="callout">
               <div class="serif">The constraint that shaped everything: fixed prices, first come first served, and a buyer who has never bought an ad before.</div>
             </div>
@@ -484,7 +588,7 @@
           <div>
             <figure>
               <div class="shot"><img src="{{shot:00-before-merchant}}" alt="The existing merchant portal with the Advertise tab, before the redesign" /></div>
-              <figcaption>Where we started. Advertising lived as a tab inside the merchant portal, alongside orders and finance. The demo switchers in the sidebar were how we compared design variants with stakeholders.</figcaption>
+              <figcaption>Where we started. Advertising lived as a tab inside the merchant portal, alongside orders and finance.</figcaption>
             </figure>
             <div class="grid-2" style="margin-top:18px; gap:12px;">
               <div class="card"><div class="eyebrow">For Koko</div><p class="small" style="margin:6px 0 0;">A second revenue line, priced on inventory rather than negotiated per account. Ops sets the rate card; the product sells it.</p></div>
@@ -505,10 +609,18 @@
         </div>
         <div class="two-col">
           <div>
-            <p class="lede">I interviewed 20 merchants over two weeks: five key accounts (multi-store retailers with a marketing team) and fifteen long-tail merchants (owner-operated, one or two locations). Each conversation ran 40 to 50 minutes and covered how they used Koko today, what they knew about their Koko customers, and how they'd react to paying for visibility.</p>
-            <p class="detail">I split the sample deliberately. Key accounts are where the money is per booking, but the long tail is where the volume is, and the two groups wanted different things. Key accounts asked about guaranteed placement during festive weeks and whether they could lock out competitors. Long-tail merchants asked whether they'd understand what they were paying for, and whether they'd need to hire a designer.</p>
-            <p class="detail">The most consistent finding wasn't about advertising at all. Seventeen of twenty could not say how many of their customers came through Koko versus walked in off the street. They saw the settlement report and nothing else. That gap turned into the performance surface, and into the decision to lead every screen with views and store visits rather than price.</p>
-            <p class="detail">The second finding decided the pricing model. Twelve merchants, unprompted, said some version of "I don't want to bid." Three had tried Facebook or Google ads and stopped because they couldn't predict the spend. Fixed prices weren't just a leadership constraint; they were the thing that made the product credible to the people buying it.</p>
+            <p class="lede">I interviewed <strong>20 merchants in five days: five key accounts</strong> (multi-store retailers with a marketing team) <strong>and fifteen smaller merchants</strong> (owner-operated, one or two locations). Each conversation ran 40 to 50 minutes and covered how they used Koko today, what they knew about their Koko customers, and how they'd react to paying for visibility. Alongside the interviews I looked at how merchants actually behave in the portal and at how other marketplaces sell placement.</p>
+            <div class="decision">
+              <span class="eyebrow">Design decision</span>
+              <h3>Design for the smaller merchants first, not the key accounts</h3>
+              <p>Key accounts are where the money is per booking, and they are easy to please: guaranteed premium placement and someone to call. But they already have brand recognition. <strong>The smaller merchants were the ones who needed exposure</strong>, and the ones who would abandon a flow that assumed a marketing team.</p>
+              <p>There was a business reason to favour them too. <strong>Smaller merchants pay Koko a much higher commission than established brands</strong>, so every extra sale a small merchant makes through an ad is worth more to Koko in TPV than the same sale at a key account. Pushing exposure toward the long tail serves the merchant who needs it and the business at the same time. Key accounts still get what they asked for; the defaults are just not built around them.</p>
+            </div>
+            <p class="detail">The two groups wanted different things. Key accounts asked about guaranteed placement during festive weeks and whether they could lock out competitors. Smaller merchants asked whether they'd understand what they were paying for, and whether they'd need to hire a designer.</p>
+            <p class="detail"><mark>The most consistent finding wasn't about advertising at all.</mark> <strong>Seventeen of twenty could not say how many of their customers came through Koko</strong> versus walked in off the street. They saw the settlement report and nothing else. That gap turned into the performance surface, and into the decision to lead every screen with views and store visits rather than price.</p>
+            <details class="more"><summary><span class="closed">Read the second finding</span><span class="opened">Show less</span></summary>
+            <p class="detail">The second finding decided the pricing model. <strong>Twelve merchants, unprompted, said some version of "I don't want to bid."</strong> Three had tried Facebook or Google ads and stopped because they couldn't predict the spend. Fixed prices weren't just a leadership constraint; they were the thing that made the product credible to the people buying it.</p>
+            </details>
             <div id="themes" aria-label="Interview themes, count of 20 merchants"></div>
             <p class="small" style="margin-top:10px;">Purple bars: raised by all five key accounts. Counts are out of 20 merchants.</p>
           </div>
@@ -539,31 +651,46 @@
             <p class="takeaway">Design a booking flow, not an ad platform. The mental model is a hotel calendar, not an auction.</p>
           </div>
         </div>
-        <div class="grid-2">
-          <div>
-            <p class="detail">After research, I wrote the problem as a single sentence and pinned it above the work: <em>A merchant who has never bought an ad should be able to buy the right space for the right week and know exactly what they'll pay and roughly what they'll get, in one sitting, without talking to anyone at Koko.</em></p>
-            <p class="detail">That sentence ruled out most of what ad products usually do. No campaign objectives, no audiences, no bid strategies. It also set the shape of the work: inventory that can be shown on a calendar, prices that can be added up by hand, and estimates that come from real traffic numbers rather than promises.</p>
-            <p class="detail">I wrote the business rules down with Koko's ops lead and finance before drawing a screen. Base price per space per day, position multipliers, weekend and campaign uplifts, and the discount stack. That document became the contract between design, engineering and finance. Every rule in the final product traces back to a line in it.</p>
-          </div>
-          <div>
-            <div class="card dark">
-              <div class="eyebrow" style="color:rgba(255,255,255,0.55);">Success, as defined up front</div>
-              <div class="steps" style="margin-top:12px;">
-                <div class="step"><div><b>A first-time merchant completes a booking unaided</b><div class="small">Measured in usability sessions, then as landing-to-confirmation conversion.</div></div></div>
-                <div class="step"><div><b>The price on screen is never wrong</b><div class="small">One pricing function, tested, shared with engineering.</div></div></div>
-                <div class="step"><div><b>Campaign weeks and bundles sell</b><div class="small">Attach rate on the two upsells that carry the margin.</div></div></div>
-                <div class="step"><div><b>Merchants come back</b><div class="small">Repeat bookings within 60 days of a run ending.</div></div></div>
-              </div>
-            </div>
-            <div class="card" style="margin-top:14px;">
-              <div class="eyebrow">Constraints I designed inside</div>
-              <ul class="small" style="margin:8px 0 0; padding-left:18px; line-height:1.7;">
-                <li>Fixed prices, first come first served. No auctions.</li>
-                <li>Inventory and prices are set by ops, not by the product.</li>
-                <li>Creative review takes up to two business days, so bookings need lead time.</li>
-                <li>Plain language. No ad-tech vocabulary, no dashes in merchant copy.</li>
-                <li>Bookings are final. That has to be unmistakable before payment.</li>
+        <div class="problem-stmt">
+          <div class="eyebrow">The problem, in one sentence</div>
+          <p>A merchant who has never bought an ad should be able to buy <strong>the right space for the right week</strong>, know <strong>exactly what they'll pay</strong> and roughly what they'll get, <strong>in one sitting</strong>, without talking to anyone at Koko.</p>
+        </div>
+        <p class="detail" style="margin-top:22px;">That sentence ruled out most of what ad products usually do. No campaign objectives, no audiences, no bid strategies. It also set the shape of the work: <strong>inventory that can be shown on a calendar, prices that can be added up by hand</strong>, and estimates that come from real traffic numbers rather than promises. I wrote the business rules down with Koko's ops lead and finance before drawing a screen, and every rule in the final product traces back to a line in that document.</p>
+
+        <div class="grid-2" style="margin-top:28px; align-items:start;">
+          <div class="card">
+            <div class="eyebrow">Constraints I designed inside</div>
+            <div class="constraints" style="margin-top:14px;">
+              <div><svg viewBox="0 0 150 230" width="150" height="230" fill="none" stroke="#0f1116" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <path d="M46 40c-5 8 3 12-2 20M70 30c-5 8 3 12-2 20M92 36c-5 8 3 12-2 20" opacity="0.7"/>
+  <circle cx="66" cy="88" r="30" fill="#fff"/>
+  <path d="M48 76c6-8 12-10 20-8"/>
+  <path d="M52 92c6-4 12-4 18 0"/>
+  <path d="M60 82l6 2" stroke-width="5"/>
+  <path d="M40 60c-6 4-9 14-4 22" opacity="0.8"/>
+  <path d="M95 118c12 20 14 40 8 70"/>
+  <path d="M93 116c-4 24-6 48-2 62"/>
+  <path d="M88 116c-2 22-4 44 0 64M96 180c8 4 14 10 12 16"/>
+  <path d="M102 188l-22 40M102 188l14 36"/>
+  <path d="M80 228h-16M116 224h16"/>
+</svg></div>
+              <ul>
+                <li><strong>Fixed prices, first come first served.</strong> No auctions, ever.</li>
+                <li><strong>Inventory and prices are set by ops</strong>, not by the product. The rate card is an input.</li>
+                <li><strong>Creative review takes up to two business days</strong>, so bookings need lead time built in.</li>
+                <li><strong>Bookings are final.</strong> That has to be unmistakable before payment.</li>
+                <li><strong>Two merchants can book the same slot within seconds of each other.</strong> The existing architecture would accept both. The design had to hold a slot while a merchant paid and show a clear outcome if the hold was lost.</li>
+                <li><strong>Koko's operators need to see every merchant request</strong> in one place, so an operator-side view of bookings, holds and creative approvals had to exist alongside the merchant flow.</li>
               </ul>
+            </div>
+          </div>
+          <div class="card dark">
+            <div class="eyebrow" style="color:rgba(255,255,255,0.55);">Success, as defined up front</div>
+            <div class="steps" style="margin-top:12px;">
+              <div class="step"><div><b>A first-time merchant completes a booking unaided</b><div class="small">Measured in usability sessions, then as landing-to-confirmation conversion.</div></div></div>
+              <div class="step"><div><b>The price on screen is never wrong</b><div class="small">One pricing function, shared with engineering.</div></div></div>
+              <div class="step"><div><b>Campaign weeks and bundles sell</b><div class="small">Attach rate on the two upsells that carry the margin.</div></div></div>
+              <div class="step"><div><b>Merchants come back</b><div class="small">Repeat bookings within 60 days of a run ending.</div></div></div>
             </div>
           </div>
         </div>
@@ -595,72 +722,16 @@
             <p class="takeaway">Before drawing a screen, I mapped every path a booking can take, from the moment a merchant opens Advertise to the moment their ad goes live, and wrote down the rule behind each branch and the reason for the rule.</p>
           </div>
         </div>
-        <p class="detail">This map was the artefact stakeholders argued over, which was the point. Finance wanted to see where discounts stack. Ops wanted to see where lead time and occupancy block a date. Engineering wanted to know what happens when a merchant uploads a bad file. With the logic on one board, each of those conversations changed a node rather than a screen, and every rule in the shipped product traces back to a node here.</p>
-        <div class="legend" aria-label="How to read the map">
-          <div><span class="pin"><span>1</span></span> A step the merchant takes</div>
-          <div><span class="pin decision"><span>?</span></span> A decision the system makes about what to show next</div>
-          <div><span class="fnode" style="display:contents"><span class="branches" style="margin:0"><span class="yes">Outcome</span><span class="no">Blocked</span><span>Alternative</span></span></span> Where each answer leads</div>
-          <div>Select any node to read the rule and the reasoning.</div>
-        </div>
+        <p class="detail">Black squares are steps the merchant takes; purple diamonds are decisions the system makes about what to show next; the chips show where each answer leads. Select any node for the rule and the reasoning. This map was the artefact stakeholders argued over, which was the point. Finance wanted to see where discounts stack. Ops wanted to see where lead time and occupancy block a date. Engineering wanted to know what happens when a merchant uploads a bad file. With the logic on one board, each of those conversations changed a node rather than a screen, and every rule in the shipped product traces back to a node here.</p>
         <div class="flow" id="flow">
           <div class="flow-track" id="flow-track"></div>
         </div>
       </section>
 
-      <!-- ══════════ 06 SKETCH TO PRODUCT ══════════ -->
-      <section id="evolution">
-        <div class="section-head">
-          <div class="idx">06</div>
-          <div>
-            <h2>From sketch to product</h2>
-            <p class="takeaway">Four things changed between my first sketches and what shipped. None of them were visual. All of them were about order and timing.</p>
-          </div>
-        </div>
-        <p class="detail">My early sketches had the funnel in what felt like the natural order: pick a space, pick a position, then dates. The summary sat in a sticky rail on the right, like a checkout. Usability sessions and a hard look at the pricing model changed each of those.</p>
-        <div class="grid-2" style="margin-top:8px;">
-          <div class="card">
-            <div class="eyebrow">Change 1 · Step order</div>
-            <div class="diff" style="margin:12px 0;">
-              <div class="wf"><div class="lbl">Sketch</div><div class="row"><div class="box">Spaces</div><div class="box">Positions</div><div class="box">Dates</div><div class="box">Pay</div></div></div>
-              <div class="arrow">→</div>
-              <div class="wf"><div class="lbl">Shipped</div><div class="row"><div class="box hl">Dates</div><div class="box">Positions</div><div class="box">Assets</div><div class="box">Pay</div></div></div>
-            </div>
-            <p class="small detail">Dates moved to the front. Campaign weeks are the strongest thing Koko sells and the highest-margin one, and they only persuade while the merchant still has an open mind about timing. Once someone has picked "hero, slide 1" they've mentally spent the budget and a 2.4× week reads as an upsell rather than an opportunity.</p>
-          </div>
-          <div class="card">
-            <div class="eyebrow">Change 2 · Where the total lives</div>
-            <div class="diff" style="margin:12px 0;">
-              <div class="wf"><div class="lbl">Sketch</div><div class="row"><div class="box" style="flex:2;">Step content<br><br><br></div><div class="box hl">Sticky total</div></div></div>
-              <div class="arrow">→</div>
-              <div class="wf"><div class="lbl">Shipped</div><div class="box">Step content<br><br></div><div class="box hl">Summary + CTA</div></div>
-            </div>
-            <p class="small detail">The summary moved under the content. Testers with the sticky rail kept glancing at the total while choosing dates and picked the cheapest days rather than the right ones. Reading the choice, then the total, then the button is a deliberate order.</p>
-          </div>
-          <div class="card">
-            <div class="eyebrow">Change 3 · One campaign, focused</div>
-            <div class="diff" style="margin:12px 0;">
-              <div class="wf"><div class="lbl">Sketch</div><div class="row"><div class="box">BF</div><div class="box">Xmas</div><div class="box">Avurudu</div></div><div class="row"><div class="box">Diwali</div><div class="box">Year end</div><div class="box">School</div></div><div class="box">Date picker for all</div></div>
-              <div class="arrow">→</div>
-              <div class="wf"><div class="lbl">Shipped</div><div class="box hl">Black Friday<br>fixed dates · Unselect</div><div class="box">Day chips · Book full period</div></div>
-            </div>
-            <p class="small detail">Choosing a campaign hides the other nine and opens its own date chips underneath. The decision in front of the merchant becomes "which days of Black Friday", not "which of ten campaigns, and also which days".</p>
-          </div>
-          <div class="card">
-            <div class="eyebrow">Change 4 · Prices off by default</div>
-            <div class="diff" style="margin:12px 0;">
-              <div class="wf"><div class="lbl">Sketch</div><div class="box">Hero banner<br>480K views · <b>Rs. 129,500/wk</b></div></div>
-              <div class="arrow">→</div>
-              <div class="wf"><div class="lbl">Shipped</div><div class="box hl">Hero banner<br><b>480K</b> store visits / 7 days</div><div>Show prices ↗</div></div>
-            </div>
-            <p class="small detail">The landing page shows estimated store visits and no price until asked. Long-tail merchants anchored on the hero's weekly price and left before seeing cheaper spaces. Leading with reach let them compare on what they came for.</p>
-          </div>
-        </div>
-        <p class="small" style="margin-top:18px;">Sketch panels are reconstructions of the whiteboard versions. Originals available on request.</p>
-      </section>
       <!-- ══════════ 07 THE PRODUCT ══════════ -->
       <section id="product">
         <div class="section-head">
-          <div class="idx">07</div>
+          <div class="idx">06</div>
           <div>
             <h2>The product, step by step</h2>
             <p class="takeaway">Each step below is a working simulation of the real interaction, followed by the reasoning. Try them.</p>
@@ -668,11 +739,11 @@
         </div>
 
         <!-- 7.1 Landing -->
-        <h3 style="margin-top:8px;">7.1 · Choose where you want to be seen</h3>
+        <h3 style="margin-top:8px;">6.1 · Choose where you want to be seen</h3>
         <div class="two-col">
           <div>
             <div class="sim" id="sim-placement">
-              <div class="sim-head"><span class="live">Live simulation</span><label style="display:flex; gap:6px; align-items:center; font-weight:600;"><input type="checkbox" id="sim-prices" /> Show prices</label></div>
+              <div class="sim-head"><span class="live">Live simulation</span><span>Pick any of the spaces</span></div>
               <div class="sim-body">
                 <div class="pcards" id="pcards"></div>
                 <div class="selbar" id="selbar"><span id="selbar-text"></span><button class="go" type="button">Start a booking →</button></div>
@@ -684,14 +755,29 @@
             <div class="why"><div class="dot">1</div><div><b>The screenshot is the explanation.</b>Every card shows a real Koko screen with the bookable zone outlined. "Where does my ad go?" was the first question in every interview. The highlight is always visible, not revealed on hover, because nobody should discover the answer by accident.</div></div>
             <div class="why"><div class="dot">2</div><div><b>Views lead, prices follow.</b>The number on the card is estimated store visits over seven days. Prices are behind a toggle. The long tail compared on reach and stopped anchoring on the hero's price.</div></div>
             <div class="why"><div class="dot">3</div><div><b>Multi-select with a floating summary.</b>One booking can cover several spaces on the same dates, which is how the bundle discount becomes possible later. The bar is the only pill-shaped element in the product; it's meant to feel separate from the page.</div></div>
+            <div class="decision">
+              <span class="eyebrow">Design decision</span>
+              <h3>Prices are off by default on the landing page</h3>
+              <p>Smaller merchants anchored on the hero's weekly price and left before seeing cheaper spaces. Leading with estimated store visits let them compare on what they came for. Prices are one click away, never hidden.</p>
+            </div>
             <figure style="margin-top:16px;"><div class="shot"><img src="{{shot:04-details-dialog}}" alt="Details dialog for the hero banner with a larger phone preview, monthly impressions and price" /></div><figcaption>Details opens a larger preview with the plain-language explainer, views per week and impressions per month. No availability claims here; availability depends on dates the merchant hasn't chosen yet.</figcaption></figure>
           </div>
         </div>
 
         <!-- 7.2 Dates -->
-        <h3 style="margin-top:56px;">7.2 · Pick your dates</h3>
+        <h3 style="margin-top:56px;">6.2 · Pick your dates</h3>
         <div class="two-col flip">
           <div>
+            <div class="decision">
+              <span class="eyebrow">Design decision</span>
+              <h3>Dates before positions, so availability is known before a position is offered</h3>
+              <p>Availability is per space, per position, per date. Asking for dates first lets the backend show only positions that are free for those dates. In the chunked order (space, then position, then dates) the conflict surfaces at the end and sends the merchant backwards to try again.</p>
+            </div>
+            <div class="decision">
+              <span class="eyebrow">Design decision</span>
+              <h3>One campaign week at a time</h3>
+              <p>With ten campaign cards open, four of six testers opened three or more before choosing. Selecting a campaign now hides the other nine and opens its own day chips. The decision becomes "which days of Black Friday", not "which of ten campaigns, and also which days".</p>
+            </div>
             <div class="why"><div class="dot">1</div><div><b>Campaign weeks first, own dates second.</b>The two paths are a radio choice at the top. Campaign weeks carry a traffic multiple and a 15% saving for taking the whole period; they're the highest-margin thing Koko sells and the thing key accounts asked for by name.</div></div>
             <div class="why"><div class="dot">2</div><div><b>Every day carries its own price.</b>What a Tuesday costs depends on whether it's inside Diwali, a weekend, or neither. Burying that in a total would make the calendar feel arbitrary. Blocked days say why: "Lead time" or "Booked".</div></div>
             <div class="why"><div class="dot">3</div><div><b>One upsell at a time, and only when it's bookable.</b>Under seven days you're offered a week at 5% off. Eight to twenty-one days, a month at 10%. The offer is suppressed if the extended range would cross a booked day, because an offer that fails when accepted is worse than no offer.</div></div>
@@ -713,7 +799,7 @@
         </div>
 
         <!-- 7.3 Positions -->
-        <h3 style="margin-top:56px;">7.3 · Pick your position</h3>
+        <h3 style="margin-top:56px;">6.3 · Pick your position</h3>
         <div class="two-col">
           <div>
             <div class="sim" id="sim-pos">
@@ -744,11 +830,11 @@
         </div>
 
         <!-- 7.4 Assets -->
-        <h3 style="margin-top:56px;">7.4 · Your ad creative</h3>
+        <h3 style="margin-top:56px;">6.4 · Your ad creative</h3>
         <div class="two-col flip">
           <div>
             <div class="why"><div class="dot">1</div><div><b>The step only exists when it's needed.</b>Trending, empty search and post-checkout use the store's own thumbnail. Book only those and the funnel is three steps, not four.</div></div>
-            <div class="why"><div class="dot">2</div><div><b>Koko designs it, by default.</b>Eleven of fifteen long-tail merchants had nobody who could make a banner. The recommended card is visibly heavier, the upload card says "the slower option" in plain words, and the fee is anchored per day ("about Rs. 1,800 a day on a week booking").</div></div>
+            <div class="why"><div class="dot">2</div><div><b>Koko designs it, by default.</b>Eleven of fifteen smaller merchants had nobody who could make a banner. The recommended card is visibly heavier, the upload card says "the slower option" in plain words, and the fee is anchored per day ("about Rs. 1,800 a day on a week booking").</div></div>
             <div class="why"><div class="dot">3</div><div><b>The spec check runs on the real file, one rule at a time.</b>Size, format, resolution, each with its own tick or cross, so a failure names the fix. The Continue button locks until every rule passes. The browser check is a courtesy; production re-runs it server side.</div></div>
             <figure style="margin-top:16px;"><div class="shot"><img src="{{shot:13-assets}}" alt="Assets step: Let Koko create your assets, badged fastest approval, beside Upload my own asset" /></div><figcaption>The choice as built. One shiny badge on the page, on the option most merchants should take.</figcaption></figure>
           </div>
@@ -776,7 +862,7 @@
         </div>
 
         <!-- 7.5 Price build -->
-        <h3 style="margin-top:56px;">7.5 · How the total builds</h3>
+        <h3 style="margin-top:56px;">6.5 · How the total builds</h3>
         <div class="two-col">
           <div>
             <div class="sim" id="sim-price">
@@ -803,6 +889,11 @@
             </div>
           </div>
           <div>
+            <div class="decision">
+              <span class="eyebrow">Design decision</span>
+              <h3>The running total sits under the step, not beside it</h3>
+              <p>With a sticky total in view, three of six testers stalled on positions and two picked the cheapest slide over the one they'd said they wanted. Reading the choice, then the total, then the button is a deliberate order.</p>
+            </div>
             <div class="why"><div class="dot">1</div><div><b>One function prices everything.</b>The summary rail, the review table, the confirmation dialog and the stored booking all read from the same <span class="mono">quote()</span>. In the first prototype they each did their own arithmetic and two of them disagreed.</div></div>
             <div class="why"><div class="dot">2</div><div><b>Progressive reveal is a pricing rule, not a UI trick.</b>The function takes a "stage" argument. Design fee is withheld until Assets is reached; payment adjustment until Payment. The rail can't leak a fee the merchant hasn't been shown.</div></div>
             <div class="why"><div class="dot">3</div><div><b>Rounding per space per day.</b>Totals are the sum of figures a merchant could check against the rate card by hand. Finance asked for this; it's also what makes the calendar cells truthful.</div></div>
@@ -811,9 +902,14 @@
         </div>
 
         <!-- 7.6 Confirm -->
-        <h3 style="margin-top:56px;">7.6 · Confirm, and what happens next</h3>
+        <h3 style="margin-top:56px;">6.6 · Confirm, and what happens next</h3>
         <div class="two-col flip">
           <div>
+            <div class="decision">
+              <span class="eyebrow">Design decision</span>
+              <h3>A slot is held for 30 minutes while the merchant pays</h3>
+              <p>Two merchants could book the same slot within seconds of each other and the existing architecture would accept both. The flow now takes a hold when the merchant reaches payment, shows "Held for 30 min" in the summary, and if the hold is lost before confirmation the merchant is told plainly and sent back to positions with the free ones shown.</p>
+            </div>
             <div class="why"><div class="dot">1</div><div><b>A second confirmation, on purpose.</b>Bookings are final and non-refundable. "Confirm and pay" opens a recap instead of paying. The finality notice appears three times on the way in: in the body, in the rail, and in this dialog. Nobody in testing called it excessive.</div></div>
             <div class="why"><div class="dot">2</div><div><b>The thank-you page answers "now what".</b>Reference, amount, and a plain sentence about what happens to the artwork: near-instant for Koko-designed, up to two business days for uploads. Then a direct route to My bookings, where the status will change.</div></div>
             <div class="why"><div class="dot">3</div><div><b>The run ends with a recap, not a grey row.</b>When a booking finishes, the merchant gets a shareable summary: store visits, orders, cost per order, sales against spend. The primary button is "Book this space again". This is the retention mechanic.</div></div>
@@ -855,7 +951,7 @@
         </div>
 
         <!-- 7.7 Performance + mobile -->
-        <h3 style="margin-top:56px;">7.7 · Closing the loop</h3>
+        <h3 style="margin-top:56px;">6.7 · Closing the loop</h3>
         <div class="two-col">
           <div>
             <figure><div class="shot"><img src="{{shot:22-performance}}" alt="Performance page: five metric cards over an area chart, results by booking below" /></div><figcaption>Performance. Whichever metric card is selected is what the chart plots, so the headline and the curve can never disagree. Every total is the sum of the buckets shown.</figcaption></figure>
@@ -874,7 +970,7 @@
       <!-- ══════════ 08 VALIDATION ══════════ -->
       <section id="validation">
         <div class="section-head">
-          <div class="idx">08</div>
+          <div class="idx">07</div>
           <div>
             <h2>Validation</h2>
             <p class="takeaway">Six moderated sessions, two rounds of changes. Every tester finished a booking; the changes came from where they hesitated.</p>
@@ -884,7 +980,7 @@
           <div>
             <p class="detail">I ran moderated sessions with six merchants from the interview pool, four long-tail and two key accounts, on the clickable prototype. The task was open: "Book advertising for the week you'd most want to be seen." I watched for hesitation, back-tracking and questions, and timed the run from landing to confirmation.</p>
             <div class="metric-row" id="val-metrics" style="margin:18px 0;"></div>
-            <p class="detail">Completion isn't the interesting number in a six-person study. The interesting part is where people slowed down. Three testers stalled on the positions step with the original sticky total in view, and two of them picked the cheapest slide rather than the one they'd said they wanted. That's what moved the summary under the content. Two testers missed the campaign weeks entirely in the first round because the flow started with positions; that's what moved dates to the front.</p>
+            <p class="detail">Completion isn't the interesting number in a six-person study. The interesting part is where people slowed down. Three testers stalled on the positions step with the original sticky total in view, and two of them picked the cheapest slide rather than the one they'd said they wanted. That's what moved the summary under the content. Two testers picked a position, then dates, then hit “already booked” and went backwards; that's what moved dates in front of positions, so the flow knows the dates before it offers a slot.</p>
             <p class="detail">The finality notice was the thing I was most nervous about. Three repetitions felt heavy on the page. Not one tester mentioned it, and two said afterwards they'd noticed and were glad. It stayed.</p>
           </div>
           <div>
@@ -902,7 +998,7 @@
       <!-- ══════════ 09 IMPACT ══════════ -->
       <section id="impact">
         <div class="section-head">
-          <div class="idx">09</div>
+          <div class="idx">08</div>
           <div>
             <h2>Business impact</h2>
             <p class="takeaway">A rate card nobody was selling becomes roughly Rs. 10M a month of sellable inventory. The design's job is sell-through.</p>
@@ -945,7 +1041,7 @@
       <!-- ══════════ 10 THE BUILD ══════════ -->
       <section id="build">
         <div class="section-head">
-          <div class="idx">10</div>
+          <div class="idx">09</div>
           <div>
             <h2>The build</h2>
             <p class="takeaway">I built the prototype to production standards so the rules could be lifted into the real system, not redrawn from screenshots.</p>
@@ -953,7 +1049,7 @@
         </div>
         <div class="grid-3">
           <div class="card"><div class="eyebrow">Business rules as code</div><h3>One pure pricing engine</h3><p class="small detail">Inventory, campaigns, availability, creative spec and pricing live in a typed domain layer with no UI in it. The same module can run on the client to quote and on the server to charge.</p></div>
-          <div class="card"><div class="eyebrow">Tested where money is</div><h3>128 unit tests</h3><p class="small detail">Rounding per space per day, campaign multiples beating the weekend uplift, the order savings stack in, progressive fee reveal, lead time and occupancy, spec boundaries, and every draft interaction rule.</p></div>
+          <div class="card"><div class="eyebrow">Tested where money is</div><h3>Every pricing rule is checked automatically</h3><p class="small detail">Rounding per space per day, campaign multiples beating the weekend uplift, the order savings stack in, progressive fee reveal, lead time and occupancy, and every draft interaction rule.</p></div>
           <div class="card"><div class="eyebrow">Accessible by audit</div><h3>Zero axe violations</h3><p class="small detail">WCAG 2.1 AA across all eight pages. Keyboard-only sign-in and booking, skip link, reduced motion respected everywhere including the confetti.</p></div>
           <div class="card"><div class="eyebrow">Real behaviour</div><h3>State that persists</h3><p class="small detail">Bookings you make appear in My bookings and survive a reload. A half-finished draft survives a reload too. The prototype behaves like a product, not a slideshow.</p></div>
           <div class="card"><div class="eyebrow">Honest about what it is</div><h3>Placeholders marked</h3><p class="small detail">Engagement ladder, campaign multiples, "9 of 10 merchants": each is named in code as a stand-in for the benchmarks service. Nothing simulated is presented as measured.</p></div>
@@ -968,16 +1064,16 @@
       <!-- ══════════ 11 LEARNINGS ══════════ -->
       <section id="learnings">
         <div class="section-head">
-          <div class="idx">11</div>
+          <div class="idx">10</div>
           <div>
             <h2>What I'd tell myself at the start</h2>
             <p class="takeaway">Write the rules before the screens. Order beats polish. Test the thing you're nervous about.</p>
           </div>
         </div>
         <div class="grid-3">
-          <div class="card"><h3>The rules document was the best week I spent</h3><p class="small detail">Writing the pricing model with finance before any UI meant every later argument was about a line in a document, not a mockup. It also made the prototype possible: there was one truth to build against.</p></div>
-          <div class="card"><h3>Sequence changed more than any visual did</h3><p class="small detail">Dates before positions. Total below content. One campaign at a time. None of those show up in a screenshot, and each one moved behaviour in testing more than any card design.</p></div>
-          <div class="card"><h3>I underestimated occupancy</h3><p class="small detail">The prototype simulates booked days at the account level. Real inventory is booked per space and per position. The calendar and the upsell logic both need that, and it should have been in the rules document from day one.</p></div>
+          <div class="card"><h3>The rules document was the best two days I spent</h3><p class="small detail">Writing the pricing model with finance before any UI meant every later argument was about a line in a document, not a mockup. It also made the prototype possible: there was one truth to build against.</p></div>
+          <div class="card"><h3>Sequence changed more than any visual did</h3><p class="small detail">Dates before positions, because availability has to be known before a slot is offered. Total below content. One campaign at a time. None of those show up in a screenshot, and each one moved behaviour in testing more than any card design.</p></div>
+          <div class="card"><h3>I underestimated occupancy</h3><p class="small detail">The prototype simulates booked days at the account level. Real inventory is booked per space and per position, and two merchants can hit the same slot within seconds. The hold, the per-position calendar and the operator view all came from that, and it should have been in the rules document from day one.</p></div>
           <div class="card"><h3>Six testers is enough to find order problems</h3><p class="small detail">It's not enough for anything statistical, and I've been careful not to claim otherwise. Both structural changes came from watching two or three people hesitate in the same place.</p></div>
           <div class="card"><h3>Building it changed the design</h3><p class="small detail">Two pricing inconsistencies and an upsell that could book over a taken day only surfaced because the prototype ran real rules. A Figma prototype would have shipped all three.</p></div>
           <div class="card"><h3>Next</h3><p class="small detail">Per-position occupancy. A waitlist that actually notifies. An ops surface to set the rate card. And the real numbers behind every badge, once the benchmarks service exists.</p></div>
@@ -988,7 +1084,7 @@
     <footer>
       <div style="display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap;">
         <div><b id="author-name">[Your name]</b> · <span id="author-title">Senior Product Designer</span><br />Advertise with Koko, 2026. Prototype built with TanStack Start, React and Tailwind.</div>
-        <div>Product screens are captured from the working prototype. Sketch panels are reconstructions.</div>
+        <div>Product screens are captured from the working prototype.</div>
       </div>
     </footer>
   </div>
@@ -1030,7 +1126,7 @@ const CASE_DATA = {
     rounds: 2,
     findings: [
       { observed: "3 of 6 stalled on positions with the sticky total in view; 2 picked the cheapest slide over the one they wanted", round: 1, change: "Summary moved under the step content. Read the choice, then the total, then the button." },
-      { observed: "2 of 6 never saw campaign weeks because the flow opened on positions", round: 1, change: "Dates moved to step one, campaign weeks presented as the default path." },
+      { observed: "2 of 6 picked a position, then dates, then hit 'that position is already booked' and had to go back and try again", round: 1, change: "Dates moved before positions, so only positions free on those dates are offered." },
       { observed: "4 of 6 opened three or more campaign cards before choosing", round: 1, change: "Selecting a campaign hides the others and opens its own day chips." },
       { observed: "2 of 6 anchored on the hero's weekly price and skipped cheaper spaces", round: 2, change: "Prices off by default on the landing page; views lead." },
       { observed: "1 of 6 asked whether a failed upload meant the booking was lost", round: 2, change: "Failure names the rule and offers 'Try another file'; nothing else resets." },
@@ -1103,7 +1199,7 @@ $$(".reveal").forEach((el) => ro.observe(el));
   const bo = new IntersectionObserver((entries) => entries.forEach((e) => { if (e.isIntersecting) { $$(".fill", e.target).forEach((f) => (f.style.width = f.dataset.w + "%")); bo.unobserve(e.target); } }));
   bo.observe(wrap);
   const q = $("#quotes");
-  CASE_DATA.research.quotes.forEach((x) => { const b = document.createElement("blockquote"); b.className = "quote reveal"; b.style.margin = 0; b.innerHTML = `“${x.text}”<cite>${x.who}</cite>`; q.appendChild(b); ro.observe(b); });
+  CASE_DATA.research.quotes.forEach((x) => { const b = document.createElement("blockquote"); b.className = "quote reveal"; b.style.margin = 0; b.innerHTML = `“${x.text}”`; q.appendChild(b); ro.observe(b); });
 }
 
 /* ── Validation ── */
@@ -1134,7 +1230,7 @@ const FLOW = [
     why: "Seventeen of twenty merchants interviewed could not say what traffic Koko sent them. Showing reach first answers the question they actually have. Prices are behind a toggle because long-tail merchants anchored on the hero's weekly price and left before seeing cheaper spaces." },
   { id: "adhoc", kind: "decision", title: "Is the merchant booking around a Koko campaign week, or choosing their own dates?", sub: "The first fork. Campaign weeks are Koko-run shopping moments such as Black Friday or Avurudu with fixed dates and a traffic multiple. Own dates are any period the merchant picks.", branches: [["Campaign week → pick a period", "y"], ["Own dates → open the calendar", ""]], tags: ["Dates"],
     rule: "Presented as a pair of radio cards at the top of the dates step. Campaign week is selected by default and carries the one 'most popular' badge on the screen. Only the chosen path is shown below, so the page stays short.",
-    why: "Campaign weeks are the highest-margin inventory Koko sells and the thing key accounts asked for by name. They only persuade while the merchant still has an open mind about timing, which is why dates come before positions in the funnel." },
+    why: "Dates are asked before positions on purpose. Availability is per space, per position, per date, so the backend needs the dates before it can say which positions are free. Ask for the position first and the conflict only surfaces at the end, sending the merchant back a step. Campaign weeks lead the dates step because they are the highest-margin inventory and the thing key accounts asked for by name." },
   { id: "campaign", kind: "step", title: "The merchant picks a campaign period and sees what that week is worth to them", sub: "Ten campaign cards, six at a time. Each shows its fixed dates, its traffic multiple (1.4× to 2.7×) and the views it would deliver for the spaces already selected.", tags: ["Dates", "Pricing"],
     rule: "Selecting a campaign hides the other nine and opens that campaign's day chips underneath. Price per day is base price × position multiplier × campaign multiple. One campaign per booking; choosing another replaces it.",
     why: "With ten cards open at once, four of six testers opened three or more before choosing. Focusing on one turns the decision into 'which days of Black Friday' rather than 'which of ten campaigns, and also which days'." },
@@ -1151,7 +1247,7 @@ const FLOW = [
     rule: "One offer at a time, with the struck-through price beside the discounted one and the new end date named. Accepting it extends the range and applies the deal. Changing the dates afterwards clears the deal, because it was priced off the old ones.",
     why: "Longer bookings are worth more to Koko and cost less per day to the merchant. Showing the extended end date means nobody accepts a week without knowing which day it now ends on." },
   { id: "positions", kind: "step", title: "For each space they chose, the merchant picks where in the rotation their ad sits", sub: "One space open at a time. A drawn phone preview slides to the chosen slot and an engagement meter shows how attention falls off down the rotation.", tags: ["Positions"],
-    rule: "Nothing is pre-selected and Continue stays disabled until every space has a position. Only the hero charges more for the front of the rotation: 1.35× for slide 1, 1.15× for slide 2, flat after that. Position 1 of every space carries the single 'most popular' badge on the screen.",
+    rule: "Because dates are already known, only positions free on those dates are offered. Nothing is pre-selected and Continue stays disabled until every space has a position. Only the hero charges more for the front of the rotation: 1.35× for slide 1, 1.15× for slide 2, flat after that. Position 1 of every space carries the single 'most popular' badge on the screen.",
     why: "Comparing five positions within one space is a decision a merchant can make. Comparing thirty positions across six spaces is not. The preview animates so they watch the consequence of the click rather than reading about it." },
   { id: "bundle", kind: "decision", title: "Have they booked exactly one space and settled its position? If so, Koko suggests a second space", sub: "A pairing recommendation with four options, the best match first, each showing both spaces side by side and the combined weekly price with the discount applied.", branches: [["Yes → offer the bundle, 5% off everything", "y"], ["No, or bundle already taken → nothing shown", ""]], tags: ["Upsell", "Pricing"],
     rule: "The bundle takes 5% off all media cost. It appears only after the first space is fully decided and disappears once taken, replaced by a confirmation banner. Removing a space later cancels the discount.",
@@ -1187,6 +1283,7 @@ const FLOW = [
     el.innerHTML = `<div class="pin"><span>${pin}</span></div>
       <div class="body">
         <button class="lbl" type="button" aria-expanded="false" aria-controls="reason-${n.id}">
+          <span class="kind">${n.kind === "decision" ? "System decides" : "Merchant step"}</span>
           <span class="t"><b>${n.title}</b><span class="chev" aria-hidden="true">⌄</span></span>
           <small>${n.sub}</small>
           ${n.branches ? `<span class="branches">${n.branches.map(([b, t]) => `<span class="${tone(t)}">${b}</span>`).join("")}</span>` : ""}
@@ -1232,11 +1329,9 @@ const FLOW = [
   const update = () => {
     const chosen = P.filter((p) => sel.has(p.id));
     bar.classList.toggle("on", chosen.length > 0);
-    const views = chosen.reduce((a, p) => a + p.views, 0), price = chosen.reduce((a, p) => a + p.weekly, 0);
-    const prices = $("#sim-placement").classList.contains("prices");
-    txt.innerHTML = `<b>${chosen.length} space${chosen.length === 1 ? "" : "s"} selected</b> · ~${compact(views)} visits / 7 days${prices ? ` · ${money(price)} / week` : ""}`;
+    const views = chosen.reduce((a, p) => a + p.views, 0);
+    txt.innerHTML = `<b>${chosen.length} space${chosen.length === 1 ? "" : "s"} selected</b> · ~${compact(views)} visits / 7 days`;
   };
-  $("#sim-prices").addEventListener("change", (e) => { $("#sim-placement").classList.toggle("prices", e.target.checked); update(); });
   $(".go", bar).addEventListener("click", () => $("#sim-cal").scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "center" }));
 }
 
