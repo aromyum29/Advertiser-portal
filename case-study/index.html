@@ -36,6 +36,9 @@
   }
 
   * { box-sizing: border-box; }
+  /* Single-theme page. Without this a dark-scheme viewer gives every <button>
+     the UA's light "buttontext" colour on our light ground. */
+  :root { color-scheme: light; }
   html { scroll-behavior: smooth; }
   @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
   body {
@@ -49,7 +52,7 @@
   }
   img { max-width: 100%; display: block; }
   a { color: inherit; }
-  button { font: inherit; cursor: pointer; }
+  button { font: inherit; cursor: pointer; color: inherit; }
   ::selection { background: var(--brand); }
 
   h1, h2, h3, .serif { font-family: var(--serif); font-weight: 500; letter-spacing: -0.01em; }
@@ -144,29 +147,43 @@
   .principle .k { font-family: var(--serif); font-size: 2rem; font-weight: 300; color: var(--brand-ink); line-height: 1; }
 
   /* ── Decision flow ── */
-  .flow { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 28px; align-items: start; }
-  .flow-track { display: flex; flex-direction: column; gap: 0; }
-  .fnode { position: relative; display: grid; grid-template-columns: 30px 1fr; gap: 14px; align-items: start; padding: 10px 0 10px 4px; }
-  .fnode::before { content: ""; position: absolute; left: 18px; top: 0; bottom: 0; width: 2px; background: var(--line); }
-  .fnode:first-child::before { top: 50%; }
-  .fnode:last-child::before { bottom: 50%; }
-  .fnode .pin { position: relative; z-index: 1; width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; font-size: 0.7rem; font-weight: 800; background: #fff; border: 2px solid var(--ink); }
-  .fnode.decision .pin { transform: rotate(45deg); border-color: var(--ad); color: var(--ad); border-radius: 6px; }
-  .fnode.decision .pin span { transform: rotate(-45deg); }
-  .fnode button.lbl { text-align: left; background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 10px 14px; width: 100%; transition: border-color 0.15s, box-shadow 0.15s; }
-  .fnode button.lbl:hover { border-color: var(--ink); }
-  .fnode button.lbl[aria-pressed="true"] { border-color: var(--ink); box-shadow: 0 0 0 3px var(--brand); }
-  .fnode button.lbl b { display: block; font-size: 0.95rem; }
-  .fnode button.lbl small { display: block; color: var(--ink-3); font-size: 0.78rem; margin-top: 2px; }
-  .fnode .branches { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
-  .fnode .branches span { font-size: 0.7rem; font-weight: 700; padding: 3px 8px; border-radius: 999px; background: var(--muted); }
-  .fnode .branches span.yes { background: var(--green-bg); color: var(--green); }
-  .fnode .branches span.no { background: #fee2e2; color: var(--red); }
-  .flow-panel { position: sticky; top: 24px; background: var(--ink); color: #fff; border-radius: 18px; padding: 24px; min-height: 240px; }
-  .flow-panel .eyebrow { color: rgba(255,255,255,0.55); }
-  .flow-panel h3 { color: #fff; margin-top: 8px; }
-  .flow-panel p { color: rgba(255,255,255,0.85); font-size: 0.95rem; }
-  .flow-panel .tag { display: inline-block; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 4px 9px; border-radius: 999px; background: rgba(255,255,255,0.14); margin-right: 6px; margin-bottom: 8px; }
+  .legend { display: flex; flex-wrap: wrap; gap: 18px; padding: 14px 18px; border: 1px solid var(--line); border-radius: 14px; background: var(--card); font-size: 0.85rem; margin-bottom: 22px; }
+  .legend > div { display: flex; align-items: center; gap: 10px; }
+  .legend .pin { width: 26px; height: 26px; font-size: 0.65rem; }
+  .flow { max-width: 860px; }
+  .flow-track { display: flex; flex-direction: column; }
+  .fnode { position: relative; display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 16px; align-items: start; padding: 8px 0; }
+  .fnode::before { content: ""; position: absolute; left: 16px; top: 0; bottom: 0; width: 2px; background: var(--line); }
+  .fnode:first-child::before { top: 24px; }
+  .fnode:last-child::before { bottom: auto; height: 24px; }
+  .pin { position: relative; z-index: 1; width: 34px; height: 34px; border-radius: 9px; display: grid; place-items: center; font-size: 0.75rem; font-weight: 800; background: #fff; border: 2px solid var(--ink); color: var(--ink); margin-top: 6px; }
+  .decision .pin, .pin.decision { transform: rotate(45deg); border-color: var(--ad-ink); color: var(--ad-ink); border-radius: 7px; }
+  .decision .pin span, .pin.decision span { display: block; transform: rotate(-45deg); }
+  .fnode .body { border: 1px solid var(--line); border-radius: 14px; background: var(--card); overflow: hidden; transition: border-color 0.15s, box-shadow 0.15s; }
+  .fnode .body:hover { border-color: #9a9ca6; }
+  .fnode.open .body { border-color: var(--ink); box-shadow: 0 0 0 3px var(--brand); }
+  .fnode button.lbl { display: block; width: 100%; text-align: left; background: transparent; border: 0; padding: 14px 16px; color: var(--ink); }
+  .fnode button.lbl .t { display: flex; justify-content: space-between; align-items: start; gap: 12px; }
+  .fnode button.lbl b { display: block; font-size: 1rem; line-height: 1.35; color: var(--ink); }
+  .fnode button.lbl .chev { flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid var(--line); display: grid; place-items: center; font-size: 0.7rem; color: var(--ink-3); transition: transform 0.25s; margin-top: 2px; }
+  .fnode.open button.lbl .chev { transform: rotate(180deg); border-color: var(--ink); color: var(--ink); }
+  .fnode button.lbl small { display: block; color: var(--ink-2); font-size: 0.86rem; margin-top: 4px; line-height: 1.45; }
+  .fnode .branches { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+  .fnode .branches span { font-size: 0.74rem; font-weight: 700; padding: 4px 10px; border-radius: 999px; background: var(--muted); color: var(--ink-2); border: 1px solid var(--line-2); }
+  .fnode .branches span.yes { background: var(--green-bg); color: var(--green); border-color: transparent; }
+  .fnode .branches span.no { background: #fee2e2; color: var(--red); border-color: transparent; }
+  .fnode .reason { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.3s cubic-bezier(0.2,0.8,0.2,1); }
+  .fnode.open .reason { grid-template-rows: 1fr; }
+  .fnode .reason > div { min-height: 0; overflow: hidden; }
+  .fnode .reason .in { padding: 0 16px 16px; display: grid; gap: 10px; }
+  .fnode .reason .rule, .fnode .reason .because { padding: 12px 14px; border-radius: 10px; font-size: 0.9rem; line-height: 1.55; }
+  .fnode .reason .rule { background: var(--muted); }
+  .fnode .reason .because { background: var(--ink); color: #fff; }
+  .fnode .reason .eyebrow { display: block; margin-bottom: 4px; }
+  .fnode .reason .because .eyebrow { color: rgba(255,255,255,0.6); }
+  .fnode .reason .tags { display: flex; gap: 6px; flex-wrap: wrap; }
+  .fnode .reason .tag { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 4px 9px; border-radius: 999px; background: var(--brand); color: var(--ink); }
+  @media (prefers-reduced-motion: reduce) { .fnode .reason, .fnode button.lbl .chev { transition: none; } }
 
   /* ── Simulations ── */
   .sim { background: var(--card); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; }
@@ -333,8 +350,8 @@
   @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
 
   @media (max-width: 1080px) {
-    .two-col, .two-col.flip, .flow { grid-template-columns: minmax(0, 1fr); }
-    .sticky, .flow-panel { position: static; }
+    .two-col, .two-col.flip { grid-template-columns: minmax(0, 1fr); }
+    .sticky { position: static; }
   }
   @media (max-width: 900px) {
     .frame { grid-template-columns: 1fr; }
@@ -574,17 +591,18 @@
           <div class="idx">05</div>
           <div>
             <h2>The decision logic</h2>
-            <p class="takeaway">Before wireframes, I mapped every branch a booking can take and wrote down why each one exists. Click a node to read the reasoning.</p>
+            <p class="takeaway">Before drawing a screen, I mapped every path a booking can take, from the moment a merchant opens Advertise to the moment their ad goes live, and wrote down the rule behind each branch and the reason for the rule.</p>
           </div>
         </div>
-        <p class="detail">This flow was the artefact stakeholders argued over, and that was the point. Finance wanted to see where discounts stack. Ops wanted to see where lead time and occupancy block a date. Engineering wanted to know what happens when a merchant uploads a bad file. Having the logic on one board meant each of those conversations changed a node, not a screen.</p>
+        <p class="detail">This map was the artefact stakeholders argued over, which was the point. Finance wanted to see where discounts stack. Ops wanted to see where lead time and occupancy block a date. Engineering wanted to know what happens when a merchant uploads a bad file. With the logic on one board, each of those conversations changed a node rather than a screen, and every rule in the shipped product traces back to a node here.</p>
+        <div class="legend" aria-label="How to read the map">
+          <div><span class="pin"><span>1</span></span> A step the merchant takes</div>
+          <div><span class="pin decision"><span>?</span></span> A decision the system makes about what to show next</div>
+          <div><span class="fnode" style="display:contents"><span class="branches" style="margin:0"><span class="yes">Outcome</span><span class="no">Blocked</span><span>Alternative</span></span></span> Where each answer leads</div>
+          <div>Select any node to read the rule and the reasoning.</div>
+        </div>
         <div class="flow" id="flow">
           <div class="flow-track" id="flow-track"></div>
-          <aside class="flow-panel" id="flow-panel" aria-live="polite">
-            <div class="eyebrow">Reasoning</div>
-            <h3>Pick a node</h3>
-            <p>Each step in the flow has a rule behind it and a reason for the rule. Select one on the left.</p>
-          </aside>
         </div>
       </section>
 
@@ -1090,42 +1108,85 @@ $$(".reveal").forEach((el) => ro.observe(el));
 
 /* ── Decision flow ── */
 const FLOW = [
-  { id: "entry", kind: "step", title: "Merchant opens Advertise", sub: "Landing page, six spaces", tags: ["Landing"], why: "The funnel starts by selecting spaces, not with a booking CTA. Value is carried by real traffic figures (2.5M installs, 600K monthly shoppers) so every estimate on the page has a visible source." },
-  { id: "adhoc", kind: "decision", title: "Booking ad hoc, or for a campaign week?", sub: "The first fork", branches: [["Campaign week", "y"], ["Own dates", ""]], tags: ["Dates"], why: "Asked first, because campaign weeks are the highest-margin inventory and only persuade while the merchant is still deciding when. Presented as a radio pair with campaign weeks badged 'most popular' and selected by default." },
-  { id: "campaign", kind: "step", title: "Pick a campaign period", sub: "Fixed dates, traffic multiple, one per booking", tags: ["Dates", "Upsell"], why: "Choosing one hides the other nine and opens its day chips. Price per day = base × position multiplier × campaign multiple. Taking the whole period saves 15%; the button shows the saving against the per-day price. Early-bird notes are shown where active." },
-  { id: "own", kind: "step", title: "Pick own dates in a 30-day window", sub: "Lead time, occupancy, weekend uplift", tags: ["Dates", "Availability"], why: "First three days are blocked for creative review. Days another merchant holds say 'Booked'. Weekends carry a 9% uplift and a purple Boost tag. Campaign days appear tinted here too, priced at the campaign multiple, so a merchant who picks their own dates still sees the campaign." },
-  { id: "blocked", kind: "decision", title: "Does the range cross a blocked day?", sub: "Lead time or booked", branches: [["Yes → refuse with a hint", "n"], ["No → continue", "y"]], tags: ["Availability", "Recovery"], why: "The tap is refused with a specific reason and a way forward: the earliest bookable start, or 'pick around it'. Nothing is silently moved. The week and month offers are suppressed when the extended range would cross a booked day." },
-  { id: "duration", kind: "decision", title: "Fewer than 7 days? 8 to 21?", sub: "One upsell at a time", branches: [["Under 7 → full week, 5% off", "y"], ["8 to 21 → full month, 10% off", "y"], ["Over 21 → no offer", ""]], tags: ["Upsell", "Pricing"], why: "Short bookings are nudged to a week, week-ish bookings to a month, and anything past three weeks is left alone. Changing the dates afterwards clears the deal, because it was priced off the old ones." },
-  { id: "positions", kind: "step", title: "Pick a position in each space", sub: "One accordion open at a time", tags: ["Positions"], why: "Nothing pre-selected; Continue stays disabled until every space has a position. The preview slides to the chosen slot. Only the hero charges for the front of the rotation (1.35× slide 1, 1.15× slide 2). Position 1 of every space carries the single 'most popular' badge on the screen." },
-  { id: "bundle", kind: "decision", title: "Exactly one space, position settled?", sub: "When Koko recommends a pairing", branches: [["Yes → offer the bundle", "y"], ["No → skip", ""]], tags: ["Upsell", "Pricing"], why: "The bundle takes 5% off all media cost. It's offered only once the first decision is finished, because a second decision on top of an unfinished one is noise. Removing a space later cancels the bundle." },
-  { id: "creative", kind: "decision", title: "Does any space need artwork?", sub: "Banner spaces vs. store thumbnail", branches: [["Yes → Assets step", "y"], ["No → straight to payment", ""]], tags: ["Assets"], why: "Trending, empty search and post-checkout use the store's own card. Book only those and the funnel is three steps. The design fee is never shown for a booking that has no Assets step." },
-  { id: "koko", kind: "decision", title: "Koko designs it, or own upload?", sub: "Default: Koko", branches: [["Koko → Rs. 12,500, near-instant", "y"], ["Upload → free, up to 2 days", ""]], tags: ["Assets", "Pricing"], why: "Eleven of fifteen long-tail merchants had nobody to make a banner. Koko-designed is the visibly heavier card. Upload is described as 'the slower option' in plain words with its caveats listed, not hidden." },
-  { id: "spec", kind: "decision", title: "Does the file pass the spec?", sub: "Size, format, resolution", branches: [["All pass → continue", "y"], ["Any fail → try another file", "n"]], tags: ["Assets", "Recovery"], why: "Rules run one at a time against the real file so a failure names its fix. Continue locks until all pass. The browser check is a courtesy; production re-checks server side and the booking only confirms after approval." },
-  { id: "payment", kind: "decision", title: "How do they pay?", sub: "Seller credit, card, JustPay", branches: [["Seller credit +5%", ""], ["Card +2%", ""], ["JustPay −2%", "y"]], tags: ["Payment", "Pricing"], why: "Adjustments apply to the subtotal and only appear on this step. Seller credit is the default and badged; it shows the payout before and after. Fees are dark blue, discounts green, amounts shown only on the selected method." },
-  { id: "confirm", kind: "step", title: "Confirm and pay → recap dialog", sub: "Second confirmation", tags: ["Payment", "Trust"], why: "Bookings are final. The primary button opens a recap of space, dates, method and total with the no-refunds line, and only then charges. The 30-minute slot hold is stated in the rail throughout." },
-  { id: "after", kind: "step", title: "Thank you → My bookings → recap", sub: "Status changes as creative is approved", tags: ["Retention"], why: "The confirmation says what happens next in one sentence. The booking appears in My bookings immediately as pending or confirmed. When the run ends, a recap shows results against spend with 'Book this space again' as the primary action." },
+  { id: "entry", kind: "step", title: "The merchant opens Advertise and sees the six places inside the Koko app where their store can appear", sub: "Hero banner, secondary banner, trending row, empty search results, shop page banner and the post-checkout screen. Each is shown on a real screenshot with the bookable area outlined.", tags: ["Landing"],
+    rule: "The page carries no booking button in its header. The funnel starts by selecting one or more spaces. Every estimate on the page is derived from live traffic figures (2.5M installs, 600K monthly shoppers) and store visits are shown before any price.",
+    why: "Seventeen of twenty merchants interviewed could not say what traffic Koko sent them. Showing reach first answers the question they actually have. Prices are behind a toggle because long-tail merchants anchored on the hero's weekly price and left before seeing cheaper spaces." },
+  { id: "adhoc", kind: "decision", title: "Is the merchant booking around a Koko campaign week, or choosing their own dates?", sub: "The first fork. Campaign weeks are Koko-run shopping moments such as Black Friday or Avurudu with fixed dates and a traffic multiple. Own dates are any period the merchant picks.", branches: [["Campaign week → pick a period", "y"], ["Own dates → open the calendar", ""]], tags: ["Dates"],
+    rule: "Presented as a pair of radio cards at the top of the dates step. Campaign week is selected by default and carries the one 'most popular' badge on the screen. Only the chosen path is shown below, so the page stays short.",
+    why: "Campaign weeks are the highest-margin inventory Koko sells and the thing key accounts asked for by name. They only persuade while the merchant still has an open mind about timing, which is why dates come before positions in the funnel." },
+  { id: "campaign", kind: "step", title: "The merchant picks a campaign period and sees what that week is worth to them", sub: "Ten campaign cards, six at a time. Each shows its fixed dates, its traffic multiple (1.4× to 2.7×) and the views it would deliver for the spaces already selected.", tags: ["Dates", "Pricing"],
+    rule: "Selecting a campaign hides the other nine and opens that campaign's day chips underneath. Price per day is base price × position multiplier × campaign multiple. One campaign per booking; choosing another replaces it.",
+    why: "With ten cards open at once, four of six testers opened three or more before choosing. Focusing on one turns the decision into 'which days of Black Friday' rather than 'which of ten campaigns, and also which days'." },
+  { id: "partial", kind: "decision", title: "Did they take the whole campaign period, or only some of its days?", sub: "The day chips let a merchant take any run of days inside the period. A counter shows how many of the period's days are chosen.", branches: [["Whole period → 15% off", "y"], ["Some days → priced per day, full-period offer shown", ""]], tags: ["Upsell", "Pricing"],
+    rule: "Taking every day of the period earns 15% off. A partial selection is priced per day at the campaign multiple, and a 'Book full period' button shows the discounted price beside the struck-through per-day total, with the saving in rupees.",
+    why: "Koko wants the slot filled for the whole moment, not a fragment of it. The saving is shown as the merchant's own money rather than a percentage because 'saves you Rs. 69,206' moves people more than '15%' does." },
+  { id: "own", kind: "step", title: "Or the merchant picks their own dates from a thirty-day calendar where every day shows its own price", sub: "The window starts today and can jump by month or year. Each cell shows the day's price for the selected spaces, and tags weekends with a Boost label and campaign days with the campaign's name.", tags: ["Dates", "Availability"],
+    rule: "Tap a start date, then an end date. Weekends cost 9% more. Days inside a campaign period cost the campaign multiple even on this path. The first three days are blocked for creative review and days another merchant holds say 'Booked'.",
+    why: "What a Tuesday costs depends on when it is. Putting the price on the cell keeps the total explainable. Blocked days say why they are blocked so the merchant plans around them rather than guessing." },
+  { id: "blocked", kind: "decision", title: "Does the date they tapped, or the range they drew, run into a day that can't be booked?", sub: "Two things block a day: it is inside the three-day creative review lead time, or another merchant already holds it.", branches: [["Yes → the tap is refused with a specific hint", "n"], ["No → the range is accepted", "y"]], tags: ["Availability", "Recovery"],
+    rule: "A blocked tap is refused with a reason and a way forward: the earliest bookable start, or 'that range crosses a booked date, pick around it'. Nothing is silently moved. The week and month offers are suppressed if the extended range would cross a booked day.",
+    why: "An offer that fails when accepted is worse than no offer. Early versions extended a booking by length alone and could book over a taken day; running the real rules in the prototype is what exposed it." },
+  { id: "duration", kind: "decision", title: "Is the booking short enough that a longer one would be a better deal?", sub: "Once a range exists, the system checks its length and offers at most one extension.", branches: [["Under 7 days → make it a full week, 5% off", "y"], ["8 to 21 days → make it a full month, 10% off", "y"], ["Over 21 days, or exactly 7 → no offer", ""]], tags: ["Upsell", "Pricing"],
+    rule: "One offer at a time, with the struck-through price beside the discounted one and the new end date named. Accepting it extends the range and applies the deal. Changing the dates afterwards clears the deal, because it was priced off the old ones.",
+    why: "Longer bookings are worth more to Koko and cost less per day to the merchant. Showing the extended end date means nobody accepts a week without knowing which day it now ends on." },
+  { id: "positions", kind: "step", title: "For each space they chose, the merchant picks where in the rotation their ad sits", sub: "One space open at a time. A drawn phone preview slides to the chosen slot and an engagement meter shows how attention falls off down the rotation.", tags: ["Positions"],
+    rule: "Nothing is pre-selected and Continue stays disabled until every space has a position. Only the hero charges more for the front of the rotation: 1.35× for slide 1, 1.15× for slide 2, flat after that. Position 1 of every space carries the single 'most popular' badge on the screen.",
+    why: "Comparing five positions within one space is a decision a merchant can make. Comparing thirty positions across six spaces is not. The preview animates so they watch the consequence of the click rather than reading about it." },
+  { id: "bundle", kind: "decision", title: "Have they booked exactly one space and settled its position? If so, Koko suggests a second space", sub: "A pairing recommendation with four options, the best match first, each showing both spaces side by side and the combined weekly price with the discount applied.", branches: [["Yes → offer the bundle, 5% off everything", "y"], ["No, or bundle already taken → nothing shown", ""]], tags: ["Upsell", "Pricing"],
+    rule: "The bundle takes 5% off all media cost. It appears only after the first space is fully decided and disappears once taken, replaced by a confirmation banner. Removing a space later cancels the discount.",
+    why: "A second decision on top of an unfinished one is noise. Waiting until the first is settled meant testers read the offer instead of scrolling past it. The partner is chosen by which spaces sell well together, not by price." },
+  { id: "creative", kind: "decision", title: "Does any space in the booking need artwork, or does the store's own thumbnail do the job?", sub: "Banner spaces (hero, secondary, shop page) need an image. Trending, empty search and post-checkout show the store's existing card.", branches: [["Needs artwork → an Assets step is added", "y"], ["Thumbnail only → straight to payment", ""]], tags: ["Assets"],
+    rule: "The Assets step exists only when something in the booking needs a banner. Book only thumbnail spaces and the funnel is three steps. The design fee is never shown for a booking that has no Assets step.",
+    why: "A step with nothing to decide teaches merchants to click through without reading. Removing it when it doesn't apply keeps every remaining step meaningful." },
+  { id: "koko", kind: "decision", title: "Will Koko's team design the banner, or will the merchant upload their own?", sub: "Two cards. Koko designs it for a flat Rs. 12,500 with approval in minutes. Upload is free, takes up to two business days to review, and the booking only confirms after approval.", branches: [["Koko designs it → Rs. 12,500, near-instant approval", "y"], ["Own upload → free, up to two days, must pass the spec", ""]], tags: ["Assets", "Pricing"],
+    rule: "Koko-designed is the default and the visibly heavier card. The fee is anchored per day ('about Rs. 1,800 a day on a week booking'). The upload card says 'the slower option' in plain words and lists its caveats rather than hiding them.",
+    why: "Eleven of fifteen long-tail merchants had nobody who could make a banner. Making the easier path the default removes the reason most of them would have abandoned the booking." },
+  { id: "spec", kind: "decision", title: "If they upload, does the file meet the spec?", sub: "Three rules, checked one at a time against the real file: under 5 MB, JPG or PNG, at least 1600 × 640 pixels.", branches: [["All three pass → continue to payment", "y"], ["Any fail → the failed rule is named, try another file", "n"]], tags: ["Assets", "Recovery"],
+    rule: "Each rule shows its own tick or cross in sequence so a failure names the fix. Continue locks until all pass. The browser check is a courtesy; production re-runs it server side and the booking confirms only after human approval.",
+    why: "'Your file was rejected' sends a merchant to Google. 'Resolution at least 1600 × 640 px, failed' sends them back to their designer with the answer." },
+  { id: "payment", kind: "decision", title: "How does the merchant pay, and what does that do to the total?", sub: "Three methods. Koko seller credit deducts from the next payout and adds a 5% convenience fee. Card adds 2%. JustPay bank transfer takes 2% off.", branches: [["Seller credit → +5%, payout shown before and after", ""], ["Card → +2%", ""], ["JustPay → 2% off", "y"]], tags: ["Payment", "Pricing"],
+    rule: "Adjustments apply to the subtotal and appear only on the payment step. Fees are dark blue, discounts green, and the rupee amount shows only on the selected method. Seller credit is the default and shows the upcoming payout with the booking deducted.",
+    why: "Seller credit is the fastest for Koko to settle and needs no card. Showing the payout before and after answers the question a merchant on credit actually has: what will I receive on the 31st?" },
+  { id: "confirm", kind: "step", title: "The merchant reviews everything, then confirms twice, because the booking is final", sub: "A review table with an Edit link on every row that jumps back to the step that set it. 'Confirm and pay' opens a recap dialog restating space, dates, method and total before anything is charged.", tags: ["Payment", "Trust"],
+    rule: "No cancellations and no refunds. The notice appears in the page body, in the summary rail and in the dialog. The slot is held for 30 minutes while they decide, and the hold is stated in the rail throughout.",
+    why: "Three repetitions felt heavy on the page. Not one tester objected, and two said afterwards they were glad. A merchant who pays Rs. 400,000 for a week should never be able to say they weren't told." },
+  { id: "after", kind: "step", title: "The booking appears in My bookings, its status changes as the creative is approved, and the run ends with a recap", sub: "Koko-designed artwork confirms almost immediately. Uploads sit as 'pending approval' until reviewed. When the run finishes, a summary shows store visits, orders, cost per order and sales against spend.", tags: ["Retention"],
+    rule: "The confirmation page says in one sentence what happens next and links to My bookings. The recap's primary button is 'Book this space again'.",
+    why: "Sixteen of twenty merchants wanted proof that it worked. The recap is that proof, and it is the moment they are most likely to book again." },
 ];
 {
   const track = $("#flow-track");
-  const panel = $("#flow-panel");
   let stepNo = 0;
+  const tone = (t) => (t === "y" ? "yes" : t === "n" ? "no" : "");
   FLOW.forEach((n) => {
     const el = document.createElement("div");
     el.className = "fnode " + n.kind;
+    el.dataset.id = n.id;
     const pin = n.kind === "decision" ? "?" : ++stepNo;
-    const tone = (t) => (t === "y" ? "yes" : t === "n" ? "no" : "");
     el.innerHTML = `<div class="pin"><span>${pin}</span></div>
-      <button class="lbl" type="button" aria-pressed="false" data-id="${n.id}"><b>${n.title}</b><small>${n.sub}</small>
-      ${n.branches ? `<div class="branches">${n.branches.map(([b, t]) => `<span class="${tone(t)}">${b}</span>`).join("")}</div>` : ""}</button>`;
+      <div class="body">
+        <button class="lbl" type="button" aria-expanded="false" aria-controls="reason-${n.id}">
+          <span class="t"><b>${n.title}</b><span class="chev" aria-hidden="true">⌄</span></span>
+          <small>${n.sub}</small>
+          ${n.branches ? `<span class="branches">${n.branches.map(([b, t]) => `<span class="${tone(t)}">${b}</span>`).join("")}</span>` : ""}
+        </button>
+        <div class="reason" id="reason-${n.id}"><div><div class="in">
+          <div class="tags">${n.tags.map((t) => `<span class="tag">${t}</span>`).join("")}</div>
+          <div class="rule"><span class="eyebrow">The rule</span>${n.rule}</div>
+          <div class="because"><span class="eyebrow">Why</span>${n.why}</div>
+        </div></div></div>
+      </div>`;
     track.appendChild(el);
   });
-  const show = (id) => {
-    const n = FLOW.find((x) => x.id === id);
-    $$("button.lbl", track).forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.id === id)));
-    panel.innerHTML = `<div class="eyebrow">Reasoning</div><h3>${n.title}</h3><div>${n.tags.map((t) => `<span class="tag">${t}</span>`).join("")}</div><p>${n.why}</p>`;
+  const open = (id) => {
+    $$(".fnode", track).forEach((el) => {
+      const on = el.dataset.id === id && !el.classList.contains("open");
+      el.classList.toggle("open", on);
+      $("button.lbl", el).setAttribute("aria-expanded", String(on));
+    });
   };
-  track.addEventListener("click", (e) => { const b = e.target.closest("button.lbl"); if (b) show(b.dataset.id); });
-  show("adhoc");
+  track.addEventListener("click", (e) => { const b = e.target.closest("button.lbl"); if (b) open(b.closest(".fnode").dataset.id); });
+  open("adhoc");
 }
 
 /* ── Sim 1: placements ── */
