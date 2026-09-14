@@ -26,7 +26,7 @@ import {
 } from "../domain/availability";
 import { getCampaign } from "../domain/campaigns";
 import type { CreativeUpload } from "../domain/creative";
-import { longDate, rangeLength, toISO, startOfToday } from "../domain/dates";
+import { addDaysISO, longDate, rangeLength, toISO, startOfToday } from "../domain/dates";
 import { BUNDLE_PARTNER } from "../domain/inventory";
 import { MONTH_DEAL, WEEK_DEAL } from "../domain/pricing";
 import type {
@@ -284,15 +284,30 @@ export function useBookingDraft(): DraftValue {
  * The duration upsell on offer for the current range, if any. One at a time:
  * short bookings are nudged to a week, week-ish bookings to a month, and a
  * booking already past three weeks is left alone.
+ *
+ * The extended range has to be bookable. Offering "make it a full week" when
+ * the seventh day is already taken would either sell a slot twice or bounce
+ * the advertiser with an error they could not have anticipated.
  */
 export const durationUpsell = (
   draft: BookingDraft,
-): { deal: typeof WEEK_DEAL | typeof MONTH_DEAL; days: number } | null => {
+  todayISO: ISODate,
+): { deal: DurationDeal; days: number; endISO: ISODate } | null => {
   if (!draft.startISO || !draft.endISO) return null;
+
   const length = rangeLength(draft.startISO, draft.endISO);
-  if (length < 7) return { deal: WEEK_DEAL, days: 7 };
-  if (length >= 8 && length <= 21) return { deal: MONTH_DEAL, days: 30 };
-  return null;
+  const candidate =
+    length < 7
+      ? { deal: WEEK_DEAL, days: 7 }
+      : length <= 21 && length >= 8
+        ? { deal: MONTH_DEAL, days: 30 }
+        : null;
+  if (!candidate) return null;
+
+  const endISO = addDaysISO(draft.startISO, candidate.days - 1);
+  if (validateRange(draft.startISO, endISO, todayISO)) return null;
+
+  return { ...candidate, endISO };
 };
 
 /** Days taken of a campaign period, given the chip range the advertiser dragged. */

@@ -14,7 +14,7 @@ import { fromISO, longDate, MONTH_SHORT } from "../../domain/dates";
 import { compact, days as daysLabel, money, percent } from "../../domain/format";
 import { rangeCost } from "../../domain/pricing";
 import type { BookingDraft, ISODate } from "../../domain/types";
-import { addDaysISO, rangeLength } from "../../domain/dates";
+import { rangeLength } from "../../domain/dates";
 import { durationUpsell } from "../../state/booking-draft";
 import { ConfirmBanner, Tag } from "../primitives";
 
@@ -46,10 +46,11 @@ export function DateCalendar({
   const complete = Boolean(startISO && endISO);
   const length = complete ? rangeLength(startISO!, endISO!) : 0;
 
-  const upsell = durationUpsell(draft);
-  const upsellEnd = upsell && startISO ? addDaysISO(startISO, upsell.days - 1) : null;
+  const upsell = durationUpsell(draft, todayISO);
   const upsellGross =
-    upsellEnd && startISO ? rangeCost(draft.placementIds, draft.positions, startISO, upsellEnd) : 0;
+    upsell && startISO
+      ? rangeCost(draft.placementIds, draft.positions, startISO, upsell.endISO)
+      : 0;
   const upsellPrice = upsell ? Math.round(upsellGross * (1 - upsell.deal.pct)) : 0;
 
   return (
@@ -202,7 +203,7 @@ export function DateCalendar({
         </div>
       )}
 
-      {upsell && upsellEnd && (
+      {upsell && (
         <div className="animate-in slide-in-from-top-2 mt-4 flex flex-wrap items-center justify-between gap-4 rounded-xl border-[1.5px] border-[#BDDCEE] bg-[#BDDCEE]/10 p-5 shadow-sm duration-200">
           <div>
             <Tag>Save {percent(upsell.deal.pct)}</Tag>
@@ -210,14 +211,14 @@ export function DateCalendar({
               Make it a {upsell.deal.label.toLowerCase()}
             </p>
             <p className="mt-0.5 text-sm text-muted-foreground tabular-nums">
-              {daysLabel(upsell.days)} to {longDate(upsellEnd)} ·{" "}
+              {daysLabel(upsell.days)} to {longDate(upsell.endISO)} ·{" "}
               <span className="line-through opacity-60">{money(upsellGross)}</span>{" "}
               <span className="font-bold text-foreground">{money(upsellPrice)}</span>
             </p>
           </div>
           <button
             type="button"
-            onClick={() => onExtend(upsellEnd, upsell.deal)}
+            onClick={() => onExtend(upsell.endISO, upsell.deal)}
             className="w-full rounded-lg bg-gray-900 px-6 py-3 text-sm font-medium text-white shadow-sm transition-all hover:bg-gray-800 hover:shadow-md active:scale-[0.98] sm:w-auto dark:bg-gray-100 dark:text-gray-900 dark:hover:bg-gray-200"
           >
             Book the {upsell.deal.label.toLowerCase().replace("full ", "")}

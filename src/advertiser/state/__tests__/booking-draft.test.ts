@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 
+import { bookedDates, LEAD_DAYS } from "../../domain/availability";
+import { addDaysISO } from "../../domain/dates";
 import { WEEK_DEAL } from "../../domain/pricing";
 import { campaignDaysTaken, durationUpsell, EMPTY_DRAFT, reducer } from "../booking-draft";
 import type { BookingDraft } from "../../domain/types";
@@ -130,35 +132,64 @@ describe("campaigns", () => {
 });
 
 describe("duration upsell", () => {
+  // Far enough ahead that neither lead time nor the simulated occupancy
+  // interferes, so these cases test the length rules on their own.
+  const TODAY = "2026-09-14";
+
   it("offers a full week on a short booking", () => {
     expect(
-      durationUpsell({ ...EMPTY_DRAFT, startISO: "2026-10-05", endISO: "2026-10-07" })?.deal,
+      durationUpsell({ ...EMPTY_DRAFT, startISO: "2026-10-05", endISO: "2026-10-07" }, TODAY)?.deal,
     ).toEqual(WEEK_DEAL);
+  });
+
+  it("names the day the extended range would end on", () => {
+    expect(
+      durationUpsell({ ...EMPTY_DRAFT, startISO: "2026-10-05", endISO: "2026-10-07" }, TODAY)
+        ?.endISO,
+    ).toBe("2026-10-11");
   });
 
   it("offers nothing on an exact week, which already earned its deal", () => {
     expect(
-      durationUpsell({ ...EMPTY_DRAFT, startISO: "2026-10-05", endISO: "2026-10-11" }),
+      durationUpsell({ ...EMPTY_DRAFT, startISO: "2026-10-05", endISO: "2026-10-11" }, TODAY),
     ).toBeNull();
   });
 
   it("offers a full month between eight and twenty-one days", () => {
     expect(
-      durationUpsell({ ...EMPTY_DRAFT, startISO: "2026-10-05", endISO: "2026-10-12" })?.days,
+      durationUpsell({ ...EMPTY_DRAFT, startISO: "2026-10-05", endISO: "2026-10-12" }, TODAY)?.days,
     ).toBe(30);
     expect(
-      durationUpsell({ ...EMPTY_DRAFT, startISO: "2026-10-05", endISO: "2026-10-25" })?.days,
+      durationUpsell({ ...EMPTY_DRAFT, startISO: "2026-10-05", endISO: "2026-10-25" }, TODAY)?.days,
     ).toBe(30);
   });
 
   it("leaves a long booking alone", () => {
     expect(
-      durationUpsell({ ...EMPTY_DRAFT, startISO: "2026-10-05", endISO: "2026-10-30" }),
+      durationUpsell({ ...EMPTY_DRAFT, startISO: "2026-10-05", endISO: "2026-10-30" }, TODAY),
     ).toBeNull();
   });
 
   it("offers nothing without a complete range", () => {
-    expect(durationUpsell({ ...EMPTY_DRAFT, startISO: "2026-10-05", endISO: null })).toBeNull();
+    expect(
+      durationUpsell({ ...EMPTY_DRAFT, startISO: "2026-10-05", endISO: null }, TODAY),
+    ).toBeNull();
+  });
+
+  it("does not offer a week that would run over a day someone else booked", () => {
+    // Occupancy sits at today+7, so a booking starting at today+3 would have to
+    // cross it to reach seven days.
+    const start = addDaysISO(TODAY, LEAD_DAYS);
+    const draft = { ...EMPTY_DRAFT, startISO: start, endISO: addDaysISO(start, 2) };
+    expect(bookedDates(TODAY)).toContain(addDaysISO(start, 4));
+    expect(durationUpsell(draft, TODAY)).toBeNull();
+  });
+
+  it("still offers the week when the extended range is clear", () => {
+    // Starting past both occupied days, a full week has nothing in its way.
+    const start = addDaysISO(TODAY, 14);
+    const draft = { ...EMPTY_DRAFT, startISO: start, endISO: addDaysISO(start, 2) };
+    expect(durationUpsell(draft, TODAY)?.deal).toEqual(WEEK_DEAL);
   });
 });
 
