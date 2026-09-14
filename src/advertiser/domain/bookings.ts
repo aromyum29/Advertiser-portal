@@ -127,7 +127,7 @@ export const SEED_BOOKINGS: readonly BookingRecord[] = [
     creative: "koko",
     payment: "credit",
     createdAt: "2026-08-04T09:12:00.000Z",
-    result: "128 orders so far · Rs. 1.86M in sales",
+    result: "214 orders so far · Rs. 3.12M in sales",
   },
   {
     id: "KAD-0987",
@@ -146,7 +146,7 @@ export const SEED_BOOKINGS: readonly BookingRecord[] = [
     creative: "koko",
     payment: "card",
     createdAt: "2026-07-14T11:40:00.000Z",
-    result: "Drove 214 orders · Rs. 3.12M in sales",
+    result: "Drove 128 orders · Rs. 1.86M in sales",
   },
   {
     id: "KAD-1061",
