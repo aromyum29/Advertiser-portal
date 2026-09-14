@@ -7,7 +7,8 @@
 <meta name="description" content="How Koko's unused app real estate became a self-serve advertising product for merchants. Research, decision logic, interaction design, and a working prototype." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Lato:ital,wght@0,400;0,700;0,900;1,400&display=swap" rel="stylesheet" />
+<!-- Myriad Pro and Book Antiqua are system faces, not web fonts. They render where installed; PT Sans and PT Serif stand in elsewhere. -->
+<link href="https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
 <style>
   /* ── Tokens: the product's own palette, so the page reads as the same hand ── */
   :root {
@@ -29,9 +30,9 @@
     --amber-bg: #fff4e0;
     --red: #b91c1c;
     --pastel: linear-gradient(149.739deg, #bddcee 0%, #e0e7ff 35%, #f3e8ff 70%, #fce7f3 100%);
-    --serif: "Abril Fatface", "Playfair Display", Georgia, serif;
-    --sans: "Lato", "Helvetica Neue", Arial, sans-serif;
-    --ui: "Lato", "Helvetica Neue", Arial, sans-serif;
+    --serif: "Myriad Pro", "Myriad", "PT Sans", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    --sans: "Book Antiqua", "Palatino Linotype", Palatino, "PT Serif", Georgia, serif;
+    --ui: "Myriad Pro", "Myriad", "PT Sans", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
     --measure: 66ch;
     --rail: 268px;
   }
@@ -48,7 +49,7 @@
     color: var(--ink);
     font-family: var(--sans);
     font-size: 17px;
-    line-height: 1.65;
+    line-height: 1.7;
     -webkit-font-smoothing: antialiased;
   }
   img { max-width: 100%; display: block; }
@@ -56,13 +57,13 @@
   button { font: inherit; cursor: pointer; color: inherit; }
   ::selection { background: var(--brand); }
 
-  h1, h2, .serif { font-family: var(--serif); font-weight: 400; letter-spacing: 0; }
-  h3 { font-family: var(--ui); font-weight: 700; letter-spacing: -0.01em; }
-  h3.sub-h { font-family: var(--serif); font-weight: 400; font-size: 1.6rem; letter-spacing: 0; }
+  h1, h2, .serif { font-family: var(--serif); font-weight: 700; letter-spacing: -0.015em; }
+  h3 { font-family: var(--serif); font-weight: 700; letter-spacing: -0.01em; }
+  h3.sub-h { font-size: 1.5rem; }
   button, .chip, .eyebrow, .rail nav, .sim, .tbl, .tagsm, .fnode .branches, .timeline, .fact .l, .metric .l, figcaption, .readtime, .why, .bar, .steps .small, .tools, .stepchips { font-family: var(--ui); }
   strong { font-weight: 700; color: var(--ink); }
   mark { background: linear-gradient(transparent 55%, var(--brand) 55%); color: inherit; padding: 0 2px; }
-  h1 { font-size: clamp(2.2rem, 4.6vw, 3.9rem); line-height: 1.08; margin: 0; }
+  h1 { font-size: clamp(2.4rem, 5vw, 4.2rem); line-height: 1.05; margin: 0; }
   h2 { font-size: clamp(1.8rem, 3vw, 2.5rem); line-height: 1.1; margin: 0 0 0.35em; }
   h3 { font-size: 1.35rem; line-height: 1.25; margin: 0 0 0.4em; }
   p { margin: 0 0 1em; max-width: var(--measure); }
@@ -86,12 +87,12 @@
   .content { min-width: 0; }
   main > section { padding: 96px clamp(24px, 6vw, 96px); border-bottom: 1px solid var(--line-2); }
   .section-head { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 24px; align-items: start; margin-bottom: 40px; }
-  .section-head .idx { font-family: var(--serif); font-size: 2.4rem; line-height: 1; color: var(--brand-ink); font-weight: 400; opacity: 0.85; }
+  .section-head .idx { font-family: var(--serif); font-size: 2.4rem; line-height: 1; color: var(--brand-ink); font-weight: 700; opacity: 0.85; }
   .takeaway { font-family: var(--sans); font-size: 1.15rem; line-height: 1.55; color: var(--ink-2); max-width: 52ch; margin-top: 10px; font-weight: 400; }
 
   /* Reading time, counting down as sections are passed. */
   .readtime { border: 1px solid var(--line); background: var(--card); border-radius: 14px; padding: 12px 14px; }
-  .readtime .big { font-family: var(--serif); font-size: 1.7rem; font-weight: 400; line-height: 1; font-variant-numeric: tabular-nums; }
+  .readtime .big { font-family: var(--serif); font-size: 1.7rem; font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; }
   .readtime .big small { font-size: 0.8rem; font-weight: 600; color: var(--ink-3); margin-left: 4px; }
   .readtime .l { font-size: 0.78rem; color: var(--ink-3); margin-top: 6px; }
   .readtime .track { height: 4px; border-radius: 999px; background: var(--muted); margin-top: 10px; overflow: hidden; }
@@ -165,7 +166,7 @@
   /* ── Design decision card: used wherever a call was made ── */
   .decision { position: relative; border: 2px solid var(--ink); border-radius: 16px; background: #fff; padding: 22px 22px 20px; margin: 22px 0; }
   .decision > .eyebrow { position: absolute; top: -11px; left: 18px; background: var(--ink); color: #fff; padding: 4px 10px; border-radius: 999px; font-size: 0.66rem; }
-  .decision h3 { font-family: var(--ui); font-size: 1.05rem; margin: 0 0 8px; }
+  .decision h3 { font-size: 1.05rem; margin: 0 0 8px; }
   .decision p { margin: 0; font-size: 0.95rem; }
   .decision p + p { margin-top: 8px; }
   .decision .vs { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
@@ -399,7 +400,7 @@
   .timeline div { padding: 14px 16px; border-right: 1px solid var(--line-2); border-bottom: 1px solid var(--line-2); }
   .timeline div:nth-child(3n) { border-right: 0; }
   .timeline div:nth-last-child(-n+3) { border-bottom: 0; }
-  .timeline b { display: block; font-family: var(--ui); font-weight: 700; font-size: 1rem; }
+  .timeline b { display: block; font-family: var(--serif); font-weight: 700; font-size: 1rem; }
   .timeline small { color: var(--ink-3); font-size: 0.78rem; }
 
   .metric-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); gap: 14px; }
